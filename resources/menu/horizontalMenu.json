@@ -1,0 +1,1146 @@
+{
+    "menu":  [
+                 {
+                     "menuHeader":  "PROTOTYPE"
+                 },
+                 {
+                     "url":  "/",
+                     "name":  "Blank Canvas",
+                     "icon":  "menu-icon tf-icons ti ti-layout",
+                     "slug":  "prototype.index"
+                 },
+                 {
+                     "url":  "dashboard",
+                     "name":  "Dashboard",
+                     "icon":  "menu-icon tf-icons ti ti-dashboard",
+                     "slug":  "prototype.dashboard"
+                 },
+                 {
+                     "url":  "scenarios",
+                     "name":  "Scenarios",
+                     "icon":  "menu-icon tf-icons ti ti-list-details",
+                     "slug":  "prototype.scenarios"
+                 },
+                 {
+                     "url":  "settings",
+                     "name":  "Settings",
+                     "icon":  "menu-icon tf-icons ti ti-settings",
+                     "slug":  "prototype.settings"
+                 },
+                 {
+                     "menuHeader":  "TEMPLATE LIBRARY"
+                 },
+                 {
+                     "url":  "templates",
+                     "name":  "All Templates",
+                     "icon":  "menu-icon tf-icons ti ti-library",
+                     "slug":  "templates.index"
+                 },
+                 {
+                     "name":  "Dashboards",
+                     "icon":  "menu-icon tf-icons ti ti-smart-home",
+                     "slug":  "templates.dashboard",
+                     "submenu":  [
+                                     {
+                                         "url":  "templates/dashboard/analytics",
+                                         "icon":  "menu-icon tf-icons ti ti-chart-pie-2",
+                                         "name":  "Analytics",
+                                         "slug":  "templates.dashboard-analytics"
+                                     },
+                                     {
+                                         "url":  "templates/dashboard/crm",
+                                         "name":  "CRM",
+                                         "icon":  "menu-icon tf-icons ti ti-3d-cube-sphere",
+                                         "slug":  "templates.dashboard-crm"
+                                     },
+                                     {
+                                         "url":  "templates/app/ecommerce/dashboard",
+                                         "name":  "eCommerce",
+                                         "icon":  "menu-icon tf-icons ti ti-shopping-cart",
+                                         "slug":  "templates.app-ecommerce-dashboard"
+                                     },
+                                     {
+                                         "url":  "templates/app/logistics/dashboard",
+                                         "name":  "Logistics",
+                                         "icon":  "menu-icon tf-icons ti ti-truck",
+                                         "slug":  "templates.app-logistics-dashboard"
+                                     },
+                                     {
+                                         "url":  "templates/app/academy/dashboard",
+                                         "name":  "Academy",
+                                         "icon":  "menu-icon tf-icons ti ti-book",
+                                         "slug":  "templates.app-academy-dashboard"
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Layouts",
+                     "icon":  "menu-icon tf-icons ti ti-layout-sidebar",
+                     "slug":  "templates.layouts",
+                     "submenu":  [
+                                     {
+                                         "url":  "templates/layouts/without-menu",
+                                         "name":  "Without menu",
+                                         "icon":  "menu-icon tf-icons ti ti-menu-2",
+                                         "slug":  "templates.layouts-without-menu"
+                                     },
+                                     {
+                                         "url":  "templates/layouts/vertical",
+                                         "name":  "Vertical",
+                                         "icon":  "menu-icon tf-icons ti ti-layout-distribute-vertical",
+                                         "slug":  "templates.layouts-vertical",
+                                         "target":  "_blank"
+                                     },
+                                     {
+                                         "url":  "templates/layouts/fluid",
+                                         "name":  "Fluid",
+                                         "icon":  "menu-icon tf-icons ti ti-maximize",
+                                         "slug":  "templates.layouts-fluid"
+                                     },
+                                     {
+                                         "url":  "templates/layouts/container",
+                                         "name":  "Container",
+                                         "icon":  "menu-icon tf-icons ti ti-arrows-maximize",
+                                         "slug":  "templates.layouts-container"
+                                     },
+                                     {
+                                         "url":  "templates/layouts/blank",
+                                         "name":  "Blank",
+                                         "icon":  "menu-icon tf-icons ti ti-square",
+                                         "slug":  "templates.layouts-blank",
+                                         "target":  "_blank"
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Apps",
+                     "icon":  "menu-icon tf-icons ti ti-layout-grid-add",
+                     "slug":  [
+                                  "templates.app",
+                                  "templates.laravel"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "url":  "templates/app/email",
+                                         "name":  "Email",
+                                         "icon":  "menu-icon tf-icons ti ti-mail",
+                                         "slug":  "templates.app-email"
+                                     },
+                                     {
+                                         "url":  "templates/app/chat",
+                                         "name":  "Chat",
+                                         "icon":  "menu-icon tf-icons ti ti-messages",
+                                         "slug":  "templates.app-chat"
+                                     },
+                                     {
+                                         "url":  "templates/app/calendar",
+                                         "name":  "Calendar",
+                                         "icon":  "menu-icon tf-icons ti ti-calendar",
+                                         "slug":  "templates.app-calendar"
+                                     },
+                                     {
+                                         "url":  "templates/app/kanban",
+                                         "name":  "Kanban",
+                                         "icon":  "menu-icon tf-icons ti ti-layout-kanban",
+                                         "slug":  "templates.app-kanban"
+                                     },
+                                     {
+                                         "name":  "eCommerce",
+                                         "icon":  "menu-icon tf-icons ti ti-shopping-cart",
+                                         "slug":  "templates.app-ecommerce",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/ecommerce/dashboard",
+                                                             "name":  "Dashboard",
+                                                             "slug":  "templates.app-ecommerce-dashboard"
+                                                         },
+                                                         {
+                                                             "name":  "Products",
+                                                             "slug":  "templates.app-ecommerce-product",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/product/list",
+                                                                                 "name":  "Product List",
+                                                                                 "slug":  "templates.app-ecommerce-product-list"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/product/add",
+                                                                                 "name":  "Add Product",
+                                                                                 "slug":  "templates.app-ecommerce-product-add"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/product/category",
+                                                                                 "name":  "Category List",
+                                                                                 "slug":  "templates.app-ecommerce-product-category"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Order",
+                                                             "slug":  "templates.app-ecommerce-order",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/order/list",
+                                                                                 "name":  "Order List",
+                                                                                 "slug":  "templates.app-ecommerce-order-list"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/order/details",
+                                                                                 "name":  "Order Details",
+                                                                                 "slug":  "templates.app-ecommerce-order-details"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Customer",
+                                                             "slug":  "templates.app-ecommerce-customer",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/customer/all",
+                                                                                 "name":  "All Customers",
+                                                                                 "slug":  "templates.app-ecommerce-customer-all"
+                                                                             },
+                                                                             {
+                                                                                 "name":  "Customer Details",
+                                                                                 "slug":  "templates.app-ecommerce-customer-details",
+                                                                                 "submenu":  [
+                                                                                                 {
+                                                                                                     "url":  "templates/app/ecommerce/customer/details/overview",
+                                                                                                     "name":  "Overview",
+                                                                                                     "slug":  "templates.app-ecommerce-customer-details-overview"
+                                                                                                 },
+                                                                                                 {
+                                                                                                     "url":  "templates/app/ecommerce/customer/details/security",
+                                                                                                     "name":  "Security",
+                                                                                                     "slug":  "templates.app-ecommerce-customer-details-security"
+                                                                                                 },
+                                                                                                 {
+                                                                                                     "url":  "templates/app/ecommerce/customer/details/billing",
+                                                                                                     "name":  "Address \u0026 Billing",
+                                                                                                     "slug":  "templates.app-ecommerce-customer-details-billing"
+                                                                                                 },
+                                                                                                 {
+                                                                                                     "url":  "templates/app/ecommerce/customer/details/notifications",
+                                                                                                     "name":  "Notifications",
+                                                                                                     "slug":  "templates.app-ecommerce-customer-details-notifications"
+                                                                                                 }
+                                                                                             ]
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/ecommerce/manage/reviews",
+                                                             "name":  "Manage Reviews",
+                                                             "slug":  "templates.app-ecommerce-manage-reviews"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/ecommerce/referrals",
+                                                             "name":  "Referrals",
+                                                             "slug":  "templates.app-ecommerce-referrals"
+                                                         },
+                                                         {
+                                                             "name":  "Settings",
+                                                             "slug":  "templates.app-ecommerce-settings",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/details",
+                                                                                 "name":  "Store details",
+                                                                                 "slug":  "templates.app-ecommerce-settings-details"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/payments",
+                                                                                 "name":  "Payments",
+                                                                                 "slug":  "templates.app-ecommerce-settings-payments"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/checkout",
+                                                                                 "name":  "Checkout",
+                                                                                 "slug":  "templates.app-ecommerce-settings-checkout"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/shipping",
+                                                                                 "name":  "Shipping \u0026 Delivery",
+                                                                                 "slug":  "templates.app-ecommerce-settings-shipping"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/locations",
+                                                                                 "name":  "Locations",
+                                                                                 "slug":  "templates.app-ecommerce-settings-locations"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/ecommerce/settings/notifications",
+                                                                                 "name":  "Notifications",
+                                                                                 "slug":  "templates.app-ecommerce-settings-notifications"
+                                                                             }
+                                                                         ]
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Academy",
+                                         "icon":  "menu-icon tf-icons ti ti-book",
+                                         "slug":  "templates.app-academy",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/academy/dashboard",
+                                                             "name":  "Dashboard",
+                                                             "slug":  "templates.app-academy-dashboard"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/academy/course",
+                                                             "name":  "My Course",
+                                                             "slug":  "templates.app-academy-course"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/academy/course-details",
+                                                             "name":  "Course Details",
+                                                             "slug":  "templates.app-academy-course-details"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Logistics",
+                                         "icon":  "menu-icon tf-icons ti ti-truck",
+                                         "slug":  "templates.app-logistics",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/logistics/dashboard",
+                                                             "name":  "Dashboard",
+                                                             "slug":  "templates.app-logistics-dashboard"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/logistics/fleet",
+                                                             "name":  "Fleet",
+                                                             "slug":  "templates.app-logistics-fleet"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Invoice",
+                                         "icon":  "menu-icon tf-icons ti ti-file-dollar",
+                                         "slug":  "templates.app-invoice",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/invoice/list",
+                                                             "name":  "List",
+                                                             "slug":  "templates.app-invoice-list"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/invoice/preview",
+                                                             "name":  "Preview",
+                                                             "slug":  "templates.app-invoice-preview"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/invoice/edit",
+                                                             "name":  "Edit",
+                                                             "slug":  "templates.app-invoice-edit"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/invoice/add",
+                                                             "name":  "Add",
+                                                             "slug":  "templates.app-invoice-add"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Users",
+                                         "slug":  "templates.app-user",
+                                         "icon":  "menu-icon tf-icons ti ti-users",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/user/list",
+                                                             "name":  "List",
+                                                             "slug":  "templates.app-user-list"
+                                                         },
+                                                         {
+                                                             "name":  "View",
+                                                             "slug":  "templates.app-user-view",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/app/user/view/account",
+                                                                                 "name":  "Account",
+                                                                                 "slug":  "templates.app-user-view-account"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/user/view/security",
+                                                                                 "name":  "Security",
+                                                                                 "slug":  "templates.app-user-view-security"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/user/view/billing",
+                                                                                 "name":  "Billing \u0026 Plans",
+                                                                                 "slug":  "templates.app-user-view-billing"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/user/view/notifications",
+                                                                                 "name":  "Notifications",
+                                                                                 "slug":  "templates.app-user-view-notifications"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/app/user/view/connections",
+                                                                                 "name":  "Connections",
+                                                                                 "slug":  "templates.app-user-view-connections"
+                                                                             }
+                                                                         ]
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Roles \u0026 Permissions",
+                                         "icon":  "menu-icon tf-icons ti ti-settings",
+                                         "slug":  "templates.app-access",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/app/access-roles",
+                                                             "name":  "Roles",
+                                                             "slug":  "templates.app-access-roles"
+                                                         },
+                                                         {
+                                                             "url":  "templates/app/access-permission",
+                                                             "name":  "Permission",
+                                                             "slug":  "templates.app-access-permission"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Laravel Example",
+                                         "icon":  "menu-icon tf-icons ti ti-brand-php",
+                                         "slug":  "templates.laravel-example",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/laravel/user-management",
+                                                             "name":  "User Management",
+                                                             "slug":  "templates.laravel-example-user-management"
+                                                         }
+                                                     ]
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Pages",
+                     "icon":  "menu-icon tf-icons ti ti-file",
+                     "slug":  [
+                                  "templates.pages",
+                                  "templates.auth",
+                                  "templates.wizard-ex",
+                                  "templates.modal"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "name":  "Front Pages",
+                                         "icon":  "menu-icon tf-icons ti ti-files",
+                                         "slug":  "templates.front-pages",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/front-pages/landing",
+                                                             "name":  "Landing",
+                                                             "slug":  "templates.front-pages-landing",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/front-pages/pricing",
+                                                             "name":  "Pricing",
+                                                             "slug":  "templates.front-pages-pricing",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/front-pages/payment",
+                                                             "name":  "Payments",
+                                                             "slug":  "templates.front-pages-payment",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/front-pages/checkout",
+                                                             "name":  "Checkout",
+                                                             "slug":  "templates.front-pages-checkout",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/front-pages/help-center",
+                                                             "name":  "Help Center",
+                                                             "slug":  "templates.front-pages-help-center",
+                                                             "target":  "_blank"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "User Profile",
+                                         "icon":  "menu-icon tf-icons ti ti-user-circle",
+                                         "slug":  "templates.pages-profile",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/pages/profile-user",
+                                                             "name":  "Profile",
+                                                             "slug":  "templates.pages-profile-user"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/profile-teams",
+                                                             "name":  "Teams",
+                                                             "slug":  "templates.pages-profile-teams"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/profile-projects",
+                                                             "name":  "Projects",
+                                                             "slug":  "templates.pages-profile-projects"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/profile-connections",
+                                                             "name":  "Connections",
+                                                             "slug":  "templates.pages-profile-connections"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Account Settings",
+                                         "icon":  "menu-icon tf-icons ti ti-settings",
+                                         "slug":  "templates.pages-account-settings",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/pages/account-settings-account",
+                                                             "name":  "Account",
+                                                             "slug":  "templates.pages-account-settings-account"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/account-settings-security",
+                                                             "name":  "Security",
+                                                             "slug":  "templates.pages-account-settings-security"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/account-settings-billing",
+                                                             "name":  "Billing \u0026 Plans",
+                                                             "slug":  "templates.pages-account-settings-billing"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/account-settings-notifications",
+                                                             "name":  "Notifications",
+                                                             "slug":  "templates.pages-account-settings-notifications"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/account-settings-connections",
+                                                             "name":  "Connections",
+                                                             "slug":  "templates.pages-account-settings-connections"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "url":  "templates/pages/faq",
+                                         "name":  "FAQ",
+                                         "icon":  "menu-icon tf-icons ti ti-help",
+                                         "slug":  "templates.pages-faq"
+                                     },
+                                     {
+                                         "url":  "templates/pages/pricing",
+                                         "name":  "Pricing",
+                                         "icon":  "menu-icon tf-icons ti ti-diamond",
+                                         "slug":  "templates.pages-pricing"
+                                     },
+                                     {
+                                         "name":  "Misc",
+                                         "icon":  "menu-icon tf-icons ti ti-3d-cube-sphere",
+                                         "slug":  "templates.pages-misc",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/pages/misc-error",
+                                                             "name":  "Error",
+                                                             "slug":  "templates.pages-misc-error",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/misc-under-maintenance",
+                                                             "name":  "Under Maintenance",
+                                                             "slug":  "templates.pages-misc-under-maintenance",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/misc-comingsoon",
+                                                             "name":  "Coming Soon",
+                                                             "slug":  "templates.pages-misc-comingsoon",
+                                                             "target":  "_blank"
+                                                         },
+                                                         {
+                                                             "url":  "templates/pages/misc-not-authorized",
+                                                             "name":  "Not Authorized",
+                                                             "slug":  "templates.pages-misc-not-authorized",
+                                                             "target":  "_blank"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Authentications",
+                                         "icon":  "menu-icon tf-icons ti ti-lock",
+                                         "slug":  "templates.auth",
+                                         "submenu":  [
+                                                         {
+                                                             "name":  "Login",
+                                                             "slug":  "templates.auth-login",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/login-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-login-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/login-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-login-cover",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Register",
+                                                             "slug":  "templates.auth-register",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/register-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-register-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/register-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-register-cover",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/register-multisteps",
+                                                                                 "name":  "Multi-steps",
+                                                                                 "slug":  "templates.auth-register-multisteps",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Verify Email",
+                                                             "slug":  "templates.auth-verify-email",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/verify-email-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-verify-email-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/verify-email-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-verify-email-cover",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Reset Password",
+                                                             "slug":  "templates.auth-reset-password",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/reset-password-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-reset-password-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/reset-password-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-reset-password-cover",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Forgot Password",
+                                                             "slug":  "templates.auth-forgot-password",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/forgot-password-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-forgot-password-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/forgot-password-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-forgot-password-cover",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "name":  "Two Steps",
+                                                             "slug":  "templates.auth-two-steps",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/auth/two-steps-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.auth-two-steps-basic",
+                                                                                 "target":  "_blank"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/auth/two-steps-cover",
+                                                                                 "name":  "Cover",
+                                                                                 "slug":  "templates.auth-two-steps-cover",
+                                                                                 "target":  "_blank"
+                                                                             }
+                                                                         ]
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Wizard Examples",
+                                         "icon":  "menu-icon tf-icons ti ti-forms",
+                                         "slug":  "templates.wizard-ex",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/wizard/ex-checkout",
+                                                             "name":  "Checkout",
+                                                             "slug":  "templates.wizard-ex-checkout"
+                                                         },
+                                                         {
+                                                             "url":  "templates/wizard/ex-property-listing",
+                                                             "name":  "Property Listing",
+                                                             "slug":  "templates.wizard-ex-property-listing"
+                                                         },
+                                                         {
+                                                             "url":  "templates/wizard/ex-create-deal",
+                                                             "name":  "Create Deal",
+                                                             "slug":  "templates.wizard-ex-create-deal"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "url":  "templates/modal-examples",
+                                         "name":  "Modal Examples",
+                                         "icon":  "menu-icon tf-icons ti ti-square",
+                                         "slug":  "templates.modal-examples"
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Components",
+                     "icon":  "menu-icon tf-icons ti ti-toggle-left",
+                     "slug":  [
+                                  "templates.cards",
+                                  "templates.ui",
+                                  "templates.extended",
+                                  "templates.icons"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "name":  "Cards",
+                                         "icon":  "menu-icon tf-icons ti ti-id",
+                                         "slug":  "templates.cards",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/cards/basic",
+                                                             "name":  "Basic",
+                                                             "slug":  "templates.cards-basic"
+                                                         },
+                                                         {
+                                                             "url":  "templates/cards/advance",
+                                                             "name":  "Advance",
+                                                             "slug":  "templates.cards-advance"
+                                                         },
+                                                         {
+                                                             "url":  "templates/cards/statistics",
+                                                             "name":  "Statistics",
+                                                             "slug":  "templates.cards-statistics"
+                                                         },
+                                                         {
+                                                             "url":  "templates/cards/analytics",
+                                                             "name":  "Analytics",
+                                                             "slug":  "templates.cards-analytics"
+                                                         },
+                                                         {
+                                                             "url":  "templates/cards/actions",
+                                                             "name":  "Actions",
+                                                             "slug":  "templates.cards-actions"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "User interface",
+                                         "icon":  "menu-icon tf-icons ti ti-color-swatch",
+                                         "slug":  "templates.ui",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/ui/accordion",
+                                                             "name":  "Accordion",
+                                                             "slug":  "templates.ui-accordion"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/alerts",
+                                                             "name":  "Alerts",
+                                                             "slug":  "templates.ui-alerts"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/badges",
+                                                             "name":  "Badges",
+                                                             "slug":  "templates.ui-badges"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/buttons",
+                                                             "name":  "Buttons",
+                                                             "slug":  "templates.ui-buttons"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/carousel",
+                                                             "name":  "Carousel",
+                                                             "slug":  "templates.ui-carousel"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/collapse",
+                                                             "name":  "Collapse",
+                                                             "slug":  "templates.ui-collapse"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/dropdowns",
+                                                             "name":  "Dropdowns",
+                                                             "slug":  "templates.ui-dropdowns"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/footer",
+                                                             "name":  "Footer",
+                                                             "slug":  "templates.ui-footer"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/list-groups",
+                                                             "name":  "List groups",
+                                                             "slug":  "templates.ui-list-groups"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/modals",
+                                                             "name":  "Modals",
+                                                             "slug":  "templates.ui-modals"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/navbar",
+                                                             "name":  "Navbar",
+                                                             "slug":  "templates.ui-navbar"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/offcanvas",
+                                                             "name":  "Offcanvas",
+                                                             "slug":  "templates.ui-offcanvas"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/pagination-breadcrumbs",
+                                                             "name":  "Pagination \u0026 Breadcrumbs",
+                                                             "slug":  "templates.ui-pagination-breadcrumbs"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/progress",
+                                                             "name":  "Progress",
+                                                             "slug":  "templates.ui-progress"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/spinners",
+                                                             "name":  "Spinners",
+                                                             "slug":  "templates.ui-spinners"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/tabs-pills",
+                                                             "name":  "Tabs \u0026 Pills",
+                                                             "slug":  "templates.ui-tabs-pills"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/toasts",
+                                                             "name":  "Toasts",
+                                                             "slug":  "templates.ui-toasts"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/tooltips-popovers",
+                                                             "name":  "Tooltips \u0026 Popovers",
+                                                             "slug":  "templates.ui-tooltips-popovers"
+                                                         },
+                                                         {
+                                                             "url":  "templates/ui/typography",
+                                                             "name":  "Typography",
+                                                             "slug":  "templates.ui-typography"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Extended UI",
+                                         "icon":  "menu-icon tf-icons ti ti-components",
+                                         "slug":  "templates.extended",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/extended/ui-avatar",
+                                                             "name":  "Avatar",
+                                                             "slug":  "templates.extended-ui-avatar"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-blockui",
+                                                             "name":  "BlockUI",
+                                                             "slug":  "templates.extended-ui-blockui"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-drag-and-drop",
+                                                             "name":  "Drag \u0026 Drop",
+                                                             "slug":  "templates.extended-ui-drag-and-drop"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-media-player",
+                                                             "name":  "Media Player",
+                                                             "slug":  "templates.extended-ui-media-player"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-perfect-scrollbar",
+                                                             "name":  "Perfect Scrollbar",
+                                                             "slug":  "templates.extended-ui-perfect-scrollbar"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-star-ratings",
+                                                             "name":  "Star Ratings",
+                                                             "slug":  "templates.extended-ui-star-ratings"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-sweetalert2",
+                                                             "name":  "SweetAlert2",
+                                                             "slug":  "templates.extended-ui-sweetalert2"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-text-divider",
+                                                             "name":  "Text Divider",
+                                                             "slug":  "templates.extended-ui-text-divider"
+                                                         },
+                                                         {
+                                                             "name":  "Timeline",
+                                                             "slug":  "templates.extended-ui-timeline",
+                                                             "submenu":  [
+                                                                             {
+                                                                                 "url":  "templates/extended/ui-timeline-basic",
+                                                                                 "name":  "Basic",
+                                                                                 "slug":  "templates.extended-ui-timeline-basic"
+                                                                             },
+                                                                             {
+                                                                                 "url":  "templates/extended/ui-timeline-fullscreen",
+                                                                                 "name":  "Fullscreen",
+                                                                                 "slug":  "templates.extended-ui-timeline-fullscreen"
+                                                                             }
+                                                                         ]
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-tour",
+                                                             "name":  "Tour",
+                                                             "slug":  "templates.extended-ui-tour"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-treeview",
+                                                             "name":  "Treeview",
+                                                             "slug":  "templates.extended-ui-treeview"
+                                                         },
+                                                         {
+                                                             "url":  "templates/extended/ui-misc",
+                                                             "name":  "Miscellaneous",
+                                                             "slug":  "templates.extended-ui-misc"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Icons",
+                                         "icon":  "menu-icon tf-icons ti ti-brand-tabler",
+                                         "slug":  "templates.icons",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/icons/tabler",
+                                                             "name":  "Tabler",
+                                                             "slug":  "templates.icons-tabler"
+                                                         },
+                                                         {
+                                                             "url":  "templates/icons/font-awesome",
+                                                             "name":  "Fontawesome",
+                                                             "slug":  "templates.icons-font-awesome"
+                                                         }
+                                                     ]
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Forms",
+                     "icon":  "menu-icon tf-icons ti ti-forms",
+                     "slug":  [
+                                  "templates.forms",
+                                  "templates.form-layouts",
+                                  "templates.form-wizard",
+                                  "templates.form"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "name":  "Form Elements",
+                                         "icon":  "menu-icon tf-icons ti ti-toggle-left",
+                                         "slug":  "templates.forms",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/forms/basic-inputs",
+                                                             "name":  "Basic Inputs",
+                                                             "slug":  "templates.forms-basic-inputs"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/input-groups",
+                                                             "name":  "Input groups",
+                                                             "slug":  "templates.forms-input-groups"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/custom-options",
+                                                             "name":  "Custom Options",
+                                                             "slug":  "templates.forms-custom-options"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/editors",
+                                                             "name":  "Editors",
+                                                             "slug":  "templates.forms-editors"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/file-upload",
+                                                             "name":  "File Upload",
+                                                             "slug":  "templates.forms-file-upload"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/pickers",
+                                                             "name":  "Pickers",
+                                                             "slug":  "templates.forms-pickers"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/selects",
+                                                             "name":  "Select \u0026 Tags",
+                                                             "slug":  "templates.forms-selects"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/sliders",
+                                                             "name":  "Sliders",
+                                                             "slug":  "templates.forms-sliders"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/switches",
+                                                             "name":  "Switches",
+                                                             "slug":  "templates.forms-switches"
+                                                         },
+                                                         {
+                                                             "url":  "templates/forms/extras",
+                                                             "name":  "Extras",
+                                                             "slug":  "templates.forms-extras"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Form Layouts",
+                                         "icon":  "menu-icon tf-icons ti ti-layout-navbar",
+                                         "slug":  "templates.form-layouts",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/form/layouts-vertical",
+                                                             "name":  "Vertical Form",
+                                                             "slug":  "templates.form-layouts-vertical"
+                                                         },
+                                                         {
+                                                             "url":  "templates/form/layouts-horizontal",
+                                                             "name":  "Horizontal Form",
+                                                             "slug":  "templates.form-layouts-horizontal"
+                                                         },
+                                                         {
+                                                             "url":  "templates/form/layouts-sticky",
+                                                             "name":  "Sticky Actions",
+                                                             "slug":  "templates.form-layouts-sticky"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "name":  "Form Wizard",
+                                         "icon":  "menu-icon tf-icons ti ti-text-wrap-disabled",
+                                         "slug":  "templates.form-wizard",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/form/wizard-numbered",
+                                                             "name":  "Numbered",
+                                                             "slug":  "templates.form-wizard-numbered"
+                                                         },
+                                                         {
+                                                             "url":  "templates/form/wizard-icons",
+                                                             "name":  "Icons",
+                                                             "slug":  "templates.form-wizard-icons"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "url":  "templates/form/validation",
+                                         "name":  "Form Validation",
+                                         "icon":  "menu-icon tf-icons ti ti-checkbox",
+                                         "slug":  "templates.form-validation"
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Tables",
+                     "icon":  "menu-icon tf-icons ti ti-layout-grid",
+                     "slug":  [
+                                  "templates.tables",
+                                  "templates.tables-datatables"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "url":  "templates/tables/basic",
+                                         "name":  "Tables",
+                                         "icon":  "menu-icon tf-icons ti ti-table",
+                                         "slug":  "templates.tables-basic"
+                                     },
+                                     {
+                                         "name":  "Datatables",
+                                         "icon":  "menu-icon tf-icons ti ti-layout-grid",
+                                         "slug":  "templates.tables-datatables",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/tables/datatables-basic",
+                                                             "name":  "Basic",
+                                                             "slug":  "templates.tables-datatables-basic"
+                                                         },
+                                                         {
+                                                             "url":  "templates/tables/datatables-advanced",
+                                                             "name":  "Advanced",
+                                                             "slug":  "templates.tables-datatables-advanced"
+                                                         },
+                                                         {
+                                                             "url":  "templates/tables/datatables-extensions",
+                                                             "name":  "Extensions",
+                                                             "slug":  "templates.tables-datatables-extensions"
+                                                         }
+                                                     ]
+                                     }
+                                 ]
+                 },
+                 {
+                     "name":  "Charts \u0026 Maps",
+                     "icon":  "menu-icon tf-icons ti ti-chart-bar",
+                     "slug":  [
+                                  "templates.charts",
+                                  "templates.maps"
+                              ],
+                     "submenu":  [
+                                     {
+                                         "name":  "Charts",
+                                         "icon":  "menu-icon tf-icons ti ti-chart-pie",
+                                         "slug":  "templates.charts",
+                                         "submenu":  [
+                                                         {
+                                                             "url":  "templates/charts/apex",
+                                                             "name":  "Apex Charts",
+                                                             "slug":  "templates.charts-apex"
+                                                         },
+                                                         {
+                                                             "url":  "templates/charts/chartjs",
+                                                             "name":  "ChartJS",
+                                                             "slug":  "templates.charts-chartjs"
+                                                         }
+                                                     ]
+                                     },
+                                     {
+                                         "url":  "templates/maps/leaflet",
+                                         "icon":  "menu-icon tf-icons ti ti-map",
+                                         "name":  "Leaflet Maps",
+                                         "slug":  "templates.maps-leaflet"
+                                     }
+                                 ]
+                 }
+             ]
+}
