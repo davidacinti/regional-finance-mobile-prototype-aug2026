@@ -29,6 +29,7 @@ class PrototypeController extends Controller
                 $scenario,
                 (bool) $request->session()->get("prototype_interstitial_dismissed.$scenarioId", false)
             ),
+            'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
         ]);
     }
 
@@ -71,7 +72,45 @@ class PrototypeController extends Controller
             'scheduledPayment' => $request->session()->get('prototype_scheduled_payment'),
             'paymentStatus' => $request->session()->get('prototype_payment_status'),
             'notifications' => $this->notifications($scenario, $request),
+            'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
+            'autopayStatus' => $request->session()->get('prototype_autopay_status'),
         ]);
+    }
+
+    public function enrollAutopay(Request $request, string $loan): RedirectResponse
+    {
+        $mode = $request->input('autopay_mode', 'minimum') === 'extra' ? 'extra' : 'minimum';
+        $additionalAmount = $mode === 'extra' ? (float) $request->input('additional_amount', 0) : 0.0;
+        $accountLabel = $request->input('account_mode') === 'new'
+            ? ($request->input('new_account_name') ?: 'New checking account') . ' • ' . substr((string) $request->input('new_account_number', '0000'), -4)
+            : $request->input('saved_account', 'Primary Checking • 4203');
+
+        $request->session()->put('prototype_autopay_enrollment', [
+            'loan_id' => (int) $loan,
+            'enrolled' => true,
+            'mode' => $mode,
+            'additional_amount' => $additionalAmount,
+            'account_label' => $accountLabel,
+        ]);
+
+        $request->session()->flash('prototype_autopay_status', 'enrolled');
+
+        return redirect()->route('prototype.loan.autopay', $loan);
+    }
+
+    public function cancelAutopay(Request $request, string $loan): RedirectResponse
+    {
+        $request->session()->put('prototype_autopay_enrollment', [
+            'loan_id' => (int) $loan,
+            'enrolled' => false,
+            'mode' => null,
+            'additional_amount' => 0.0,
+            'account_label' => null,
+        ]);
+
+        $request->session()->flash('prototype_autopay_status', 'cancelled');
+
+        return redirect()->route('prototype.loan.autopay', $loan);
     }
 
     public function markNotificationRead(Request $request, string $notification): RedirectResponse

@@ -239,6 +239,25 @@ $highlightCards[] = [
         </div>
         <div class="{{ count($loans) > 1 ? 'loan-strip' : '' }}">
           @foreach($loans as $loan)
+            @php
+              $loanIsPastDue = $loan['status'] !== 'current';
+              if ($loanIsPastDue) {
+                $loanAlertTone = 'urgent';
+                $loanAlertTitle = $servicingAlert['title'] ?? 'Payment past due';
+                $loanAlertBody = $formatServicingText($servicingAlert['body'] ?? '$pastDue was due $dueDate.');
+              } elseif ($modules['show_payment_due_banner']) {
+                $loanAlertTone = 'warning';
+                $loanAlertTitle = 'Payment due soon';
+                $loanAlertBody = $money($loan['next_payment_amount']) . ' is due ' . $date($loan['next_payment_date']) . '.';
+              } else {
+                $loanAlertTone = 'success';
+                $loanAlertTitle = "You're all caught up";
+                $loanAlertBody = '$0 is due until your next statement cycle.';
+              }
+              $loanAutopayEnabled = (($autopayOverride['loan_id'] ?? null) === $loan['id'])
+                ? (bool) $autopayOverride['enrolled']
+                : (bool) ($loan['autopay_enabled'] ?? false);
+            @endphp
             <article class="app-card loan-card">
               <div class="card-heading">
                 <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] }}</span>
@@ -249,8 +268,9 @@ $highlightCards[] = [
               <div class="loan-grid">
                 <div><i class="ti ti-cash"></i><span>Next payment</span><strong>{{ $money($loan['next_payment_amount']) }}</strong></div>
                 <div><i class="ti ti-calendar-due"></i><span>Due date</span><strong>{{ $date($loan['next_payment_date']) }}</strong></div>
-                <div><i class="ti ti-refresh"></i><span>AutoPay</span><strong>{{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</strong></div>
+                <div><i class="ti ti-refresh"></i><span>AutoPay</span><strong>{{ $loanAutopayEnabled ? 'On' : 'Off' }}</strong></div>
               </div>
+              <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
               <div class="button-row">
                 <a href="{{ route('prototype.payment') }}" class="btn {{ $loan['status'] === 'past_due' || $modules['show_payment_due_banner'] ? 'btn-primary' : 'btn-outline-primary' }} flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
                 <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-light flex-fill"><i class="ti ti-chevron-right"></i>Details</a>

@@ -93,35 +93,64 @@ $pastLoanDocuments = [
     </header>
 
     @if($type === 'loan')
-      <section class="loan-detail-hero">
-        <div>
-          <span>Original principal amount</span>
-          <strong>{{ $money(($loan['balance'] ?? 0) + 1100) }}</strong>
+      @php
+        $loanHasLatePayment = $scenario['alerts']['late_payment'] ?? false;
+        $loanShowDueSoon = ($scenario['alerts']['payment_due_soon'] ?? false) && ! $loanHasLatePayment;
+        $loanServicingAlert = $scenario['servicing_alert'] ?? [];
+        $loanFormatServicingText = function (?string $text) use ($loan, $money, $date) {
+          return strtr($text ?? '', [
+            '$pastDue' => $money($loan['past_due_amount'] ?? 0),
+            '$dueDate' => $date($loan['next_payment_date'] ?? now()),
+          ]);
+        };
+        if ($loan['status'] !== 'current') {
+          $loanAlertTone = 'urgent';
+          $loanAlertTitle = $loanServicingAlert['title'] ?? 'Payment past due';
+          $loanAlertBody = $loanFormatServicingText($loanServicingAlert['body'] ?? '$pastDue was due $dueDate.');
+        } elseif ($loanShowDueSoon) {
+          $loanAlertTone = 'warning';
+          $loanAlertTitle = 'Payment due soon';
+          $loanAlertBody = $money($loan['next_payment_amount']) . ' is due ' . $date($loan['next_payment_date']) . '.';
+        } else {
+          $loanAlertTone = 'success';
+          $loanAlertTitle = "You're all caught up";
+          $loanAlertBody = '$0 is due until your next statement cycle.';
+        }
+      @endphp
+
+      <section class="app-card loan-summary-card">
+        <div class="card-heading">
+          <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] ?? 'Personal loan' }}</span>
+          <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
         </div>
-        <div>
-          <span>Account balance</span>
-          <strong>{{ $money($loan['balance']) }}</strong>
+        <div class="balance">{{ $money($loan['balance']) }}</div>
+        <p class="muted">Account balance</p>
+        <div class="loan-grid">
+          <div><i class="ti ti-report-money"></i><span>Original principal</span><strong>{{ $money(($loan['balance'] ?? 0) + 1100) }}</strong></div>
+          <div><i class="ti ti-refresh"></i><span>AutoPay</span><strong>{{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</strong></div>
         </div>
-        <a href="{{ route('prototype.loan', ['loan' => $loan['id'], 'sheet' => 'details']) }}" class="btn btn-outline-light btn-sm">Loan details</a>
+        <a href="{{ route('prototype.loan', ['loan' => $loan['id'], 'sheet' => 'details']) }}" class="btn btn-outline-primary w-100"><i class="ti ti-file-info"></i>Loan details</a>
       </section>
 
       <section class="app-card loan-servicing-card">
-        <div class="servicing-heading">
-          <div>
-            <span>Amount due</span>
-            <strong>{{ $money(($loan['past_due_amount'] ?? 0) > 0 ? $loan['past_due_amount'] : $loan['next_payment_amount']) }}</strong>
-          </div>
-          <span class="autopay-state"><i class="ti ti-refresh"></i>{{ $loan['autopay_enabled'] ? 'AutoPay enabled' : 'AutoPay off' }}</span>
+        <div class="card-heading">
+          <span class="card-title-with-icon"><i class="ti ti-calendar-due"></i>Amount due</span>
         </div>
-        <p class="due-line"><i class="ti ti-circle-filled"></i>Due on {{ $date($loan['next_payment_date']) }}</p>
+        <div class="balance">{{ $money(($loan['past_due_amount'] ?? 0) > 0 ? $loan['past_due_amount'] : $loan['next_payment_amount']) }}</div>
+        <p class="muted">Due {{ $date($loan['next_payment_date']) }}</p>
         <a class="detail-link" href="{{ route('prototype.payment') }}">See payment details</a>
-        <div class="servicing-facts">
-          <div><span>Payoff amount</span><strong>{{ $money(($loan['balance'] ?? 0) + 42.18) }}</strong></div>
-          <div><span>Last payment date</span><strong>-</strong></div>
-          <div><span>Last payment amount</span><strong>-</strong></div>
+
+        <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
+
+        <div class="loan-grid">
+          <div><i class="ti ti-receipt-2"></i><span>Payoff amount</span><strong>{{ $money(($loan['balance'] ?? 0) + 42.18) }}</strong></div>
+          <div><i class="ti ti-calendar-check"></i><span>Last payment</span><strong>-</strong></div>
         </div>
-        <a href="{{ route('prototype.payment') }}" class="btn btn-primary w-100">Manage AutoPay</a>
-        <a href="{{ route('prototype.payment') }}" class="btn btn-outline-primary w-100 mt-3">Make a Payment</a>
+
+        <div class="button-row">
+          <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti ti-refresh"></i>Manage AutoPay</a>
+          <a href="{{ route('prototype.payment') }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
+        </div>
       </section>
 
       <section class="loan-detail-section">
@@ -551,6 +580,7 @@ $pastLoanDocuments = [
               <a href="mailto:greenville@regionalfinance.com" class="btn btn-outline-primary flex-fill"><i class="ti ti-mail"></i>Email</a>
             </div>
             <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($branch['address'] ?? 'Regional Finance') }}" target="_blank" rel="noopener" class="btn btn-outline-primary w-100"><i class="ti ti-route"></i>Get directions</a>
+            <a href="https://branches.regionalfinance.com/fl/jacksonville/6000-lake-grey-blvd" target="_blank" rel="noopener" class="btn btn-outline-primary w-100 branch-page-link"><i class="ti ti-external-link"></i>View official branch page</a>
           </section>
           @break
         @default
