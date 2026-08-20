@@ -132,7 +132,7 @@
   text-decoration: none;
   box-shadow: 0 8px 18px rgba(16, 43, 81, .06);
   cursor: pointer;
-  z-index: 5;
+  z-index: 50;
 }
 
 .top-nav-btn i {
@@ -1282,6 +1282,262 @@
   margin-bottom: 0;
 }
 
+.offers-page,
+.wellness-page {
+  display: grid;
+  gap: .9rem;
+}
+
+.offers-hero,
+.wellness-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .9rem;
+  padding: .95rem;
+  border: 1px solid rgba(67, 124, 191, .2);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(67, 124, 191, .12), rgba(255, 255, 255, .96)),
+    var(--surface, #fff);
+}
+
+.offers-hero {
+  grid-template-columns: 52px minmax(0, 1fr);
+}
+
+.offers-hero-icon,
+.wellness-score-ring,
+.offer-product-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rf-lime);
+  color: var(--rf-navy);
+}
+
+.offers-hero-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  font-size: 1.7rem;
+}
+
+.offers-hero h2,
+.wellness-hero h2,
+.offer-product-card h3,
+.wellness-insight-card h3,
+.connect-bank-card h3 {
+  color: var(--text, var(--rf-navy));
+  margin: .15rem 0 .3rem;
+}
+
+.soft-credit-callout {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .7rem .8rem;
+  border-radius: 14px;
+  color: var(--rf-navy);
+  background: rgba(205, 217, 41, .34);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.soft-credit-callout i {
+  font-size: 1.25rem;
+}
+
+.offer-product-list {
+  display: grid;
+  gap: .75rem;
+}
+
+.offer-product-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: .75rem;
+  padding: .9rem;
+  border: 1px solid var(--border-soft, #dce7f2);
+  border-radius: 18px;
+  background: var(--surface, #fff);
+}
+
+.offer-product-card .btn {
+  grid-column: 1 / -1;
+}
+
+.offer-product-card.featured {
+  border-color: #123765;
+  background: linear-gradient(180deg, #174a86 0%, #102b51 100%);
+}
+
+.offer-product-card.featured h3,
+.offer-product-card.featured p,
+.offer-product-card.featured .eyebrow {
+  color: #fff !important;
+}
+
+.offer-product-card.featured p {
+  color: rgba(255, 255, 255, .78) !important;
+}
+
+.offer-product-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 15px;
+  font-size: 1.35rem;
+}
+
+.wellness-score-ring {
+  width: 86px;
+  height: 86px;
+  flex-direction: column;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 8px rgba(255, 255, 255, .42);
+}
+
+.wellness-score-ring span {
+  color: var(--rf-navy);
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.wellness-score-ring small {
+  color: #4f6210;
+  font-weight: 800;
+}
+
+.wellness-status-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.wellness-status-row > div,
+.wellness-insight-card,
+.budget-card,
+.cash-flow-card,
+.connect-bank-card {
+  border: 1px solid var(--border-soft, #dce7f2);
+  border-radius: 18px;
+  background: var(--surface, #fff);
+}
+
+.wellness-status-row > div {
+  display: grid;
+  gap: .25rem;
+  padding: .8rem;
+}
+
+.wellness-status-row i,
+.wellness-insight-card > i,
+.budget-row > i,
+.connect-bank-card > i {
+  color: var(--rf-blue);
+  font-size: 1.25rem;
+}
+
+.wellness-status-row span,
+.budget-row span,
+.cash-flow-card dt {
+  color: var(--muted-text, #5f6d7a);
+  font-size: .76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.wellness-status-row strong,
+.budget-row strong,
+.cash-flow-card dd {
+  color: var(--text, var(--rf-navy));
+  font-weight: 900;
+}
+
+.wellness-insight-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: .75rem;
+  padding: .9rem;
+}
+
+.wellness-insight-card > i,
+.connect-bank-card > i {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(67, 124, 191, .1);
+}
+
+.wellness-insight-card h3 {
+  font-size: 1.65rem;
+}
+
+.budget-card,
+.cash-flow-card,
+.connect-bank-card {
+  padding: .9rem;
+}
+
+.budget-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: .65rem;
+  align-items: center;
+  padding: .72rem 0;
+  border-top: 1px solid var(--border-soft, #dce7f2);
+}
+
+.budget-row:first-of-type {
+  border-top: 0;
+}
+
+.budget-meter {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(67, 124, 191, .12);
+  margin-top: .45rem;
+}
+
+.budget-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--rf-blue), var(--rf-lime));
+}
+
+.cash-flow-card dl {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+}
+
+.cash-flow-card dl div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+}
+
+.cash-flow-card dd {
+  margin: 0;
+  text-align: right;
+}
+
+.connect-bank-card {
+  display: grid;
+  gap: .65rem;
+}
+
+.connect-bank-card > i {
+  font-size: 1.5rem;
+}
+
 .bottom-nav {
   position: sticky;
   bottom: 0;
@@ -1745,8 +2001,28 @@
 }
 
 .detail-topbar {
+  position: relative;
+  z-index: 60;
   min-height: 48px;
   margin-bottom: 1rem;
+}
+
+.prototype-shell .top-navbar {
+  position: relative;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.prototype-shell .top-nav-btn,
+.prototype-shell .top-logo-link,
+.prototype-shell .theme-toggle {
+  pointer-events: auto;
+}
+
+.layout-wrapper:has(.prototype-shell) .drag-target,
+.layout-wrapper:has(.prototype-shell) .content-backdrop {
+  display: none !important;
+  pointer-events: none !important;
 }
 
 .detail-topbar .regional-logo {
@@ -2717,6 +2993,34 @@ button:focus-visible {
 .prototype-shell[data-prototype-theme="dark"] .branch-detail-list > div {
   background: #0d3147;
   border-color: rgba(139, 208, 232, .16);
+}
+
+.prototype-shell[data-prototype-theme="dark"] .offers-hero,
+.prototype-shell[data-prototype-theme="dark"] .wellness-hero,
+.prototype-shell[data-prototype-theme="dark"] .offer-product-card,
+.prototype-shell[data-prototype-theme="dark"] .wellness-status-row > div,
+.prototype-shell[data-prototype-theme="dark"] .wellness-insight-card,
+.prototype-shell[data-prototype-theme="dark"] .budget-card,
+.prototype-shell[data-prototype-theme="dark"] .cash-flow-card,
+.prototype-shell[data-prototype-theme="dark"] .connect-bank-card {
+  background: #1d1b1d;
+  border-color: rgba(255, 255, 255, .08);
+}
+
+.prototype-shell[data-prototype-theme="dark"] .offers-hero,
+.prototype-shell[data-prototype-theme="dark"] .wellness-hero {
+  background:
+    linear-gradient(135deg, rgba(13, 49, 71, .9), rgba(29, 27, 29, .96)),
+    #1d1b1d;
+}
+
+.prototype-shell[data-prototype-theme="dark"] .soft-credit-callout {
+  color: #f7fbff;
+  background: rgba(205, 217, 41, .16);
+}
+
+.prototype-shell[data-prototype-theme="dark"] .budget-meter {
+  background: rgba(139, 208, 232, .14);
 }
 
 .prototype-shell[data-prototype-theme="dark"] .status-pill.success {

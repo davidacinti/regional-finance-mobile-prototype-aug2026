@@ -19,6 +19,13 @@ $titles = [
 ];
 $loans = $scenario['loans'] ?? [];
 $branch = $scenario['branch'] ?? [];
+$wellness = $scenario['financial_wellness'] ?? [];
+$offer = $scenario['offer'] ?? [];
+$application = $scenario['application'] ?? null;
+$firstLoan = $loans[0] ?? null;
+$loanNavUrl = $firstLoan ? route('prototype.loan', $firstLoan['id']) : ($application ? route('prototype.application', $application['id']) : route('prototype.offers'));
+$loanNavLabel = $firstLoan ? (count($loans) > 1 ? 'Loans' : 'Loan') : ($application ? 'Apply' : 'Explore');
+$loanNavIcon = $firstLoan ? 'ti-wallet' : 'ti-clipboard-list';
 $loan = collect($loans)->firstWhere('id', (int) $id) ?? ($loans[0] ?? [
   'id' => $id ?? 1002841,
   'name' => 'Personal loan',
@@ -72,7 +79,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260714t">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260813b">
 @endsection
 
 @section('content')
@@ -80,7 +87,7 @@ $pastLoanDocuments = [
   <main class="phone-frame detail-frame" aria-label="{{ $titles[$type] ?? 'Prototype detail' }}">
     <header class="detail-topbar">
       <nav class="top-navbar" aria-label="App actions">
-        <a class="top-nav-btn" href="{{ route('prototype.index') }}" aria-label="Back to home"><i class="ti ti-arrow-left"></i></a>
+        <a class="top-nav-btn" href="{{ route('prototype.index') }}" aria-label="Go back" data-back-button><i class="ti ti-arrow-left"></i></a>
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance home">
           <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
         </a>
@@ -215,6 +222,73 @@ $pastLoanDocuments = [
         @if(! in_array($type, ['payment', 'notifications', 'chat', 'support'], true))
           <h2 class="detail-page-title">{{ $titles[$type] ?? 'Details' }}</h2>
         @endif
+        @if($type === 'offer')
+          @php
+            $mockOffers = [
+              [
+                'icon' => 'ti-cash-banknote',
+                'label' => 'Personalized loan option',
+                'title' => ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options in minutes',
+                'body' => 'See available loan options with a soft credit check. Checking will not impact your credit score.',
+                'cta' => ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers',
+                'featured' => true,
+              ],
+              [
+                'icon' => 'ti-shield-check',
+                'label' => 'Payment protection',
+                'title' => 'Help protect your payment',
+                'body' => 'Mock coverage options for unexpected life events, hardship, or eligible interruptions.',
+                'cta' => 'Learn more',
+                'featured' => false,
+              ],
+              [
+                'icon' => 'ti-car-crash',
+                'label' => 'Auto protection',
+                'title' => 'Vehicle service coverage',
+                'body' => 'Explore sample protection products for repair costs, roadside help, and vehicle ownership.',
+                'cta' => 'View options',
+                'featured' => false,
+              ],
+              [
+                'icon' => 'ti-home-shield',
+                'label' => 'Insurance marketplace',
+                'title' => 'Compare home or renters coverage',
+                'body' => 'A future partner flow could surface quotes and coverage education in one place.',
+                'cta' => 'Compare quotes',
+                'featured' => false,
+              ],
+            ];
+          @endphp
+          <section class="offers-page">
+            <div class="offers-hero">
+              <div class="offers-hero-icon"><i class="ti ti-sparkles"></i></div>
+              <div>
+                <span class="eyebrow">Explore</span>
+                <h2>Offers and protection</h2>
+                <p>Mock loan offers, insurance products, and protection options that could be personalized for each customer.</p>
+              </div>
+            </div>
+
+            <div class="soft-credit-callout">
+              <i class="ti ti-shield-check"></i>
+              <span>Checking loan offers will not impact your credit score.</span>
+            </div>
+
+            <div class="offer-product-list">
+              @foreach($mockOffers as $mockOffer)
+                <article class="offer-product-card {{ $mockOffer['featured'] ? 'featured' : '' }}">
+                  <div class="offer-product-icon"><i class="ti {{ $mockOffer['icon'] }}"></i></div>
+                  <div>
+                    <span class="eyebrow">{{ $mockOffer['label'] }}</span>
+                    <h3>{{ $mockOffer['title'] }}</h3>
+                    <p>{{ $mockOffer['body'] }}</p>
+                  </div>
+                  <button class="btn {{ $mockOffer['featured'] ? 'btn-primary' : 'btn-outline-primary' }} w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                </article>
+              @endforeach
+            </div>
+          </section>
+        @else
         @switch($type)
         @case('payment')
           <section
@@ -347,12 +421,168 @@ $pastLoanDocuments = [
           </section>
           @break
         @case('offer')
-          <p>Review available loan options, plain-language disclosures, expiration dates, and credit-impact messaging.</p>
-          <button class="btn btn-primary w-100" type="button">Review mock offer</button>
+          @php
+            $mockOffers = [
+              [
+                'icon' => 'ti-cash-banknote',
+                'label' => 'Personalized loan option',
+                'title' => ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options in minutes',
+                'body' => 'See available loan options with a soft credit check. Checking will not impact your credit score.',
+                'cta' => ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers',
+                'featured' => true,
+              ],
+              [
+                'icon' => 'ti-shield-check',
+                'label' => 'Payment protection',
+                'title' => 'Help protect your payment',
+                'body' => 'Mock coverage options for unexpected life events, hardship, or eligible interruptions.',
+                'cta' => 'Learn more',
+                'featured' => false,
+              ],
+              [
+                'icon' => 'ti-car-crash',
+                'label' => 'Auto protection',
+                'title' => 'Vehicle service coverage',
+                'body' => 'Explore sample protection products for repair costs, roadside help, and vehicle ownership.',
+                'cta' => 'View options',
+                'featured' => false,
+              ],
+              [
+                'icon' => 'ti-home-shield',
+                'label' => 'Insurance marketplace',
+                'title' => 'Compare home or renters coverage',
+                'body' => 'A future partner flow could surface quotes and coverage education in one place.',
+                'cta' => 'Compare quotes',
+                'featured' => false,
+              ],
+            ];
+          @endphp
+          <section class="offers-page">
+            <div class="offers-hero">
+              <div class="offers-hero-icon"><i class="ti ti-sparkles"></i></div>
+              <div>
+                <span class="eyebrow">Explore</span>
+                <h2>Offers and protection</h2>
+                <p>Mock loan offers, insurance products, and protection options that could be personalized for each customer.</p>
+              </div>
+            </div>
+
+            <div class="soft-credit-callout">
+              <i class="ti ti-shield-check"></i>
+              <span>Checking loan offers will not impact your credit score.</span>
+            </div>
+
+            <div class="offer-product-list">
+              @foreach($mockOffers as $mockOffer)
+                <article class="offer-product-card {{ $mockOffer['featured'] ? 'featured' : '' }}">
+                  <div class="offer-product-icon"><i class="ti {{ $mockOffer['icon'] }}"></i></div>
+                  <div>
+                    <span class="eyebrow">{{ $mockOffer['label'] }}</span>
+                    <h3>{{ $mockOffer['title'] }}</h3>
+                    <p>{{ $mockOffer['body'] }}</p>
+                  </div>
+                  <button class="btn {{ $mockOffer['featured'] ? 'btn-primary' : 'btn-outline-primary' }} w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                </article>
+              @endforeach
+            </div>
+          </section>
           @break
         @case('wellness')
-          <p>Expanded credit score, spending, cash-flow, and education content would live here.</p>
-          <button class="btn btn-outline-primary w-100" type="button">View insights</button>
+          @php
+            $bankConnected = (bool) ($wellness['bank_connected'] ?? false);
+            $scoreChange = (int) ($wellness['credit_score_change'] ?? 0);
+            $budgetCategories = [
+              ['label' => 'Housing', 'spent' => 1180, 'budget' => 1250, 'icon' => 'ti-home'],
+              ['label' => 'Groceries', 'spent' => 426, 'budget' => 500, 'icon' => 'ti-shopping-cart'],
+              ['label' => 'Transportation', 'spent' => 318, 'budget' => 360, 'icon' => 'ti-car'],
+            ];
+            $cashFlowItems = [
+              ['label' => 'Income tracked', 'value' => $money(4120.00)],
+              ['label' => 'Bills upcoming', 'value' => $money(986.40)],
+              ['label' => 'Projected cushion', 'value' => $money(288.35)],
+            ];
+          @endphp
+          <section class="wellness-page">
+            <div class="wellness-hero">
+              <div>
+                <span class="eyebrow">Money Hub</span>
+                <h2>Your financial wellness</h2>
+                <p>Credit score monitoring, spending insights, budgeting, and cash-flow guidance in one place.</p>
+              </div>
+              <div class="wellness-score-ring">
+                <span>{{ $wellness['credit_score'] ?? 642 }}</span>
+                <small>{{ $scoreChange >= 0 ? '+' : '' }}{{ $scoreChange }} pts</small>
+              </div>
+            </div>
+
+            <div class="wellness-status-row">
+              <div>
+                <i class="ti ti-chart-line"></i>
+                <span>Credit monitoring</span>
+                <strong>{{ ($wellness['credit_monitoring_enabled'] ?? false) ? 'On' : 'Off' }}</strong>
+              </div>
+              <div>
+                <i class="ti ti-plug-connected"></i>
+                <span>Plaid connection</span>
+                <strong>{{ $bankConnected ? 'Connected' : 'Not connected' }}</strong>
+              </div>
+            </div>
+
+            <article class="wellness-insight-card">
+              <i class="ti {{ $scoreChange >= 0 ? 'ti-trending-up' : 'ti-trending-down' }}"></i>
+              <div>
+                <span class="eyebrow">Credit score</span>
+                <h3>{{ $wellness['credit_score'] ?? 642 }}</h3>
+                <p>{{ $scoreChange >= 0 ? 'Up' : 'Down' }} {{ abs($scoreChange) }} points since your last update.</p>
+              </div>
+            </article>
+
+            @if($bankConnected)
+              <article class="wellness-insight-card spending">
+                <i class="ti ti-wallet"></i>
+                <div>
+                  <span class="eyebrow">Monthly spending</span>
+                  <h3>{{ $money($wellness['monthly_spending'] ?? 0) }}</h3>
+                  <p>{{ $wellness['cash_flow_status'] ?? 'On track' }} based on connected account activity.</p>
+                </div>
+              </article>
+
+              <section class="budget-card">
+                <div class="section-title">
+                  <h2><i class="ti ti-chart-pie"></i>Budget snapshot</h2>
+                </div>
+                @foreach($budgetCategories as $category)
+                  @php($percent = min(100, round(($category['spent'] / $category['budget']) * 100)))
+                  <div class="budget-row">
+                    <i class="ti {{ $category['icon'] }}"></i>
+                    <div>
+                      <span>{{ $category['label'] }}</span>
+                      <strong>{{ $money($category['spent']) }} of {{ $money($category['budget']) }}</strong>
+                      <div class="budget-meter"><span style="width: {{ $percent }}%"></span></div>
+                    </div>
+                  </div>
+                @endforeach
+              </section>
+
+              <section class="cash-flow-card">
+                <div class="section-title">
+                  <h2><i class="ti ti-arrows-exchange"></i>Cash-flow outlook</h2>
+                </div>
+                <dl>
+                  @foreach($cashFlowItems as $item)
+                    <div><dt>{{ $item['label'] }}</dt><dd>{{ $item['value'] }}</dd></div>
+                  @endforeach
+                </dl>
+              </section>
+            @else
+              <article class="connect-bank-card">
+                <i class="ti ti-building-bank"></i>
+                <h3>Connect a bank account</h3>
+                <p>Use a Plaid connection to unlock spending, budgeting, cash-flow alerts, and upcoming bill insights.</p>
+                <button class="btn btn-primary w-100" type="button">Connect with Plaid</button>
+              </article>
+            @endif
+          </section>
           @break
         @case('assets')
           <p>Connected vehicle details, estimated value history, and equity education would live here.</p>
@@ -587,12 +817,16 @@ $pastLoanDocuments = [
           <p>Account servicing detail for loan {{ $id }} with payment history, documents, and payoff information.</p>
           <button class="btn btn-primary w-100" type="button">Make a payment</button>
         @endswitch
+        @endif
       </section>
 
-      @if(! in_array($type, ['payment', 'chat'], true))
-        <a href="{{ route('prototype.index') }}" class="btn btn-light w-100">Return home</a>
-      @endif
     @endif
+    <nav class="bottom-nav" aria-label="Mobile app navigation">
+      <a class="{{ $type === 'home' ? 'active' : '' }}" href="{{ route('prototype.index') }}"><i class="ti ti-home"></i><span>Home</span></a>
+      <a class="{{ in_array($type, ['loan', 'application', 'payment'], true) ? 'active' : '' }}" href="{{ $loanNavUrl }}"><i class="ti {{ $loanNavIcon }}"></i><span>{{ $loanNavLabel }}</span></a>
+      <a class="{{ $type === 'offer' ? 'active' : '' }}" href="{{ route('prototype.offers') }}"><i class="ti ti-sparkles"></i><span>Explore</span></a>
+      <a class="{{ $type === 'wellness' ? 'active' : '' }}" href="{{ route('prototype.wellness') }}"><i class="ti ti-heart-rate-monitor"></i><span>Money Hub</span></a>
+    </nav>
   </main>
 </div>
 @endsection
@@ -601,5 +835,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260714t"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260813b"></script>
 @endsection

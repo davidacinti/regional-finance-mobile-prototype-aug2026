@@ -21,18 +21,20 @@
     });
   }
 
-  document.querySelectorAll('.top-nav-btn[href], .top-logo-link[href]').forEach(link => {
-    link.addEventListener('click', event => {
+  document.querySelectorAll('[data-back-button]').forEach(button => {
+    button.addEventListener('click', event => {
       if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
         return;
       }
 
-      const href = link.getAttribute('href');
+      event.preventDefault();
 
-      if (href) {
-        event.preventDefault();
-        window.location.assign(href);
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
       }
+
+      window.location.assign(button.getAttribute('href') || '/');
     });
   });
 
