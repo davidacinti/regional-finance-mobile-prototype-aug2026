@@ -1337,6 +1337,14 @@
   box-shadow: 0 14px 30px rgba(16, 43, 81, .12);
 }
 
+.profile-avatar-large.sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
 .profile-hero h2 {
   margin: .1rem 0 .25rem;
   color: var(--text, var(--rf-navy));
@@ -1495,63 +1503,22 @@
 
 .assets-page {
   display: grid;
-  gap: .9rem;
+  gap: .75rem;
 }
 
-.assets-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 56px;
-  gap: .85rem;
-  align-items: center;
-  padding: .95rem;
-  border: 1px solid rgba(205, 217, 41, .38);
-  border-radius: 18px;
-  background:
-    linear-gradient(135deg, rgba(205, 217, 41, .18), rgba(255, 255, 255, .98)),
-    var(--surface, #fff);
-}
-
-.assets-hero h2 {
-  margin: .1rem 0 .3rem;
-  color: var(--text, var(--rf-navy));
-  font-size: 1.35rem;
-}
-
-.assets-hero p {
-  margin: 0;
-  color: var(--muted-text, #5f6d7a);
-  font-size: .86rem;
-  line-height: 1.35;
-}
-
-.assets-hero > i {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--rf-navy);
-  background: var(--rf-lime);
-  font-size: 1.7rem;
-}
-
-.asset-summary-grid,
 .asset-vehicle-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: .65rem;
 }
 
-.asset-summary-grid > div,
 .asset-vehicle-metrics > div {
-  padding: .72rem;
+  padding: .65rem;
   border: 1px solid var(--border-soft, #dce7f2);
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--surface-2, #f7fbff);
 }
 
-.asset-summary-grid span,
 .asset-vehicle-metrics span {
   display: block;
   color: var(--muted-text, #5f6d7a);
@@ -1561,7 +1528,6 @@
   text-transform: uppercase;
 }
 
-.asset-summary-grid strong,
 .asset-vehicle-metrics strong {
   display: block;
   margin-top: .25rem;
@@ -1572,22 +1538,22 @@
 
 .asset-vehicle-list {
   display: grid;
-  gap: .8rem;
+  gap: .7rem;
 }
 
 .asset-vehicle-card,
 .asset-add-card {
   display: grid;
-  gap: .85rem;
-  padding: .9rem;
+  gap: .7rem;
+  padding: .82rem;
   border: 1px solid var(--border-soft, #dce7f2);
-  border-radius: 18px;
+  border-radius: 16px;
   background: var(--surface, #fff);
 }
 
 .asset-vehicle-heading {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
   gap: .65rem;
   align-items: start;
 }
@@ -1602,10 +1568,10 @@
 }
 
 .asset-car-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
-  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  font-size: 1.25rem;
 }
 
 .asset-vehicle-heading span,
@@ -1623,7 +1589,7 @@
 .asset-vehicle-heading h3 {
   margin: .12rem 0 .15rem;
   color: var(--text, var(--rf-navy));
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .asset-vehicle-heading small {
@@ -1644,11 +1610,11 @@
 
 .asset-vehicle-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .6rem;
 }
 
 .asset-add-card {
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
   border-style: dashed;
   border-color: rgba(67, 124, 191, .45);
   background: rgba(247, 251, 255, .72);
@@ -1662,7 +1628,7 @@
 }
 
 .asset-add-card h3 {
-  margin: 0 0 .25rem;
+  margin: 0;
   color: var(--text, var(--rf-navy));
   font-size: 1rem;
 }
@@ -1674,9 +1640,10 @@
 }
 
 .offers-page,
+.settings-page,
 .wellness-page {
   display: grid;
-  gap: .9rem;
+  gap: .75rem;
 }
 
 .offers-hero,
@@ -1748,7 +1715,7 @@
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
   gap: .75rem;
-  padding: .9rem;
+  padding: .85rem;
   border: 1px solid var(--border-soft, #dce7f2);
   border-radius: 18px;
   background: var(--surface, #fff);
@@ -1778,6 +1745,82 @@
   height: 44px;
   border-radius: 15px;
   font-size: 1.35rem;
+}
+
+.simple-list-card,
+.settings-list,
+.settings-profile-card {
+  border: 1px solid var(--border-soft, #dce7f2);
+  border-radius: 16px;
+  background: var(--surface, #fff);
+  overflow: hidden;
+}
+
+.simple-list-card a,
+.simple-list-card button,
+.settings-list label {
+  width: 100%;
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .65rem;
+  padding: .72rem .82rem;
+  border: 0;
+  border-bottom: 1px solid var(--border-soft, #dce7f2);
+  color: var(--text, var(--rf-navy));
+  background: transparent;
+  font: inherit;
+  text-align: left;
+}
+
+.simple-list-card a:last-child,
+.simple-list-card button:last-child,
+.settings-list label:last-child {
+  border-bottom: 0;
+}
+
+.simple-list-card i,
+.settings-list i {
+  color: var(--rf-blue);
+  font-size: 1.2rem;
+}
+
+.simple-list-card span,
+.settings-list span {
+  font-weight: 800;
+}
+
+.simple-list-card strong {
+  color: var(--rf-blue);
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.settings-profile-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: .75rem;
+  align-items: center;
+  padding: .82rem;
+}
+
+.settings-profile-card h2 {
+  margin: 0 0 .1rem;
+  color: var(--text, var(--rf-navy));
+  font-size: 1.1rem;
+}
+
+.settings-profile-card a {
+  color: var(--rf-blue);
+  font-size: .86rem;
+  font-weight: 800;
+}
+
+.settings-list input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--rf-blue);
 }
 
 .wellness-score-ring {

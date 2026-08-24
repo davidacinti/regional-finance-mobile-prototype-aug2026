@@ -256,8 +256,8 @@ class PrototypeController extends Controller
         }, $notifications);
     }
 
-    public function settings(): View
+    public function settings(Request $request): View
     {
-        return view('prototype.settings');
+        return $this->detail($request, 'settings');
     }
 }

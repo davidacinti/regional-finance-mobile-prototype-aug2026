@@ -15,6 +15,7 @@ $titles = [
   'chat' => 'AI chat',
   'notifications' => 'Notifications',
   'support' => 'Support',
+  'settings' => 'Settings',
   'payment' => 'Make a payment',
 ];
 $loans = $scenario['loans'] ?? [];
@@ -80,7 +81,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260824loan">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260824simple">
 @endsection
 
 @section('content')
@@ -275,73 +276,26 @@ $pastLoanDocuments = [
           <h2 class="detail-page-title">{{ $titles[$type] ?? 'Details' }}</h2>
         @endif
         @if($type === 'offer')
-          @php
-            $mockOffers = [
-              [
-                'icon' => 'ti-cash-banknote',
-                'label' => 'Personalized loan option',
-                'title' => ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options in minutes',
-                'body' => 'See available loan options with a soft credit check. Checking will not impact your credit score.',
-                'cta' => ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers',
-                'featured' => true,
-              ],
-              [
-                'icon' => 'ti-shield-check',
-                'label' => 'Payment protection',
-                'title' => 'Help protect your payment',
-                'body' => 'Mock coverage options for unexpected life events, hardship, or eligible interruptions.',
-                'cta' => 'Learn more',
-                'featured' => false,
-              ],
-              [
-                'icon' => 'ti-car-crash',
-                'label' => 'Auto protection',
-                'title' => 'Vehicle service coverage',
-                'body' => 'Explore sample protection products for repair costs, roadside help, and vehicle ownership.',
-                'cta' => 'View options',
-                'featured' => false,
-              ],
-              [
-                'icon' => 'ti-home-shield',
-                'label' => 'Insurance marketplace',
-                'title' => 'Compare home or renters coverage',
-                'body' => 'A future partner flow could surface quotes and coverage education in one place.',
-                'cta' => 'Compare quotes',
-                'featured' => false,
-              ],
-            ];
-          @endphp
           <section class="offers-page">
-            <div class="offers-hero">
-              <div class="offers-hero-icon"><i class="ti ti-sparkles"></i></div>
-              <div>
-                <span class="eyebrow">Explore</span>
-                <h2>Offers and protection</h2>
-                <p>Mock loan offers, insurance products, and protection options that could be personalized for each customer.</p>
-              </div>
-            </div>
-
             <div class="soft-credit-callout">
               <i class="ti ti-shield-check"></i>
               <span>Checking loan offers will not impact your credit score.</span>
             </div>
 
-            <div class="offer-product-list">
-              @foreach($mockOffers as $mockOffer)
-                <article class="offer-product-card {{ $mockOffer['featured'] ? 'featured' : '' }}">
-                  <div class="offer-product-icon"><i class="ti {{ $mockOffer['icon'] }}"></i></div>
-                  <div>
-                    <span class="eyebrow">{{ $mockOffer['label'] }}</span>
-                    <h3>{{ $mockOffer['title'] }}</h3>
-                    <p>{{ $mockOffer['body'] }}</p>
-                  </div>
-                  @if($mockOffer['featured'])
-                    <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ $mockOffer['cta'] }}</a>
-                  @else
-                    <button class="btn btn-outline-primary w-100" type="button">{{ $mockOffer['cta'] }}</button>
-                  @endif
-                </article>
-              @endforeach
+            <article class="offer-product-card featured">
+              <div class="offer-product-icon"><i class="ti ti-cash-banknote"></i></div>
+              <div>
+                <span class="eyebrow">Personalized loan option</span>
+                <h3>{{ ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options' }}</h3>
+                <p>See available options with a soft credit check.</p>
+              </div>
+              <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers' }}</a>
+            </article>
+
+            <div class="simple-list-card">
+              <a href="{{ $secureLoanUrl }}"><i class="ti ti-sparkles"></i><span>Personal loan offers</span><strong>Check now</strong></a>
+              <button type="button"><i class="ti ti-shield-check"></i><span>Payment protection</span><strong>Learn more</strong></button>
+              <button type="button"><i class="ti ti-car-crash"></i><span>Auto protection</span><strong>View</strong></button>
             </div>
           </section>
         @else
@@ -479,73 +433,26 @@ $pastLoanDocuments = [
           </section>
           @break
         @case('offer')
-          @php
-            $mockOffers = [
-              [
-                'icon' => 'ti-cash-banknote',
-                'label' => 'Personalized loan option',
-                'title' => ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options in minutes',
-                'body' => 'See available loan options with a soft credit check. Checking will not impact your credit score.',
-                'cta' => ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers',
-                'featured' => true,
-              ],
-              [
-                'icon' => 'ti-shield-check',
-                'label' => 'Payment protection',
-                'title' => 'Help protect your payment',
-                'body' => 'Mock coverage options for unexpected life events, hardship, or eligible interruptions.',
-                'cta' => 'Learn more',
-                'featured' => false,
-              ],
-              [
-                'icon' => 'ti-car-crash',
-                'label' => 'Auto protection',
-                'title' => 'Vehicle service coverage',
-                'body' => 'Explore sample protection products for repair costs, roadside help, and vehicle ownership.',
-                'cta' => 'View options',
-                'featured' => false,
-              ],
-              [
-                'icon' => 'ti-home-shield',
-                'label' => 'Insurance marketplace',
-                'title' => 'Compare home or renters coverage',
-                'body' => 'A future partner flow could surface quotes and coverage education in one place.',
-                'cta' => 'Compare quotes',
-                'featured' => false,
-              ],
-            ];
-          @endphp
           <section class="offers-page">
-            <div class="offers-hero">
-              <div class="offers-hero-icon"><i class="ti ti-sparkles"></i></div>
-              <div>
-                <span class="eyebrow">Explore</span>
-                <h2>Offers and protection</h2>
-                <p>Mock loan offers, insurance products, and protection options that could be personalized for each customer.</p>
-              </div>
-            </div>
-
             <div class="soft-credit-callout">
               <i class="ti ti-shield-check"></i>
               <span>Checking loan offers will not impact your credit score.</span>
             </div>
 
-            <div class="offer-product-list">
-              @foreach($mockOffers as $mockOffer)
-                <article class="offer-product-card {{ $mockOffer['featured'] ? 'featured' : '' }}">
-                  <div class="offer-product-icon"><i class="ti {{ $mockOffer['icon'] }}"></i></div>
-                  <div>
-                    <span class="eyebrow">{{ $mockOffer['label'] }}</span>
-                    <h3>{{ $mockOffer['title'] }}</h3>
-                    <p>{{ $mockOffer['body'] }}</p>
-                  </div>
-                  @if($mockOffer['featured'])
-                    <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ $mockOffer['cta'] }}</a>
-                  @else
-                    <button class="btn btn-outline-primary w-100" type="button">{{ $mockOffer['cta'] }}</button>
-                  @endif
-                </article>
-              @endforeach
+            <article class="offer-product-card featured">
+              <div class="offer-product-icon"><i class="ti ti-cash-banknote"></i></div>
+              <div>
+                <span class="eyebrow">Personalized loan option</span>
+                <h3>{{ ($offer['type'] ?? null) === 'prequalified' ? 'Prequalified for ' . $money($offer['amount'] ?? 3500) : 'Check loan options' }}</h3>
+                <p>See available options with a soft credit check.</p>
+              </div>
+              <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ ($offer['type'] ?? null) === 'prequalified' ? 'Review offer' : 'Check offers' }}</a>
+            </article>
+
+            <div class="simple-list-card">
+              <a href="{{ $secureLoanUrl }}"><i class="ti ti-sparkles"></i><span>Personal loan offers</span><strong>Check now</strong></a>
+              <button type="button"><i class="ti ti-shield-check"></i><span>Payment protection</span><strong>Learn more</strong></button>
+              <button type="button"><i class="ti ti-car-crash"></i><span>Auto protection</span><strong>View</strong></button>
             </div>
           </section>
           @break
@@ -695,20 +602,6 @@ $pastLoanDocuments = [
             $totalEquity = collect($vehicles)->sum('estimated_equity');
           @endphp
           <section class="assets-page">
-            <div class="assets-hero">
-              <div>
-                <span class="eyebrow">Vehicles</span>
-                <h2>Manage your cars</h2>
-                <p>Track estimated value, equity, mileage, and vehicle details connected to your Regional Finance experience.</p>
-              </div>
-              <i class="ti ti-car-garage"></i>
-            </div>
-
-            <div class="asset-summary-grid">
-              <div><span>Total estimated value</span><strong>{{ $money($totalValue) }}</strong></div>
-              <div><span>Total estimated equity</span><strong>{{ $money($totalEquity) }}</strong></div>
-            </div>
-
             <section class="asset-vehicle-list" aria-label="Tracked vehicles">
               @foreach($vehicles as $vehicle)
                 <article class="asset-vehicle-card">
@@ -724,12 +617,9 @@ $pastLoanDocuments = [
                   <div class="asset-vehicle-metrics">
                     <div><span>Estimated value</span><strong>{{ $money($vehicle['estimated_value'] ?? 0) }}</strong></div>
                     <div><span>Estimated equity</span><strong>{{ $money($vehicle['estimated_equity'] ?? 0) }}</strong></div>
-                    <div><span>Linked balance</span><strong>{{ $money($vehicle['loan_balance'] ?? 0) }}</strong></div>
-                    <div><span>Updated</span><strong>{{ $date($vehicle['last_updated'] ?? now()) }}</strong></div>
                   </div>
                   <div class="asset-vehicle-actions">
-                    <button class="btn btn-primary" type="button"><i class="ti ti-refresh"></i>Refresh value</button>
-                    <button class="btn btn-outline-primary" type="button"><i class="ti ti-edit"></i>Edit details</button>
+                    <button class="btn btn-outline-primary w-100" type="button"><i class="ti ti-edit"></i>Manage vehicle</button>
                   </div>
                 </article>
               @endforeach
@@ -738,8 +628,7 @@ $pastLoanDocuments = [
             <article class="asset-add-card">
               <i class="ti ti-circle-plus"></i>
               <div>
-                <h3>Add another vehicle</h3>
-                <p>Connect a VIN or enter year, make, model, trim, and mileage to start tracking value.</p>
+                <h3>Add a vehicle</h3>
               </div>
               <button class="btn btn-outline-primary w-100" type="button">Add vehicle</button>
             </article>
@@ -992,6 +881,32 @@ $pastLoanDocuments = [
             </div>
           </section>
           @break
+        @case('settings')
+          <section class="settings-page">
+            <div class="settings-profile-card">
+              <div class="profile-avatar-large sm">
+                {{ strtoupper(substr($scenario['customer']['first_name'] ?? 'J', 0, 1)) }}{{ strtoupper(substr($scenario['customer']['last_name'] ?? 'D', 0, 1)) }}
+              </div>
+              <div>
+                <h2>{{ $scenario['customer']['first_name'] ?? 'Jordan' }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</h2>
+                <a href="{{ route('prototype.profile') }}">Edit profile</a>
+              </div>
+            </div>
+
+            <div class="settings-list">
+              <label><span><i class="ti ti-bell"></i>Payment reminders</span><input type="checkbox" checked></label>
+              <label><span><i class="ti ti-file-text"></i>Document alerts</span><input type="checkbox" checked></label>
+              <label><span><i class="ti ti-sparkles"></i>Offer updates</span><input type="checkbox"></label>
+              <label><span><i class="ti ti-lock"></i>Face ID</span><input type="checkbox" checked></label>
+            </div>
+
+            <div class="simple-list-card">
+              <a href="{{ route('prototype.notifications') }}"><i class="ti ti-bell"></i><span>Notifications</span><strong>Manage</strong></a>
+              <a href="{{ route('prototype.support') }}"><i class="ti ti-headphones"></i><span>Support</span><strong>Contact</strong></a>
+              <button type="button"><i class="ti ti-shield-lock"></i><span>Privacy and security</span><strong>View</strong></button>
+            </div>
+          </section>
+          @break
         @case('support')
           <section class="branch-support-page">
             <div class="branch-support-hero">
@@ -1080,5 +995,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260824loan"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260824simple"></script>
 @endsection
