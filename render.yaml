@@ -13,7 +13,9 @@ services:
       - key: APP_KEY
         sync: false
       - key: APP_URL
-        sync: false
+        value: https://regional-finance-mobile-prototype-aug2026.onrender.com
+      - key: ASSET_URL
+        value: https://regional-finance-mobile-prototype-aug2026.onrender.com
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER
