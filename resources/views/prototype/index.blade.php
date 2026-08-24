@@ -19,7 +19,6 @@ if (count($trackedVehicles) === 0) {
     $trackedVehicles = [
         ['year' => 2021, 'make' => 'Toyota', 'model' => 'Camry', 'estimated_value' => 21800, 'estimated_equity' => 3900, 'last_updated' => '2026-07-11'],
         ['year' => 2019, 'make' => 'Ford', 'model' => 'F-150', 'estimated_value' => 26750, 'estimated_equity' => 6450, 'last_updated' => '2026-07-08'],
-        ['year' => 2020, 'make' => 'Honda', 'model' => 'CR-V', 'estimated_value' => 23125, 'estimated_equity' => 5125, 'last_updated' => '2026-07-10'],
     ];
 }
 $money = fn ($value) => '$' . number_format((float) $value, 2);

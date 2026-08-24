@@ -584,8 +584,101 @@ $pastLoanDocuments = [
           </section>
           @break
         @case('assets')
-          <p>Connected vehicle details, estimated value history, and equity education would live here.</p>
-          <button class="btn btn-outline-primary w-100" type="button">Refresh estimate</button>
+          @php
+            $vehicles = $scenario['assets']['vehicles'] ?? [];
+            if (count($vehicles) === 0) {
+              $vehicles = [
+                [
+                  'year' => 2021,
+                  'make' => 'Toyota',
+                  'model' => 'Camry',
+                  'trim' => 'SE',
+                  'nickname' => 'Jordan\'s Camry',
+                  'estimated_value' => 21800,
+                  'estimated_equity' => 3900,
+                  'loan_balance' => 17900,
+                  'mileage' => '42,180',
+                  'last_updated' => '2026-07-11',
+                  'status' => 'Tracked',
+                ],
+                [
+                  'year' => 2019,
+                  'make' => 'Ford',
+                  'model' => 'F-150',
+                  'trim' => 'XLT',
+                  'nickname' => 'Weekend truck',
+                  'estimated_value' => 26750,
+                  'estimated_equity' => 6450,
+                  'loan_balance' => 20300,
+                  'mileage' => '61,420',
+                  'last_updated' => '2026-07-08',
+                  'status' => 'Needs mileage',
+                ],
+              ];
+            } else {
+              $vehicles = array_map(function ($vehicle, $index) {
+                return array_replace([
+                  'trim' => $index === 0 ? 'SE' : 'XLT',
+                  'nickname' => ($vehicle['make'] ?? 'Vehicle') . ' ' . ($vehicle['model'] ?? ''),
+                  'loan_balance' => max(0, ($vehicle['estimated_value'] ?? 0) - ($vehicle['estimated_equity'] ?? 0)),
+                  'mileage' => $index === 0 ? '31,640' : '58,900',
+                  'status' => $index === 0 ? 'Tracked' : 'Needs mileage',
+                ], $vehicle);
+              }, array_slice($vehicles, 0, 2), array_keys(array_slice($vehicles, 0, 2)));
+            }
+            $totalValue = collect($vehicles)->sum('estimated_value');
+            $totalEquity = collect($vehicles)->sum('estimated_equity');
+          @endphp
+          <section class="assets-page">
+            <div class="assets-hero">
+              <div>
+                <span class="eyebrow">Vehicles</span>
+                <h2>Manage your cars</h2>
+                <p>Track estimated value, equity, mileage, and vehicle details connected to your Regional Finance experience.</p>
+              </div>
+              <i class="ti ti-car-garage"></i>
+            </div>
+
+            <div class="asset-summary-grid">
+              <div><span>Total estimated value</span><strong>{{ $money($totalValue) }}</strong></div>
+              <div><span>Total estimated equity</span><strong>{{ $money($totalEquity) }}</strong></div>
+            </div>
+
+            <section class="asset-vehicle-list" aria-label="Tracked vehicles">
+              @foreach($vehicles as $vehicle)
+                <article class="asset-vehicle-card">
+                  <div class="asset-vehicle-heading">
+                    <div class="asset-car-icon"><i class="ti ti-car"></i></div>
+                    <div>
+                      <span>{{ $vehicle['nickname'] ?? 'My vehicle' }}</span>
+                      <h3>{{ $vehicle['year'] }} {{ $vehicle['make'] }} {{ $vehicle['model'] }}</h3>
+                      <small>{{ $vehicle['trim'] ?? 'Vehicle details' }} • {{ $vehicle['mileage'] ?? 'Mileage needed' }} miles</small>
+                    </div>
+                    <em>{{ $vehicle['status'] ?? 'Tracked' }}</em>
+                  </div>
+                  <div class="asset-vehicle-metrics">
+                    <div><span>Estimated value</span><strong>{{ $money($vehicle['estimated_value'] ?? 0) }}</strong></div>
+                    <div><span>Estimated equity</span><strong>{{ $money($vehicle['estimated_equity'] ?? 0) }}</strong></div>
+                    <div><span>Linked balance</span><strong>{{ $money($vehicle['loan_balance'] ?? 0) }}</strong></div>
+                    <div><span>Updated</span><strong>{{ $date($vehicle['last_updated'] ?? now()) }}</strong></div>
+                  </div>
+                  <div class="asset-vehicle-actions">
+                    <button class="btn btn-primary" type="button"><i class="ti ti-refresh"></i>Refresh value</button>
+                    <button class="btn btn-outline-primary" type="button"><i class="ti ti-edit"></i>Edit details</button>
+                  </div>
+                </article>
+              @endforeach
+            </section>
+
+            <article class="asset-add-card">
+              <i class="ti ti-circle-plus"></i>
+              <div>
+                <h3>Add another vehicle</h3>
+                <p>Connect a VIN or enter year, make, model, trim, and mileage to start tracking value.</p>
+              </div>
+              <button class="btn btn-outline-primary w-100" type="button">Add vehicle</button>
+            </article>
+          </section>
           @break
         @case('profile')
           <section class="profile-page">
