@@ -199,6 +199,25 @@
     });
   }
 
+  document.querySelectorAll('[data-loan-activity]').forEach(activity => {
+    const tabs = activity.querySelectorAll('[data-activity-tab]');
+    const panels = activity.querySelectorAll('[data-activity-panel]');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const activePanel = tab.dataset.activityTab;
+
+        tabs.forEach(candidate => {
+          candidate.classList.toggle('active', candidate === tab);
+        });
+
+        panels.forEach(panel => {
+          panel.hidden = panel.dataset.activityPanel !== activePanel;
+        });
+      });
+    });
+  });
+
   const showPrototypeAlert = ({ title, text, icon = 'ti-circle-check', confirmText = 'OK', showCancel = false, cancelText = 'Not now' }) => {
     if (window.Swal) {
       return window.Swal.fire({

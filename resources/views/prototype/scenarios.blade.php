@@ -11,7 +11,7 @@ $isFooter = false;
 @section('title', 'Prototype Scenarios')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260813b">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260824loan">
 @endsection
 
 @section('content')

@@ -79,7 +79,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260813b">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260824loan">
 @endsection
 
 @section('content')
@@ -118,68 +118,122 @@ $pastLoanDocuments = [
           $loanAlertTitle = "You're all caught up";
           $loanAlertBody = '$0 is due until your next statement cycle.';
         }
+        $amountDue = ($loan['past_due_amount'] ?? 0) > 0 ? $loan['past_due_amount'] : $loan['next_payment_amount'];
+        $originalPrincipal = max(($loan['balance'] ?? 0) + 1100, 16000);
+        $paidOffPercent = min(100, max(0, round((($originalPrincipal - ($loan['balance'] ?? 0)) / $originalPrincipal) * 100)));
+        $payoffAmount = ($loan['balance'] ?? 0) + 42.18;
+        $activityRows = [
+          ['date' => '2026-07-21', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => $loan['balance']],
+          ['date' => '2026-06-17', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 469.10],
+          ['date' => '2026-05-28', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 948.70],
+          ['date' => '2026-04-30', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => 200, 'balance' => ($loan['balance'] ?? 0) + 1389.76],
+        ];
       @endphp
 
-      <section class="app-card loan-summary-card">
-        <div class="card-heading">
-          <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] ?? 'Personal loan' }}</span>
-          <span class="loan-status-pills">
-            <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
-            <span class="status-pill autopay-pill {{ $loan['autopay_enabled'] ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</span>
-          </span>
+      <section class="loan-hero-summary">
+        <span class="eyebrow">Loan #{{ $loan['id'] ?? '1002841' }}</span>
+        <h1>{{ $loan['name'] ?? 'Personal loan' }}</h1>
+        <div class="loan-hero-meta">
+          <span><strong>{{ $money($loan['balance']) }}</strong> remaining principal</span>
+          <span><strong>24.90%</strong> APR</span>
         </div>
-        <div class="balance">{{ $money($loan['balance']) }}</div>
-        <p class="muted">Account balance</p>
-        <div class="loan-grid">
-          <div><i class="ti ti-report-money"></i><span>Original principal</span><strong>{{ $money(($loan['balance'] ?? 0) + 1100) }}</strong></div>
+        <div class="loan-status-pills">
+          <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+          <span class="status-pill autopay-pill {{ $loan['autopay_enabled'] ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</span>
         </div>
-        <a href="{{ route('prototype.loan', ['loan' => $loan['id'], 'sheet' => 'details']) }}" class="btn btn-outline-primary w-100"><i class="ti ti-file-info"></i>Loan details</a>
       </section>
 
-      <section class="app-card loan-servicing-card">
-        <div class="card-heading">
-          <span class="card-title-with-icon"><i class="ti ti-calendar-due"></i>Amount due</span>
+      <section class="app-card loan-payment-card">
+        <span class="repayment-pill">{{ $loan['status'] === 'current' ? 'In repayment' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+        <div class="loan-payment-amount">{{ $money($amountDue) }}</div>
+        <p>Due {{ $dateLong($loan['next_payment_date']) }}</p>
+        <div class="loan-payment-divider"></div>
+        <div class="autopay-row">
+          <strong>AutoPay {{ $loan['autopay_enabled'] ? 'on' : 'off' }}</strong>
+          <a href="{{ route('prototype.payment') }}">{{ $loan['autopay_enabled'] ? 'Manage' : 'Set up' }}</a>
         </div>
-        <div class="balance">{{ $money(($loan['past_due_amount'] ?? 0) > 0 ? $loan['past_due_amount'] : $loan['next_payment_amount']) }}</div>
-        <p class="muted">Due {{ $date($loan['next_payment_date']) }}</p>
-        <a class="detail-link" href="{{ route('prototype.payment') }}">See payment details</a>
-
         <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
+        <a href="{{ route('prototype.payment') }}" class="btn btn-primary w-100"><i class="ti ti-credit-card"></i>Make a payment</a>
+      </section>
 
-        <div class="loan-grid">
-          <div><i class="ti ti-receipt-2"></i><span>Payoff amount</span><strong>{{ $money(($loan['balance'] ?? 0) + 42.18) }}</strong></div>
-          <div><i class="ti ti-calendar-check"></i><span>Last payment</span><strong>-</strong></div>
-        </div>
+      <section class="loan-detail-section">
+        <h2>Explore options</h2>
+        <article class="app-card loan-refi-card">
+          <h3>You may have options for additional funds</h3>
+          <p>Check available loan options with a soft credit check. Checking will not impact your credit score.</p>
+          <a href="{{ route('prototype.offers') }}" class="btn btn-outline-primary w-100">Check options</a>
+        </article>
+      </section>
 
-        <div class="button-row">
-          <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti ti-refresh"></i>Manage AutoPay</a>
-          <a href="{{ route('prototype.payment') }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
+      <section class="loan-detail-section">
+        <div class="loan-shortcut-grid">
+          <a href="{{ route('prototype.loan', ['loan' => $loan['id'], 'sheet' => 'details']) }}"><i class="ti ti-rosette-discount-check"></i><span>Loan details</span></a>
+          <a href="{{ route('prototype.documents') }}"><i class="ti ti-file-text"></i><span>Documents</span></a>
         </div>
       </section>
 
       <section class="loan-detail-section">
-        <h2>Upcoming Payments</h2>
-        <article class="payment-row">
-          <i class="ti ti-refresh"></i>
-          <div>
-            <strong>AutoPay (Monthly)</strong>
-            <span>Scheduled {{ $date($loan['next_payment_date']) }}</span>
+        <h2>Progress</h2>
+        <article class="app-card loan-progress-card">
+          <div class="loan-progress-top">
+            <strong>{{ $paidOffPercent }}% paid off</strong>
+            <strong>{{ $money($originalPrincipal) }}</strong>
           </div>
-          <strong>{{ $money($loan['next_payment_amount']) }}</strong>
-          <button type="button" aria-label="Manage AutoPay options"><i class="ti ti-dots-vertical"></i></button>
+          <div class="loan-progress-bar" aria-label="{{ $paidOffPercent }} percent paid off">
+            <span style="width: {{ $paidOffPercent }}%"></span>
+          </div>
+          <p>This is based on the percentage of principal paid off.</p>
+        </article>
+
+        <article class="app-card loan-facts-card">
+          <dl>
+            <div><dt>Remaining principal</dt><dd>{{ $money($loan['balance']) }}</dd></div>
+            <div><dt>Accrued interest</dt><dd>{{ $money(42.18) }}</dd></div>
+            <div class="loan-facts-divider"></div>
+            <div><dt>Origination date</dt><dd>Jan 15, 2024</dd></div>
+            <div><dt>Maturity date</dt><dd>Jan 15, 2027</dd></div>
+          </dl>
+          <p>This includes principal and interest as of today. To pay off your loan early, <a href="{{ route('prototype.support') }}">contact your branch</a>.</p>
         </article>
       </section>
 
       <section class="loan-detail-section">
-        <div class="section-title">
-          <h2>Recent Activity</h2>
-          <a href="{{ route('prototype.payment') }}">View all Payment Activity</a>
-        </div>
-        <article class="empty-activity app-card">
-          <i class="ti ti-receipt-off"></i>
-          <strong>No recent payments yet</strong>
-          <span>Payment activity will appear here after a transaction posts.</span>
+        <h2>Activity</h2>
+        <article class="app-card loan-activity-card" data-loan-activity>
+          <div class="activity-tabs" role="tablist" aria-label="Payment activity">
+            <button type="button" class="active" data-activity-tab="recent">Recent</button>
+            <button type="button" data-activity-tab="scheduled">Scheduled</button>
+          </div>
+          <div class="activity-list" data-activity-panel="recent">
+            @foreach($activityRows as $activity)
+              <div class="activity-date">{{ strtoupper(\Carbon\Carbon::parse($activity['date'])->format('F j, Y')) }}</div>
+              <div class="activity-row">
+                <div>
+                  <strong>{{ $activity['title'] }}</strong>
+                  <span>{{ $activity['source'] }}</span>
+                </div>
+                <div>
+                  <strong class="activity-amount">-{{ $money($activity['amount']) }}</strong>
+                  <span>{{ $money($activity['balance']) }}</span>
+                </div>
+                <i class="ti ti-chevron-down"></i>
+              </div>
+            @endforeach
+          </div>
+          <div class="scheduled-empty" data-activity-panel="scheduled" hidden>
+            <i class="ti ti-calendar-dollar"></i>
+            <strong>{{ $loan['autopay_enabled'] ? 'Next AutoPay is scheduled' : 'No scheduled payments yet' }}</strong>
+            <span>{{ $loan['autopay_enabled'] ? $money($loan['next_payment_amount']) . ' on ' . $date($loan['next_payment_date']) : 'Scheduled payments will show here once they are set up.' }}</span>
+          </div>
         </article>
+      </section>
+
+      <section class="loan-detail-section">
+        <h2>More</h2>
+        <div class="loan-more-list">
+          <a href="{{ route('prototype.support') }}"><i class="ti ti-calendar-dollar"></i><span>Estimate early payoff</span><i class="ti ti-chevron-right"></i></a>
+          <a href="{{ route('prototype.support') }}"><i class="ti ti-help-square-rounded"></i><span>Get help</span><strong>{{ $branch['phone'] ?? '(864) 555-0148' }}</strong></a>
+        </div>
       </section>
 
       @if($showLoanSheet)
@@ -1017,5 +1071,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260813b"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260824loan"></script>
 @endsection
