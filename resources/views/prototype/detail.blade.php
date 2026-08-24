@@ -91,10 +91,6 @@ $pastLoanDocuments = [
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance home">
           <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
         </a>
-        <div class="top-nav-actions">
-          <a class="top-nav-btn" href="{{ route('prototype.chat') }}" aria-label="Open AI chat"><i class="ti ti-message-chatbot"></i></a>
-          <a class="top-nav-btn notification-action" href="{{ route('prototype.notifications') }}" aria-label="View notifications"><i class="ti ti-bell"></i><span></span></a>
-        </div>
       </nav>
     </header>
 

@@ -99,15 +99,6 @@ $highlightCards[] = [
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance home">
           <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
         </a>
-        <div class="top-nav-actions">
-          <a class="top-nav-btn" href="{{ route('prototype.chat') }}" aria-label="Open AI chat">
-            <i class="ti ti-message-chatbot"></i>
-          </a>
-          <a class="top-nav-btn notification-action" href="{{ route('prototype.notifications') }}" aria-label="View notifications">
-            <i class="ti ti-bell"></i>
-            <span></span>
-          </a>
-        </div>
       </nav>
       <div class="brand-block">
         <h1>Hi, {{ $scenario['customer']['first_name'] }}</h1>
@@ -140,6 +131,7 @@ $highlightCards[] = [
         @endif
         <a href="{{ route('prototype.documents') }}"><i class="ti ti-folder"></i><span>Document Center</span></a>
         <a href="{{ route('prototype.settings') }}"><i class="ti ti-settings"></i><span>Settings</span></a>
+        <a href="{{ route('prototype.chat') }}"><i class="ti ti-message-chatbot"></i><span>AI Assistant</span></a>
         <a href="{{ route('prototype.notifications') }}"><i class="ti ti-bell"></i><span>Notifications</span></a>
         <a href="{{ route('prototype.support') }}"><i class="ti ti-headset"></i><span>Support</span></a>
       </nav>
