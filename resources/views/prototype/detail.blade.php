@@ -588,8 +588,94 @@ $pastLoanDocuments = [
           <button class="btn btn-outline-primary w-100" type="button">Refresh estimate</button>
           @break
         @case('profile')
-          <p>Customer profile, contact preferences, alerts, and app settings would live here.</p>
-          <button class="btn btn-outline-primary w-100" type="button">Edit account</button>
+          <section class="profile-page">
+            <div class="profile-hero">
+              <div class="profile-avatar-large">
+                {{ strtoupper(substr($scenario['customer']['first_name'] ?? 'J', 0, 1)) }}{{ strtoupper(substr($scenario['customer']['last_name'] ?? 'D', 0, 1)) }}
+              </div>
+              <div>
+                <span class="eyebrow">Profile</span>
+                <h2>{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</h2>
+                <p>Keep your contact details current so Regional Finance can reach you about payments, documents, applications, and account alerts.</p>
+              </div>
+            </div>
+
+            <form class="profile-edit-form" action="javascript:void(0)">
+              <section class="profile-form-section">
+                <div class="profile-section-heading">
+                  <i class="ti ti-id"></i>
+                  <h3>Personal information</h3>
+                </div>
+                <div class="profile-field-grid">
+                  <label>First name<input type="text" value="{{ $scenario['customer']['first_name'] ?? 'Jordan' }}"></label>
+                  <label>Last name<input type="text" value="{{ $scenario['customer']['last_name'] ?? 'Davis' }}"></label>
+                  <label>Date of birth<input type="text" value="04/18/1988"></label>
+                  <label>Last 4 of SSN<input type="text" value="***-**-4321" readonly></label>
+                </div>
+              </section>
+
+              <section class="profile-form-section">
+                <div class="profile-section-heading">
+                  <i class="ti ti-address-book"></i>
+                  <h3>Contact details</h3>
+                </div>
+                <div class="profile-field-grid">
+                  <label>Mobile phone<input type="tel" value="(864) 555-2194"></label>
+                  <label>Email<input type="email" value="jordan.davis@example.com"></label>
+                  <label>Street address<input type="text" value="1450 Woodruff Rd"></label>
+                  <label>City<input type="text" value="Greenville"></label>
+                  <label>State<input type="text" value="SC"></label>
+                  <label>ZIP code<input type="text" value="29607"></label>
+                </div>
+              </section>
+
+              <section class="profile-form-section">
+                <div class="profile-section-heading">
+                  <i class="ti ti-briefcase"></i>
+                  <h3>Employment and income</h3>
+                </div>
+                <div class="profile-field-grid">
+                  <label>Employment status<select><option selected>Employed full time</option><option>Employed part time</option><option>Self employed</option><option>Retired</option></select></label>
+                  <label>Employer<input type="text" value="Carolina Logistics"></label>
+                  <label>Monthly net income<input type="text" value="$4,850"></label>
+                  <label>Pay frequency<select><option selected>Biweekly</option><option>Weekly</option><option>Monthly</option></select></label>
+                </div>
+                <div class="profile-note">
+                  <i class="ti ti-shield-check"></i>
+                  <span>Income updates may be reviewed before they are used for lending decisions.</span>
+                </div>
+              </section>
+
+              <section class="profile-form-section">
+                <div class="profile-section-heading">
+                  <i class="ti ti-bell-ringing"></i>
+                  <h3>Communication preferences</h3>
+                </div>
+                <div class="profile-toggle-list">
+                  <label><span><strong>Payment reminders</strong><small>Texts before a due date or missed payment</small></span><input type="checkbox" checked></label>
+                  <label><span><strong>Document alerts</strong><small>New statements, notices, and loan documents</small></span><input type="checkbox" checked></label>
+                  <label><span><strong>Offer updates</strong><small>Prequalification and product messages</small></span><input type="checkbox"></label>
+                </div>
+              </section>
+
+              <section class="profile-form-section">
+                <div class="profile-section-heading">
+                  <i class="ti ti-users"></i>
+                  <h3>Trusted contact</h3>
+                </div>
+                <div class="profile-field-grid">
+                  <label>Name<input type="text" value="Morgan Davis"></label>
+                  <label>Relationship<input type="text" value="Spouse"></label>
+                  <label>Phone<input type="tel" value="(864) 555-8012"></label>
+                </div>
+              </section>
+
+              <div class="profile-action-stack">
+                <button class="btn btn-primary w-100" type="button">Save profile updates</button>
+                <a class="btn btn-outline-primary w-100" href="{{ route('prototype.settings') }}">Security and notification settings</a>
+              </div>
+            </form>
+          </section>
           @break
         @case('documents')
           <section class="document-center">
