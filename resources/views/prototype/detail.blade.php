@@ -399,7 +399,9 @@ $pastLoanDocuments = [
           </section>
           @break
         @case('application')
-          @php($application = $scenario['application'] ?? [])
+          @php
+            $application = $scenario['application'] ?? [];
+          @endphp
           <section class="application-detail-flow">
             <span class="eyebrow">{{ ($application['status'] ?? '') === 'approved' ? 'Approved' : 'Application status' }}</span>
             <h2>{{ $application['headline'] ?? $application['current_step'] ?? 'Continue your application' }}</h2>
@@ -552,7 +554,9 @@ $pastLoanDocuments = [
                   <h2><i class="ti ti-chart-pie"></i>Budget snapshot</h2>
                 </div>
                 @foreach($budgetCategories as $category)
-                  @php($percent = min(100, round(($category['spent'] / $category['budget']) * 100)))
+                  @php
+                    $percent = min(100, round(($category['spent'] / $category['budget']) * 100));
+                  @endphp
                   <div class="budget-row">
                     <i class="ti {{ $category['icon'] }}"></i>
                     <div>
@@ -704,7 +708,9 @@ $pastLoanDocuments = [
           </section>
           @break
         @case('notifications')
-          @php($unreadCount = collect($notifications)->where('read', false)->count())
+          @php
+            $unreadCount = collect($notifications)->where('read', false)->count();
+          @endphp
           <section class="notifications-hub">
             <div class="notifications-toolbar">
               <div>
