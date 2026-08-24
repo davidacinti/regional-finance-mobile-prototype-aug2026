@@ -401,7 +401,6 @@ $highlightCards[] = [
           </article>
         @endforeach
       </div>
-      <p class="muted">Track value trends and equity estimates across your vehicles. Values are estimates, not guarantees.</p>
       <a href="{{ route('prototype.assets') }}" class="btn btn-outline-primary w-100"><i class="ti ti-car"></i>View vehicle details</a>
     </section>
 
