@@ -11,6 +11,7 @@ $wellness = $scenario['financial_wellness'] ?? [];
 $vehicle = $scenario['assets']['vehicles'][0] ?? null;
 $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
+$secureLoanUrl = 'https://secure.regionalfinance.com/get-a-loan?experience=sp';
 $activeLoanLabel = count($loans) === 0 ? 'No active loans' : (count($loans) > 1 ? count($loans) . ' active loans' : '1 active loan');
 $vehicleValue = $vehicle['estimated_value'] ?? 21800;
 $vehicleEquity = $vehicle['estimated_equity'] ?? 3900;
@@ -49,7 +50,7 @@ if (($offer['status'] ?? null) === 'available') {
         'label' => ($offer['type'] ?? '') === 'prequalified' ? 'Personalized offer' : 'Explore options',
         'title' => ($offer['type'] ?? '') === 'prequalified' ? 'You may be prequalified for ' . ('$' . number_format((float) $offer['amount'])) : 'See loan options in minutes',
         'body' => 'Checking will not impact your credit score.',
-        'url' => route('prototype.offers', ($offer['type'] ?? '') === 'prequalified' ? 'prequalified' : null),
+        'url' => $secureLoanUrl,
         'cta' => ($offer['type'] ?? '') === 'prequalified' ? 'View offer' : 'Check offers',
     ];
 }
@@ -262,8 +263,8 @@ $highlightCards[] = [
               </div>
               <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
               <div class="button-row">
-                <a href="{{ route('prototype.payment') }}" class="btn {{ $loan['status'] === 'past_due' || $modules['show_payment_due_banner'] ? 'btn-primary' : 'btn-outline-primary' }} flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
-                <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-light flex-fill"><i class="ti ti-chevron-right"></i>Details</a>
+                <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
+                <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-chevron-right"></i>Details</a>
               </div>
             </article>
           @endforeach
@@ -282,12 +283,12 @@ $highlightCards[] = [
           <div class="soft-credit-badge"><i class="ti ti-shield-check"></i>Checking will not impact your credit score</div>
           <div class="offer-amount">{{ '$' . number_format($offer['amount']) }}</div>
           <p>Review this personalized option in minutes. Offer expires {{ $date($offer['expires_at']) }}.</p>
-          <a href="{{ route('prototype.offers', 'prequalified') }}" class="btn btn-primary w-100">View offer</a>
+          <a href="{{ $secureLoanUrl }}" class="btn btn-primary w-100">View offer</a>
         @else
           <h2>See loan options in minutes.</h2>
           <div class="soft-credit-badge"><i class="ti ti-shield-check"></i>No impact to your credit score</div>
           <p>Check for available offers with no impact to your credit score.</p>
-          <a href="{{ route('prototype.offers') }}" class="btn btn-primary w-100">Check for offers</a>
+          <a href="{{ $secureLoanUrl }}" class="btn btn-primary w-100">Check for offers</a>
         @endif
       </section>
     @endif

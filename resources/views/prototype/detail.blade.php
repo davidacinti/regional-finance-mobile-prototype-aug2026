@@ -22,6 +22,7 @@ $branch = $scenario['branch'] ?? [];
 $wellness = $scenario['financial_wellness'] ?? [];
 $offer = $scenario['offer'] ?? [];
 $application = $scenario['application'] ?? null;
+$secureLoanUrl = 'https://secure.regionalfinance.com/get-a-loan?experience=sp';
 $firstLoan = $loans[0] ?? null;
 $loanNavUrl = $firstLoan ? route('prototype.loan', $firstLoan['id']) : ($application ? route('prototype.application', $application['id']) : route('prototype.offers'));
 $loanNavLabel = $firstLoan ? (count($loans) > 1 ? 'Loans' : 'Loan') : ($application ? 'Apply' : 'Explore');
@@ -161,7 +162,7 @@ $pastLoanDocuments = [
         <article class="app-card loan-refi-card">
           <h3>You may have options for additional funds</h3>
           <p>Check available loan options with a soft credit check. Checking will not impact your credit score.</p>
-          <a href="{{ route('prototype.offers') }}" class="btn btn-outline-primary w-100">Check options</a>
+          <a href="{{ $secureLoanUrl }}" class="btn btn-outline-primary w-100">Check options</a>
         </article>
       </section>
 
@@ -334,7 +335,11 @@ $pastLoanDocuments = [
                     <h3>{{ $mockOffer['title'] }}</h3>
                     <p>{{ $mockOffer['body'] }}</p>
                   </div>
-                  <button class="btn {{ $mockOffer['featured'] ? 'btn-primary' : 'btn-outline-primary' }} w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                  @if($mockOffer['featured'])
+                    <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ $mockOffer['cta'] }}</a>
+                  @else
+                    <button class="btn btn-outline-primary w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                  @endif
                 </article>
               @endforeach
             </div>
@@ -534,7 +539,11 @@ $pastLoanDocuments = [
                     <h3>{{ $mockOffer['title'] }}</h3>
                     <p>{{ $mockOffer['body'] }}</p>
                   </div>
-                  <button class="btn {{ $mockOffer['featured'] ? 'btn-primary' : 'btn-outline-primary' }} w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                  @if($mockOffer['featured'])
+                    <a class="btn btn-primary w-100" href="{{ $secureLoanUrl }}">{{ $mockOffer['cta'] }}</a>
+                  @else
+                    <button class="btn btn-outline-primary w-100" type="button">{{ $mockOffer['cta'] }}</button>
+                  @endif
                 </article>
               @endforeach
             </div>
