@@ -94,7 +94,6 @@ $pastLoanDocuments = [
         <div class="top-nav-actions">
           <a class="top-nav-btn" href="{{ route('prototype.chat') }}" aria-label="Open AI chat"><i class="ti ti-message-chatbot"></i></a>
           <a class="top-nav-btn notification-action" href="{{ route('prototype.notifications') }}" aria-label="View notifications"><i class="ti ti-bell"></i><span></span></a>
-          <button class="top-nav-btn theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"><i class="ti ti-moon"></i></button>
         </div>
       </nav>
     </header>

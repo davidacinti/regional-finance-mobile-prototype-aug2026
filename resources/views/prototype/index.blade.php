@@ -107,9 +107,6 @@ $highlightCards[] = [
             <i class="ti ti-bell"></i>
             <span></span>
           </a>
-          <button class="top-nav-btn theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-            <i class="ti ti-moon"></i>
-          </button>
         </div>
       </nav>
       <div class="brand-block">
