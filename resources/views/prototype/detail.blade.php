@@ -123,13 +123,15 @@ $pastLoanDocuments = [
       <section class="app-card loan-summary-card">
         <div class="card-heading">
           <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] ?? 'Personal loan' }}</span>
-          <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+          <span class="loan-status-pills">
+            <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+            <span class="status-pill autopay-pill {{ $loan['autopay_enabled'] ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</span>
+          </span>
         </div>
         <div class="balance">{{ $money($loan['balance']) }}</div>
         <p class="muted">Account balance</p>
         <div class="loan-grid">
           <div><i class="ti ti-report-money"></i><span>Original principal</span><strong>{{ $money(($loan['balance'] ?? 0) + 1100) }}</strong></div>
-          <div><i class="ti ti-refresh"></i><span>AutoPay</span><strong>{{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</strong></div>
         </div>
         <a href="{{ route('prototype.loan', ['loan' => $loan['id'], 'sheet' => 'details']) }}" class="btn btn-outline-primary w-100"><i class="ti ti-file-info"></i>Loan details</a>
       </section>

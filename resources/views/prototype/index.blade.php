@@ -249,14 +249,16 @@ $highlightCards[] = [
             <article class="app-card loan-card">
               <div class="card-heading">
                 <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] }}</span>
-                <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+                <span class="loan-status-pills">
+                  <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+                  <span class="status-pill autopay-pill {{ $loanAutopayEnabled ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loanAutopayEnabled ? 'On' : 'Off' }}</span>
+                </span>
               </div>
               <div class="balance">{{ $money($loan['balance']) }}</div>
               <p class="muted">Current balance</p>
               <div class="loan-grid">
                 <div><i class="ti ti-cash"></i><span>Next payment</span><strong>{{ $money($loan['next_payment_amount']) }}</strong></div>
                 <div><i class="ti ti-calendar-due"></i><span>Due date</span><strong>{{ $date($loan['next_payment_date']) }}</strong></div>
-                <div><i class="ti ti-refresh"></i><span>AutoPay</span><strong>{{ $loanAutopayEnabled ? 'On' : 'Off' }}</strong></div>
               </div>
               <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
               <div class="button-row">

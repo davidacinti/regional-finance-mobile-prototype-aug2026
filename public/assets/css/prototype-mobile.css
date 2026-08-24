@@ -798,9 +798,32 @@
   font-weight: 700;
 }
 
+.loan-status-pills {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.autopay-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.autopay-pill i {
+  font-size: .9rem;
+}
+
 .status-pill.success {
   color: #1f6b2d;
   background: #eaf7ec;
+}
+
+.status-pill.neutral {
+  color: #43566b;
+  background: #eef4f9;
 }
 
 .status-pill.danger {
