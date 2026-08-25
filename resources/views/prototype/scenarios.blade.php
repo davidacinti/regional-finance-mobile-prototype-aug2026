@@ -4,6 +4,7 @@ $footerView = 'layouts/sections/footer/footer-empty';
 $isMenu = false;
 $isNavbar = false;
 $isFooter = false;
+$customizerHidden = 'customizer-hide';
 @endphp
 
 @extends('layouts/contentNavbarLayout')
