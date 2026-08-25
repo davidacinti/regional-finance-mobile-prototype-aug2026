@@ -1776,6 +1776,31 @@
   min-width: 0;
 }
 
+.asset-added-message {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .72rem .8rem;
+  border: 1px solid rgba(67, 142, 80, .28);
+  border-radius: 12px;
+  color: #1f6531;
+  background: #edf8ef;
+}
+
+.asset-added-message > i {
+  font-size: 1.25rem;
+}
+
+.asset-added-message span,
+.asset-added-message strong {
+  display: block;
+}
+
+.asset-added-message span {
+  font-size: .78rem;
+  line-height: 1.35;
+}
+
 .asset-add-card p {
   margin: 0;
   font-size: .85rem;

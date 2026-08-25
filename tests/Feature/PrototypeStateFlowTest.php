@@ -144,6 +144,25 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Add vehicle');
     }
 
+    public function test_add_vehicle_action_updates_shared_scenario_state(): void
+    {
+        $this->post('/prototype/presets/new-customer')->assertRedirect('/');
+
+        $this->post('/assets')->assertRedirect('/assets');
+
+        $this->get('/assets')
+            ->assertOk()
+            ->assertSee('Vehicle added')
+            ->assertSee('2021 Toyota Camry')
+            ->assertDontSee('Track a vehicle');
+
+        $this->post('/assets')->assertRedirect('/assets');
+
+        $this->get('/assets')
+            ->assertOk()
+            ->assertSee('2019 Ford F-150');
+    }
+
     public function test_customer_facing_secondary_pages_render_from_shared_state(): void
     {
         foreach ([

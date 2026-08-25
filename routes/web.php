@@ -180,6 +180,7 @@ Route::get('/offers/{offer?}', fn (?string $offer = null) => app(PrototypeContro
 Route::get('/protection-benefits', fn () => app(PrototypeController::class)->detail(request(), 'protection'))->name('prototype.protection');
 Route::get('/financial-wellness', fn () => app(PrototypeController::class)->detail(request(), 'wellness'))->name('prototype.wellness');
 Route::get('/assets', fn () => app(PrototypeController::class)->detail(request(), 'assets'))->name('prototype.assets');
+Route::post('/assets', [PrototypeController::class, 'addVehicle'])->name('prototype.assets.add');
 Route::get('/profile', fn () => app(PrototypeController::class)->detail(request(), 'profile'))->name('prototype.profile');
 Route::get('/documents', fn () => app(PrototypeController::class)->detail(request(), 'documents'))->name('prototype.documents');
 Route::get('/ai-chat', fn () => app(PrototypeController::class)->detail(request(), 'chat'))->name('prototype.chat');

@@ -81,7 +81,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825asset-add">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825asset-action">
 @endsection
 
 @section('content')
@@ -659,6 +659,12 @@ $pastLoanDocuments = [
             $vehicles = $scenario['assets']['vehicles'] ?? [];
           @endphp
           <section class="assets-page">
+            <form id="add-vehicle-form" method="POST" action="{{ route('prototype.assets.add') }}" hidden>
+              @csrf
+            </form>
+            @if(session('prototype_vehicle_added'))
+              <div class="asset-added-message" role="status"><i class="ti ti-circle-check"></i><span><strong>Vehicle added</strong>Your vehicle is now being tracked.</span></div>
+            @endif
             @if(count($vehicles) > 0)
             <section class="asset-vehicle-list" aria-label="Tracked vehicles">
               @foreach($vehicles as $vehicle)
@@ -683,7 +689,7 @@ $pastLoanDocuments = [
               @endforeach
             </section>
             @else
-              <article class="asset-empty-state"><i class="ti ti-car"></i><h2>Track a vehicle</h2><p>See your estimated vehicle value and equity.</p><button class="btn btn-primary" type="button">Add vehicle</button></article>
+              <article class="asset-empty-state"><i class="ti ti-car"></i><h2>Track a vehicle</h2><p>See your estimated vehicle value and equity.</p><button class="btn btn-primary" type="submit" form="add-vehicle-form">Add vehicle</button></article>
             @endif
             @if(count($vehicles) > 0 && count($vehicles) < 3)
             <article class="asset-add-card">
@@ -691,7 +697,7 @@ $pastLoanDocuments = [
               <div>
                 <h3>Add a vehicle</h3>
               </div>
-              <button class="btn btn-outline-primary w-100" type="button">Add vehicle</button>
+              <button class="btn btn-outline-primary w-100" type="submit" form="add-vehicle-form">Add vehicle</button>
             </article>
             @endif
           </section>

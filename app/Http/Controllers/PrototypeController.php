@@ -288,6 +288,18 @@ class PrototypeController extends Controller
         return redirect()->route('prototype.payment');
     }
 
+    public function addVehicle(Request $request): RedirectResponse
+    {
+        $vehicleCount = (int) ($this->scenarios->state($request)['vehicles']['count'] ?? 0);
+
+        if ($vehicleCount < 3) {
+            $this->scenarios->update($request, ['vehicles' => ['count' => $vehicleCount + 1]]);
+            $request->session()->flash('prototype_vehicle_added', true);
+        }
+
+        return redirect()->route('prototype.assets');
+    }
+
     private function notifications(array $scenario, Request $request): array
     {
         $read = $request->session()->get('prototype_read_notifications', []);
