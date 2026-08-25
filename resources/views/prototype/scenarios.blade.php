@@ -28,11 +28,11 @@ $isFooter = false;
   <section class="builder-section quick-presets">
     <div class="builder-section-heading">
       <div><i class="ti ti-bolt"></i><h2>Quick presets</h2></div>
-      <span class="state-saved-indicator"><i class="ti ti-cloud-check"></i>Saved</span>
+      <span class="state-saved-indicator" data-state-save-status aria-live="polite"><i class="ti ti-cloud-check"></i><span>Saved</span></span>
     </div>
     <div class="preset-strip">
       @foreach($presets as $presetId => $preset)
-        <form method="POST" action="{{ route('prototype.presets.apply', $presetId) }}">
+        <form method="POST" action="{{ route('prototype.presets.apply', $presetId) }}" data-preset-form data-preset-id="{{ $presetId }}">
           @csrf
           <button class="preset-button {{ ($appState['meta']['preset'] ?? '') === $presetId ? 'active' : '' }}" type="submit">
             <i class="ti {{ $preset['icon'] }}"></i>
@@ -168,5 +168,5 @@ $isFooter = false;
 @endsection
 
 @section('page-script')
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state2"></script>
 @endsection

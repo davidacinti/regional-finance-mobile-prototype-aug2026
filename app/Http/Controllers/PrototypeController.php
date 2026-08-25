@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\DashboardModuleService;
 use App\Services\PrototypeScenarioService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -63,9 +64,9 @@ class PrototypeController extends Controller
         return redirect()->route('prototype.index');
     }
 
-    public function updateState(Request $request): RedirectResponse
+    public function updateState(Request $request): JsonResponse|RedirectResponse
     {
-        $this->scenarios->update($request, [
+        $state = $this->scenarios->update($request, [
             'customer' => ['type' => $request->input('customer.type', 'active')],
             'loans' => [
                 'count' => $request->integer('loans.count', 1),
@@ -94,12 +95,20 @@ class PrototypeController extends Controller
             'meta' => ['preset' => 'custom'],
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json(['state' => $state]);
+        }
+
         return redirect()->route('prototype.scenarios')->with('prototype_state_saved', true);
     }
 
-    public function applyPreset(Request $request, string $preset): RedirectResponse
+    public function applyPreset(Request $request, string $preset): JsonResponse|RedirectResponse
     {
-        $this->scenarios->applyPreset($request, $preset);
+        $state = $this->scenarios->applyPreset($request, $preset);
+
+        if ($request->expectsJson()) {
+            return response()->json(['state' => $state]);
+        }
 
         return redirect()->route('prototype.index');
     }

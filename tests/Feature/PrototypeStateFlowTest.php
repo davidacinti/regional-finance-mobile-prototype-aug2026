@@ -30,6 +30,27 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('role="dialog"', false);
     }
 
+    public function test_builder_changes_and_presets_can_save_without_navigation(): void
+    {
+        $this->postJson('/prototype/presets/application-progress')
+            ->assertOk()
+            ->assertJsonPath('state.meta.preset', 'application-progress')
+            ->assertJsonPath('state.origination.step', 'verify_income');
+
+        $this->postJson('/prototype/state', [
+            'customer' => ['type' => 'former'],
+            'loans' => ['count' => 0, 'payment_status' => 'current'],
+            'offer' => ['type' => 'check_for_offers'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 688, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 1],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertOk()
+            ->assertJsonPath('state.meta.preset', 'custom')
+            ->assertJsonPath('state.customer.type', 'former')
+            ->assertJsonPath('state.loans.count', 0);
+    }
+
     public function test_delinquency_suppresses_acquisition_content(): void
     {
         $this->post('/prototype/presets/past-due')->assertRedirect('/');

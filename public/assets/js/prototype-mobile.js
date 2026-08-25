@@ -498,10 +498,88 @@
 
   if (stateBuilder) {
     let submitTimer;
+    let saveQueue = Promise.resolve();
+    let saveRequestId = 0;
+    const storageKey = 'regionalPrototypeStateV2';
+    const saveStatus = document.querySelector('[data-state-save-status]');
+    const saveStatusText = saveStatus?.querySelector('span');
+
+    const setSaveStatus = (label, isError = false) => {
+      if (saveStatusText) saveStatusText.textContent = label;
+      saveStatus?.classList.toggle('text-danger', isError);
+      saveStatus?.querySelector('i')?.classList.toggle('ti-cloud-off', isError);
+      saveStatus?.querySelector('i')?.classList.toggle('ti-cloud-check', !isError);
+    };
+
+    const readStateValue = (state, name) => {
+      return name.replaceAll(']', '').split('[').reduce((value, key) => value?.[key], state);
+    };
+
+    const applyStateToBuilder = state => {
+      stateBuilder.querySelectorAll('[name]').forEach(control => {
+        if (control.type === 'hidden') return;
+        const value = readStateValue(state, control.name);
+        if (typeof value === 'undefined' || value === null) return;
+
+        if (control.type === 'checkbox') {
+          control.checked = Boolean(value);
+        } else if (control.type === 'radio') {
+          control.checked = String(control.value) === String(value);
+        } else {
+          control.value = String(value);
+        }
+      });
+
+      const originationToggle = stateBuilder.querySelector('[data-origination-toggle]');
+      const stepControl = stateBuilder.querySelector('[data-origination-step]');
+      if (originationToggle && stepControl) stepControl.hidden = !originationToggle.checked;
+
+      document.querySelectorAll('[data-preset-form]').forEach(form => {
+        form.querySelector('.preset-button')?.classList.toggle('active', form.dataset.presetId === state?.meta?.preset);
+      });
+    };
+
+    const queueSave = form => {
+      const formData = new FormData(form);
+      const requestId = ++saveRequestId;
+      setSaveStatus('Saving...');
+
+      saveQueue = saveQueue.catch(() => {}).then(async () => {
+        const response = await window.fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Unable to save prototype state.');
+        const payload = await response.json();
+        if (payload.state) {
+          window.localStorage.setItem(storageKey, JSON.stringify(payload.state));
+          if (requestId === saveRequestId) applyStateToBuilder(payload.state);
+        }
+        if (requestId === saveRequestId) setSaveStatus('Saved');
+      }).catch(() => setSaveStatus('Try again', true));
+
+      return saveQueue;
+    };
+
     const submitBuilder = () => {
       window.clearTimeout(submitTimer);
       submitTimer = window.setTimeout(() => stateBuilder.requestSubmit(), 250);
     };
+
+    stateBuilder.addEventListener('submit', event => {
+      event.preventDefault();
+      queueSave(stateBuilder);
+    });
+
+    document.querySelectorAll('[data-preset-form]').forEach(form => {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        window.clearTimeout(submitTimer);
+        queueSave(form);
+      });
+    });
 
     stateBuilder.querySelectorAll('select, input[type="radio"], input[type="checkbox"]').forEach(control => {
       control.addEventListener('change', () => {
