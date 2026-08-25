@@ -95,7 +95,12 @@ class PrototypeScenarioService
             'new-customer' => [
                 'customer' => ['type' => 'new'], 'loans' => ['count' => 0],
                 'offer' => ['type' => 'check_for_offers'], 'vehicles' => ['count' => 0],
-                'wellness' => ['bank_connected' => false],
+                'wellness' => [
+                    'credit_monitoring_enabled' => false,
+                    'bank_connected' => false,
+                    'high_utilization' => false,
+                    'budget_warning' => false,
+                ],
             ],
             default => [],
         };
@@ -165,6 +170,7 @@ class PrototypeScenarioService
             'offer' => ['type' => 'check_for_offers'],
             'origination' => ['active' => false, 'step' => null, 'outcome' => null, 'last_updated' => null],
             'wellness' => [
+                'credit_monitoring_enabled' => true,
                 'credit_score' => 642,
                 'credit_score_change' => 'increase',
                 'high_utilization' => false,
@@ -194,7 +200,7 @@ class PrototypeScenarioService
         $state['wellness']['credit_score_change'] = $this->allowed($state['wellness']['credit_score_change'], ['decrease', 'none', 'increase'], 'increase');
         $state['wellness']['cash_flow'] = $this->allowed($state['wellness']['cash_flow'], ['low', 'normal', 'strong'], 'normal');
         $state['wellness']['spending_trend'] = $this->allowed($state['wellness']['spending_trend'], ['down', 'normal', 'up'], 'normal');
-        foreach (['high_utilization', 'budget_warning', 'bank_connected'] as $key) {
+        foreach (['credit_monitoring_enabled', 'high_utilization', 'budget_warning', 'bank_connected'] as $key) {
             $state['wellness'][$key] = filter_var($state['wellness'][$key], FILTER_VALIDATE_BOOL);
         }
         $state['vehicles']['count'] = max(0, min(3, (int) $state['vehicles']['count']));
@@ -372,22 +378,27 @@ class PrototypeScenarioService
 
     private function wellnessState(array $wellness): array
     {
+        $creditAvailable = (bool) $wellness['credit_monitoring_enabled'];
+        $bankConnected = (bool) $wellness['bank_connected'];
         $change = match ($wellness['credit_score_change']) { 'decrease' => -18, 'none' => 0, default => 8 };
         $spending = match ($wellness['spending_trend']) { 'up' => 3357.34, 'down' => 2488.10, default => 2845.20 };
         $cashFlow = match ($wellness['cash_flow']) { 'low' => ['Low cushion', 82.15], 'strong' => ['Strong cash flow', 742.60], default => ['On track', 288.35] };
         $insights = [];
-        if ($wellness['spending_trend'] === 'up') $insights[] = ['icon' => 'ti-trending-up', 'title' => 'Spending is higher this month', 'body' => "You've spent 18% more than your typical month.", 'cta' => 'View spending'];
-        if ($wellness['high_utilization']) $insights[] = ['icon' => 'ti-percentage', 'title' => 'Credit utilization is high', 'body' => 'Lower balances may help improve your credit profile.', 'cta' => 'See credit details'];
-        if ($change > 0) $insights[] = ['icon' => 'ti-chart-line', 'title' => 'Nice work', 'body' => "Your credit score increased {$change} points.", 'cta' => 'View score'];
-        if ($wellness['budget_warning']) $insights[] = ['icon' => 'ti-alert-circle', 'title' => 'A budget is nearing its limit', 'body' => 'Groceries are at 85% of this month\'s target.', 'cta' => 'View budgets'];
-        if ($wellness['cash_flow'] === 'low') $insights[] = ['icon' => 'ti-calendar-dollar', 'title' => 'Bills are coming up', 'body' => 'You have $986 in expected bills over the next two weeks.', 'cta' => 'View cash flow'];
+        if ($bankConnected && $wellness['spending_trend'] === 'up') $insights[] = ['icon' => 'ti-trending-up', 'title' => 'Spending is higher this month', 'body' => "You've spent 18% more than your typical month.", 'cta' => 'View spending'];
+        if ($creditAvailable && $wellness['high_utilization']) $insights[] = ['icon' => 'ti-percentage', 'title' => 'Credit utilization is high', 'body' => 'Lower balances may help improve your credit profile.', 'cta' => 'See credit details'];
+        if ($creditAvailable && $change > 0) $insights[] = ['icon' => 'ti-chart-line', 'title' => 'Nice work', 'body' => "Your credit score increased {$change} points.", 'cta' => 'View score'];
+        if ($bankConnected && $wellness['budget_warning']) $insights[] = ['icon' => 'ti-alert-circle', 'title' => 'A budget is nearing its limit', 'body' => 'Groceries are at 85% of this month\'s target.', 'cta' => 'View budgets'];
+        if ($bankConnected && $wellness['cash_flow'] === 'low') $insights[] = ['icon' => 'ti-calendar-dollar', 'title' => 'Bills are coming up', 'body' => 'You have $986 in expected bills over the next two weeks.', 'cta' => 'View cash flow'];
+        if ($insights === [] && !$creditAvailable && !$bankConnected) $insights[] = ['icon' => 'ti-sparkles', 'title' => 'Build your financial snapshot', 'body' => 'More insights will appear as your account information becomes available.', 'cta' => 'Learn more'];
         if ($insights === []) $insights[] = ['icon' => 'ti-bulb', 'title' => 'Your finances are on track', 'body' => 'Spending and upcoming bills are within your usual range.', 'cta' => 'View snapshot'];
 
         return [
-            'credit_monitoring_enabled' => true, 'credit_score' => $wellness['credit_score'], 'credit_score_change' => $change,
-            'bank_connected' => $wellness['bank_connected'], 'monthly_spending' => $wellness['bank_connected'] ? $spending : 0,
-            'cash_flow_status' => $wellness['bank_connected'] ? $cashFlow[0] : 'Not connected',
-            'cash_flow_cushion' => $wellness['bank_connected'] ? $cashFlow[1] : 0,
+            'credit_monitoring_enabled' => $creditAvailable,
+            'credit_score' => $creditAvailable ? $wellness['credit_score'] : null,
+            'credit_score_change' => $creditAvailable ? $change : null,
+            'bank_connected' => $bankConnected, 'monthly_spending' => $bankConnected ? $spending : null,
+            'cash_flow_status' => $bankConnected ? $cashFlow[0] : 'Not connected',
+            'cash_flow_cushion' => $bankConnected ? $cashFlow[1] : null,
             'high_utilization' => $wellness['high_utilization'], 'budget_warning' => $wellness['budget_warning'],
             'spending_trend' => $wellness['spending_trend'], 'insights' => $insights,
         ];

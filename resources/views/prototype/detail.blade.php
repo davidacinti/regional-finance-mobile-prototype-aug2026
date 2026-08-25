@@ -81,7 +81,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825asset-action">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825sparse-customer">
 @endsection
 
 @section('content')
@@ -561,6 +561,7 @@ $pastLoanDocuments = [
           @break
         @case('wellness')
           @php
+            $creditAvailable = (bool) ($wellness['credit_monitoring_enabled'] ?? false);
             $bankConnected = (bool) ($wellness['bank_connected'] ?? false);
             $scoreChange = (int) ($wellness['credit_score_change'] ?? 0);
             $budgetCategories = [
@@ -579,11 +580,16 @@ $pastLoanDocuments = [
               <div>
                 <span class="eyebrow">Money Hub</span>
                 <h2>Financial snapshot</h2>
-                <p>Your credit, spending, and cash-flow outlook.</p>
+                <p>{{ ($creditAvailable || $bankConnected) ? 'Your credit, spending, and cash-flow outlook.' : 'Your snapshot will build as information becomes available.' }}</p>
               </div>
-              <div class="wellness-score-ring">
-                <span>{{ $wellness['credit_score'] ?? 642 }}</span>
-                <small>{{ $scoreChange >= 0 ? '+' : '' }}{{ $scoreChange }} pts</small>
+              <div class="wellness-score-ring {{ $creditAvailable ? '' : 'is-unavailable' }}">
+                @if($creditAvailable)
+                  <span>{{ $wellness['credit_score'] }}</span>
+                  <small>{{ $scoreChange >= 0 ? '+' : '' }}{{ $scoreChange }} pts</small>
+                @else
+                  <i class="ti ti-chart-dots"></i>
+                  <small>No score yet</small>
+                @endif
               </div>
             </div>
 
@@ -591,7 +597,7 @@ $pastLoanDocuments = [
               <div>
                 <i class="ti ti-chart-line"></i>
                 <span>Credit monitoring</span>
-                <strong>{{ ($wellness['credit_monitoring_enabled'] ?? false) ? 'On' : 'Off' }}</strong>
+                <strong>{{ $creditAvailable ? 'Available' : 'Not available' }}</strong>
               </div>
               <div>
                 <i class="ti ti-plug-connected"></i>
@@ -601,7 +607,7 @@ $pastLoanDocuments = [
             </div>
 
             <div class="financial-snapshot-grid">
-              <div><span>Credit score</span><strong>{{ $wellness['credit_score'] ?? 642 }}</strong><small>{{ $scoreChange > 0 ? '+' : '' }}{{ $scoreChange }} pts</small></div>
+              <div><span>Credit score</span><strong>{{ $creditAvailable ? $wellness['credit_score'] : '--' }}</strong><small>{{ $creditAvailable ? (($scoreChange > 0 ? '+' : '') . $scoreChange . ' pts') : 'Not available yet' }}</small></div>
               <div><span>Monthly spending</span><strong>{{ $bankConnected ? $money($wellness['monthly_spending'] ?? 0) : '--' }}</strong><small>{{ $bankConnected ? ($wellness['spending_trend'] === 'up' ? 'Higher' : ($wellness['spending_trend'] === 'down' ? 'Improving' : 'Typical')) : 'Connect account' }}</small></div>
               <div><span>Cash-flow outlook</span><strong>{{ $bankConnected ? $money($wellness['cash_flow_cushion'] ?? 0) : '--' }}</strong><small>{{ $wellness['cash_flow_status'] ?? 'Not connected' }}</small></div>
             </div>

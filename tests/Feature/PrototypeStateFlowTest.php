@@ -144,6 +144,28 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Add vehicle');
     }
 
+    public function test_new_customer_does_not_assume_credit_bank_or_vehicle_data(): void
+    {
+        $this->post('/prototype/presets/new-customer')->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('Financial health')
+            ->assertDontSee('<strong>642</strong>', false)
+            ->assertDontSee('Track your cars');
+
+        $this->get('/financial-wellness')
+            ->assertOk()
+            ->assertSee('No score yet')
+            ->assertSee('Not available yet')
+            ->assertSee('Not connected')
+            ->assertDontSee('2,845.20');
+
+        $this->get('/notifications')
+            ->assertOk()
+            ->assertDontSee('Credit score update');
+    }
+
     public function test_add_vehicle_action_updates_shared_scenario_state(): void
     {
         $this->post('/prototype/presets/new-customer')->assertRedirect('/');

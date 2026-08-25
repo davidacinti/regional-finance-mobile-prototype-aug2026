@@ -80,6 +80,7 @@ class PrototypeController extends Controller
                 'last_updated' => now()->toIso8601String(),
             ],
             'wellness' => [
+                'credit_monitoring_enabled' => $request->boolean('wellness.credit_monitoring_enabled'),
                 'credit_score' => $request->integer('wellness.credit_score', 642),
                 'credit_score_change' => $request->input('wellness.credit_score_change', 'increase'),
                 'high_utilization' => $request->boolean('wellness.high_utilization'),
@@ -311,17 +312,6 @@ class PrototypeController extends Controller
 
         $notifications = [
             [
-                'id' => 'money-hub-score',
-                'type' => 'Money Hub',
-                'title' => 'Credit score update',
-                'body' => ($wellness['credit_score_change'] ?? 0) === 0
-                    ? 'Your credit score is holding steady.'
-                    : 'Your credit score moved ' . (($wellness['credit_score_change'] ?? 0) > 0 ? 'up' : 'down') . ' ' . abs((int) ($wellness['credit_score_change'] ?? 0)) . ' points.',
-                'time' => '2 hours ago',
-                'icon' => 'ti-chart-line',
-                'url' => route('prototype.wellness'),
-            ],
-            [
                 'id' => 'branch-help',
                 'type' => 'Branch',
                 'title' => 'Your branch is available',
@@ -331,6 +321,20 @@ class PrototypeController extends Controller
                 'url' => route('prototype.support'),
             ],
         ];
+
+        if ($wellness['credit_monitoring_enabled'] ?? false) {
+            array_unshift($notifications, [
+                'id' => 'money-hub-score',
+                'type' => 'Money Hub',
+                'title' => 'Credit score update',
+                'body' => ($wellness['credit_score_change'] ?? 0) === 0
+                    ? 'Your credit score is holding steady.'
+                    : 'Your credit score moved ' . (($wellness['credit_score_change'] ?? 0) > 0 ? 'up' : 'down') . ' ' . abs((int) ($wellness['credit_score_change'] ?? 0)) . ' points.',
+                'time' => '2 hours ago',
+                'icon' => 'ti-chart-line',
+                'url' => route('prototype.wellness'),
+            ]);
+        }
 
         if ($loan !== []) {
             array_unshift($notifications, [

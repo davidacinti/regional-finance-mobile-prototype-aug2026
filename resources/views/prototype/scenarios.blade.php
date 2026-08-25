@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825asset-action">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825sparse-customer">
 @endsection
 
 @section('content')
@@ -103,6 +103,7 @@ $customizerHidden = 'customizer-hide';
 
     <section class="builder-section">
       <div class="builder-section-heading"><div><span>4</span><h2>Financial wellness</h2></div><i class="ti ti-heart-rate-monitor"></i></div>
+      <label class="builder-switch primary-switch"><span><strong>Credit score available</strong><small>Show score and credit insights</small></span><input type="hidden" name="wellness[credit_monitoring_enabled]" value="0"><input type="checkbox" name="wellness[credit_monitoring_enabled]" value="1" @checked($appState['wellness']['credit_monitoring_enabled'])></label>
       <div class="builder-control">
         <label>Credit score change</label>
         <div class="builder-segments three">
