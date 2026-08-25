@@ -16,7 +16,8 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Hi, Jordan')
-            ->assertSee('Personal loan');
+            ->assertSee('Personal loan')
+            ->assertSee('data-branch-map', false);
     }
 
     public function test_prequalified_offer_drives_dashboard_and_interstitial(): void

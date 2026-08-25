@@ -68,6 +68,7 @@ $highlightCards[] = [
 @section('title', 'Regional Finance Mobile Prototype')
 
 @section('page-style')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825state">
 @endsection
 
@@ -280,6 +281,23 @@ $highlightCards[] = [
         <i class="ti ti-map-pin"></i>
       </div>
       <h2>{{ $branch['name'] ?? 'Regional Finance branch' }}</h2>
+      <div
+        class="branch-map branch-map-home"
+        data-branch-map
+        data-lat="{{ $branch['lat'] ?? 34.8334 }}"
+        data-lng="{{ $branch['lng'] ?? -82.3075 }}"
+        data-zoom="14"
+        data-title="{{ $branch['name'] ?? 'Regional Finance branch' }}"
+        data-map-url="https://www.google.com/maps/search/?api=1&query={{ urlencode($branch['address'] ?? 'Regional Finance') }}"
+        role="link"
+        tabindex="0"
+        aria-label="Open {{ $branch['name'] ?? 'Regional Finance branch' }} in Google Maps"
+      >
+        <div class="branch-map-fallback">
+          <i class="ti ti-map-pin"></i>
+          <span>{{ $branch['address'] ?? 'Find your nearest branch' }}</span>
+        </div>
+      </div>
       <p><i class="ti ti-map-2"></i>{{ $branch['address'] ?? 'Find your nearest branch' }}</p>
       <div class="button-row">
         <a href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}" class="btn btn-primary flex-fill"><i class="ti ti-phone"></i>Call</a>
@@ -341,5 +359,6 @@ $highlightCards[] = [
 @endsection
 
 @section('page-script')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state"></script>
 @endsection
