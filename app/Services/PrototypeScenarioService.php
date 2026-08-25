@@ -77,8 +77,10 @@ class PrototypeScenarioService
 
     public function applyPreset(Request $request, string $preset): array
     {
+        $pendingPayment = $this->state($request)['payments']['pending'] ?? null;
         $state = $this->defaultState();
         $state['meta']['preset'] = $preset;
+        $state['payments']['pending'] = $pendingPayment;
         $changes = match ($preset) {
             'prequalified-renewal' => ['offer' => ['type' => 'prequalified_renewal']],
             'past-due' => ['loans' => ['payment_status' => 'past_due_30'], 'offer' => ['type' => 'prequalified_renewal']],
@@ -173,6 +175,7 @@ class PrototypeScenarioService
             ],
             'vehicles' => ['count' => 1],
             'protection' => ['enabled' => true, 'context' => 'auto'],
+            'payments' => ['pending' => null],
         ];
     }
 
@@ -197,6 +200,21 @@ class PrototypeScenarioService
         $state['vehicles']['count'] = max(0, min(3, (int) $state['vehicles']['count']));
         $state['protection']['enabled'] = filter_var($state['protection']['enabled'], FILTER_VALIDATE_BOOL);
         $state['protection']['context'] = $this->allowed($state['protection']['context'], ['loan', 'home_auto', 'auto'], 'auto');
+        if (is_array($state['payments']['pending'])) {
+            $state['payments']['pending'] = array_replace([
+                'id' => 'PMT-DEMO',
+                'loan_id' => 1002841,
+                'loan_name' => 'Personal loan',
+                'amount' => 0.0,
+                'minimum_due' => 0.0,
+                'payment_date' => now()->toDateString(),
+                'status' => 'Pending',
+                'account' => ['name' => 'Checking', 'label' => 'Checking - 4203', 'routing' => null],
+                'warning' => null,
+            ], $state['payments']['pending']);
+        } else {
+            $state['payments']['pending'] = null;
+        }
 
         return $state;
     }
@@ -244,6 +262,7 @@ class PrototypeScenarioService
             'financial_wellness' => $wellness,
             'assets' => ['vehicles' => array_slice($this->vehicleTemplates(), 0, $state['vehicles']['count'])],
             'protection' => $state['protection'],
+            'payments' => $state['payments'],
             'branch' => [
                 'name' => 'Greenville Branch',
                 'address' => '1450 Woodruff Rd, Greenville, SC 29607',

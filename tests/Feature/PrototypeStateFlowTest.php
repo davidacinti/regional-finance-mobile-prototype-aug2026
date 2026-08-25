@@ -63,6 +63,39 @@ class PrototypeStateFlowTest extends TestCase
             ->assertDontSee('offer-interstitial', false);
     }
 
+    public function test_pending_payment_persists_across_pages_and_presets_until_reset(): void
+    {
+        $paymentDate = now()->addDays(2)->toDateString();
+
+        $this->post('/payments', [
+            'amount' => '214.00',
+            'payment_date' => $paymentDate,
+            'account_mode' => 'saved',
+            'saved_account' => 'Primary Checking - 4203',
+        ])->assertRedirect('/payments/new');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Pending payment')
+            ->assertSee('$214.00 scheduled');
+
+        $this->get('/loans/1002841')
+            ->assertOk()
+            ->assertSee('Payment pending')
+            ->assertSee('View pending payment');
+
+        $this->postJson('/prototype/presets/prequalified-renewal')
+            ->assertOk()
+            ->assertJsonPath('state.payments.pending.amount', 214);
+
+        $this->get('/scenarios')
+            ->assertOk()
+            ->assertSee('This payment remains in the prototype until it is cancelled or the scenario is reset.');
+
+        $this->post('/prototype/reset')->assertRedirect('/scenarios');
+        $this->get('/')->assertDontSee('pending-payment-dashboard', false);
+    }
+
     public function test_application_resumes_and_moves_one_step_at_a_time(): void
     {
         $this->post('/prototype/presets/application-progress')->assertRedirect('/');

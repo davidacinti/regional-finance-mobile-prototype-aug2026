@@ -28,12 +28,6 @@
       }
 
       event.preventDefault();
-
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
-
       window.location.assign(button.getAttribute('href') || '/');
     });
   });

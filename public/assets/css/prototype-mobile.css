@@ -831,6 +831,143 @@
   background: #fdecec;
 }
 
+.status-pill.pending {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  color: #185d83;
+  background: #e4f3fb;
+}
+
+.pending-payment-dashboard {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: .7rem;
+  margin: 0 24px 18px;
+  padding: .85rem;
+  border: 1px solid rgba(67, 124, 191, .28);
+  border-radius: 14px;
+  background: #eef8fd;
+}
+
+.pending-payment-dashboard-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  color: #12345b;
+  background: #cdd929;
+  font-size: 1.25rem;
+}
+
+.pending-payment-dashboard strong,
+.pending-payment-dashboard small {
+  display: block;
+}
+
+.pending-payment-dashboard strong {
+  color: #12345b;
+  font-size: .95rem;
+}
+
+.pending-payment-dashboard small {
+  margin-top: .12rem;
+  overflow: hidden;
+  color: #62758a;
+  font-size: .72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pending-payment-dashboard > a {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  color: #2769b4;
+  background: #fff;
+}
+
+.loan-pending-summary {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .6rem;
+  margin: .75rem 0;
+  padding: .7rem;
+  border: 1px solid rgba(67, 124, 191, .25);
+  border-radius: 12px;
+  color: #12345b;
+  background: #eef8fd;
+}
+
+.loan-pending-summary > i:first-child {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: #cdd929;
+}
+
+.loan-pending-summary small,
+.loan-pending-summary strong {
+  display: block;
+}
+
+.loan-pending-summary small {
+  color: #62758a;
+  font-size: .68rem;
+  text-transform: uppercase;
+}
+
+.builder-pending-payment {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid #c9ddec;
+  border-radius: 14px;
+  color: #12345b;
+  background: #eef8fd;
+}
+
+.builder-pending-payment > i {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: #cdd929;
+  font-size: 1.25rem;
+}
+
+.builder-pending-payment span,
+.builder-pending-payment strong,
+.builder-pending-payment small {
+  display: block;
+}
+
+.builder-pending-payment span,
+.builder-pending-payment small {
+  color: #62758a;
+  font-size: .72rem;
+}
+
+.builder-pending-payment > a {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  color: #2769b4;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
 .account-alert {
   display: flex;
   align-items: flex-start;

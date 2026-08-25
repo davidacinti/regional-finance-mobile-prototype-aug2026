@@ -124,6 +124,7 @@ $pastLoanDocuments = [
         $originalPrincipal = max(($loan['balance'] ?? 0) + 1100, 16000);
         $paidOffPercent = min(100, max(0, round((($originalPrincipal - ($loan['balance'] ?? 0)) / $originalPrincipal) * 100)));
         $payoffAmount = ($loan['balance'] ?? 0) + 42.18;
+        $loanPendingPayment = ($scheduledPayment['loan_id'] ?? null) === ($loan['id'] ?? null) ? $scheduledPayment : null;
         $activityRows = [
           ['date' => '2026-07-21', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => $loan['balance']],
           ['date' => '2026-06-17', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 469.10],
@@ -142,6 +143,7 @@ $pastLoanDocuments = [
         <div class="loan-status-pills">
           <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
           <span class="status-pill autopay-pill {{ $loan['autopay_enabled'] ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loan['autopay_enabled'] ? 'On' : 'Off' }}</span>
+          @if($loanPendingPayment)<span class="status-pill pending"><i class="ti ti-clock-check"></i>Payment pending</span>@endif
         </div>
       </section>
 
@@ -154,8 +156,15 @@ $pastLoanDocuments = [
           <strong>AutoPay {{ $loan['autopay_enabled'] ? 'on' : 'off' }}</strong>
           <a href="{{ route('prototype.payment') }}">{{ $loan['autopay_enabled'] ? 'Manage' : 'Set up' }}</a>
         </div>
+        @if($loanPendingPayment)
+          <a href="{{ route('prototype.payment') }}" class="loan-pending-summary">
+            <i class="ti ti-clock-check"></i>
+            <span><small>Pending payment</small><strong>{{ $money($loanPendingPayment['amount']) }} on {{ $date($loanPendingPayment['payment_date']) }}</strong></span>
+            <i class="ti ti-chevron-right"></i>
+          </a>
+        @endif
         <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
-        <a href="{{ route('prototype.payment') }}" class="btn btn-primary w-100"><i class="ti ti-credit-card"></i>Make a payment</a>
+        <a href="{{ route('prototype.payment') }}" class="btn btn-primary w-100"><i class="ti {{ $loanPendingPayment ? 'ti-clock-check' : 'ti-credit-card' }}"></i>{{ $loanPendingPayment ? 'View pending payment' : 'Make a payment' }}</a>
       </section>
 
       @if($application)
@@ -233,9 +242,16 @@ $pastLoanDocuments = [
             @endforeach
           </div>
           <div class="scheduled-empty" data-activity-panel="scheduled" hidden>
-            <i class="ti ti-calendar-dollar"></i>
-            <strong>{{ $loan['autopay_enabled'] ? 'Next AutoPay is scheduled' : 'No scheduled payments yet' }}</strong>
-            <span>{{ $loan['autopay_enabled'] ? $money($loan['next_payment_amount']) . ' on ' . $date($loan['next_payment_date']) : 'Scheduled payments will show here once they are set up.' }}</span>
+            @if($loanPendingPayment)
+              <i class="ti ti-clock-check"></i>
+              <strong>{{ $money($loanPendingPayment['amount']) }} payment pending</strong>
+              <span>Scheduled for {{ $date($loanPendingPayment['payment_date']) }} from {{ $loanPendingPayment['account']['label'] }}.</span>
+              <a href="{{ route('prototype.payment') }}" class="btn btn-outline-primary btn-sm">View payment</a>
+            @else
+              <i class="ti ti-calendar-dollar"></i>
+              <strong>{{ $loan['autopay_enabled'] ? 'Next AutoPay is scheduled' : 'No scheduled payments yet' }}</strong>
+              <span>{{ $loan['autopay_enabled'] ? $money($loan['next_payment_amount']) . ' on ' . $date($loan['next_payment_date']) : 'Scheduled payments will show here once they are set up.' }}</span>
+            @endif
           </div>
         </article>
       </section>

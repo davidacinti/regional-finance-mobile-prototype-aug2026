@@ -32,6 +32,7 @@ class PrototypeController extends Controller
                 (bool) $request->session()->get('prototype_interstitial_dismissed', false)
             ),
             'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
+            'scheduledPayment' => $state['payments']['pending'] ?? null,
         ]);
     }
 
@@ -146,7 +147,7 @@ class PrototypeController extends Controller
             'id' => $id,
             'scenario' => $scenario,
             'appState' => $this->scenarios->state($request),
-            'scheduledPayment' => $request->session()->get('prototype_scheduled_payment'),
+            'scheduledPayment' => $scenario['payments']['pending'] ?? null,
             'paymentStatus' => $request->session()->get('prototype_payment_status'),
             'notifications' => $this->notifications($scenario, $request),
             'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
@@ -246,7 +247,7 @@ class PrototypeController extends Controller
         $paymentDate = Carbon::parse($request->input('payment_date', now()->toDateString()))->format('Y-m-d');
         $accountMode = $request->input('account_mode', 'saved');
 
-        $request->session()->put('prototype_scheduled_payment', [
+        $scheduledPayment = [
             'id' => 'PMT-' . now()->format('His'),
             'loan_id' => $loan['id'] ?? 1002841,
             'loan_name' => $loan['name'] ?? 'Personal loan',
@@ -268,7 +269,10 @@ class PrototypeController extends Controller
             'warning' => $amount < $minimumDue
                 ? 'This payment is scheduled, but it will not satisfy the minimum payment due.'
                 : null,
-        ]);
+        ];
+
+        $this->scenarios->update($request, ['payments' => ['pending' => $scheduledPayment]]);
+        $request->session()->forget('prototype_scheduled_payment');
 
         $request->session()->flash('prototype_payment_status', 'scheduled');
 
@@ -277,6 +281,7 @@ class PrototypeController extends Controller
 
     public function cancelPayment(Request $request): RedirectResponse
     {
+        $this->scenarios->update($request, ['payments' => ['pending' => null]]);
         $request->session()->forget('prototype_scheduled_payment');
         $request->session()->flash('prototype_payment_status', 'cancelled');
 
@@ -290,7 +295,7 @@ class PrototypeController extends Controller
         $loan = $scenario['loans'][0] ?? [];
         $offer = $scenario['offer'] ?? [];
         $wellness = $scenario['financial_wellness'] ?? [];
-        $scheduledPayment = $request->session()->get('prototype_scheduled_payment');
+        $scheduledPayment = $scenario['payments']['pending'] ?? null;
 
         $notifications = [
             [

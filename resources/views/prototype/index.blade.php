@@ -13,6 +13,7 @@ $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
 $secureLoanUrl = route('prototype.offers');
 $trackedVehicles = $scenario['assets']['vehicles'] ?? [];
+$scheduledPayment = $scheduledPayment ?? ($scenario['payments']['pending'] ?? null);
 $money = fn ($value) => '$' . number_format((float) $value, 2);
 $date = fn ($value) => \Carbon\Carbon::parse($value)->format('M j, Y');
 $servicingAlert = $scenario['servicing_alert'] ?? [];
@@ -148,6 +149,18 @@ $highlightCards[] = [
       </div>
     </aside>
 
+    @if($scheduledPayment)
+      <section class="pending-payment-dashboard" role="status">
+        <div class="pending-payment-dashboard-icon"><i class="ti ti-clock-check"></i></div>
+        <div>
+          <span class="eyebrow">Pending payment</span>
+          <strong>{{ $money($scheduledPayment['amount']) }} scheduled</strong>
+          <small>{{ $date($scheduledPayment['payment_date']) }} from {{ $scheduledPayment['account']['label'] }}</small>
+        </div>
+        <a href="{{ route('prototype.payment') }}" aria-label="View pending payment"><i class="ti ti-chevron-right"></i></a>
+      </section>
+    @endif
+
     @if($modules['show_late_banner'])
       <section class="alert-card urgent" role="status">
         <div>
@@ -205,6 +218,12 @@ $highlightCards[] = [
               $loanAutopayEnabled = (($autopayOverride['loan_id'] ?? null) === $loan['id'])
                 ? (bool) $autopayOverride['enrolled']
                 : (bool) ($loan['autopay_enabled'] ?? false);
+              $loanPendingPayment = ($scheduledPayment['loan_id'] ?? null) === $loan['id'] ? $scheduledPayment : null;
+              if ($loanPendingPayment) {
+                $loanAlertTone = 'warning';
+                $loanAlertTitle = 'Payment pending';
+                $loanAlertBody = $money($loanPendingPayment['amount']) . ' is scheduled for ' . $date($loanPendingPayment['payment_date']) . '.';
+              }
             @endphp
             <article class="app-card loan-card">
               <div class="card-heading">
@@ -212,6 +231,7 @@ $highlightCards[] = [
                 <span class="loan-status-pills">
                   <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
                   <span class="status-pill autopay-pill {{ $loanAutopayEnabled ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loanAutopayEnabled ? 'On' : 'Off' }}</span>
+                  @if($loanPendingPayment)<span class="status-pill pending"><i class="ti ti-clock-check"></i>Payment pending</span>@endif
                 </span>
               </div>
               <div class="balance">{{ $money($loan['balance']) }}</div>
@@ -222,7 +242,7 @@ $highlightCards[] = [
               </div>
               <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
               <div class="button-row">
-                <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti ti-credit-card"></i>Make a payment</a>
+                <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti {{ $loanPendingPayment ? 'ti-clock-check' : 'ti-credit-card' }}"></i>{{ $loanPendingPayment ? 'View payment' : 'Make a payment' }}</a>
                 <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-chevron-right"></i>Details</a>
               </div>
             </article>

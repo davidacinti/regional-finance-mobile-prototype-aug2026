@@ -26,6 +26,15 @@ $customizerHidden = 'customizer-hide';
     <a href="{{ route('prototype.index') }}" class="btn btn-primary"><i class="ti ti-device-mobile"></i>Open app</a>
   </header>
 
+  @if($appState['payments']['pending'] ?? null)
+    @php($pendingPayment = $appState['payments']['pending'])
+    <section class="builder-pending-payment" role="status">
+      <i class="ti ti-clock-check"></i>
+      <div><span>Pending payment</span><strong>${{ number_format((float) $pendingPayment['amount'], 2) }} scheduled for {{ \Carbon\Carbon::parse($pendingPayment['payment_date'])->format('M j, Y') }}</strong><small>This payment remains in the prototype until it is cancelled or the scenario is reset.</small></div>
+      <a href="{{ route('prototype.payment') }}">View<i class="ti ti-arrow-right"></i></a>
+    </section>
+  @endif
+
   <section class="builder-section quick-presets">
     <div class="builder-section-heading">
       <div><i class="ti ti-bolt"></i><h2>Quick presets</h2></div>
