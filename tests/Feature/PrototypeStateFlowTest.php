@@ -52,6 +52,24 @@ class PrototypeStateFlowTest extends TestCase
             ->assertJsonPath('state.loans.count', 0);
     }
 
+    public function test_explicit_builder_save_redirects_to_rendered_home(): void
+    {
+        $this->post('/prototype/state', [
+            'customer' => ['type' => 'former'],
+            'loans' => ['count' => 0, 'payment_status' => 'current'],
+            'offer' => ['type' => 'check_for_offers'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 688, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 1],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Need funds again?')
+            ->assertDontSee('Personal loan');
+    }
+
     public function test_delinquency_suppresses_acquisition_content(): void
     {
         $this->post('/prototype/presets/past-due')->assertRedirect('/');

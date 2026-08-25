@@ -53,7 +53,7 @@ $customizerHidden = 'customizer-hide';
     </div>
   </section>
 
-  <form method="POST" action="{{ route('prototype.state.update') }}" class="state-builder-form" data-state-builder>
+  <form method="POST" action="{{ route('prototype.state.update') }}" class="state-builder-form" data-state-builder data-success-url="{{ route('prototype.index') }}">
     @csrf
 
     <section class="builder-section">
@@ -178,5 +178,5 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('page-script')
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825payments"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825scenario-save"></script>
 @endsection

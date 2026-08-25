@@ -552,19 +552,25 @@
           if (requestId === saveRequestId) applyStateToBuilder(payload.state);
         }
         if (requestId === saveRequestId) setSaveStatus('Saved');
-      }).catch(() => setSaveStatus('Try again', true));
+        return true;
+      }).catch(() => {
+        setSaveStatus('Try again', true);
+        return false;
+      });
 
       return saveQueue;
     };
 
     const submitBuilder = () => {
       window.clearTimeout(submitTimer);
-      submitTimer = window.setTimeout(() => stateBuilder.requestSubmit(), 250);
+      submitTimer = window.setTimeout(() => queueSave(stateBuilder), 250);
     };
 
-    stateBuilder.addEventListener('submit', event => {
+    stateBuilder.addEventListener('submit', async event => {
       event.preventDefault();
-      queueSave(stateBuilder);
+      window.clearTimeout(submitTimer);
+      const saved = await queueSave(stateBuilder);
+      if (saved) window.location.assign(stateBuilder.dataset.successUrl || '/');
     });
 
     document.querySelectorAll('[data-preset-form]').forEach(form => {

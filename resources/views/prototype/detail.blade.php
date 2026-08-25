@@ -1057,5 +1057,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825payments"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825scenario-save"></script>
 @endsection

@@ -100,7 +100,7 @@ class PrototypeController extends Controller
             return response()->json(['state' => $state]);
         }
 
-        return redirect()->route('prototype.scenarios')->with('prototype_state_saved', true);
+        return redirect()->route('prototype.index')->with('prototype_state_saved', true);
     }
 
     public function applyPreset(Request $request, string $preset): JsonResponse|RedirectResponse
