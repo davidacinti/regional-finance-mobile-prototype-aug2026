@@ -70,7 +70,7 @@ $highlightCards[] = [
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825state">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825payments">
 @endsection
 
 @section('content')
@@ -380,5 +380,5 @@ $highlightCards[] = [
 
 @section('page-script')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825payments"></script>
 @endsection

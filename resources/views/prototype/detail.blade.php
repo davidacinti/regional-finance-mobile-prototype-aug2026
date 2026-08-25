@@ -81,7 +81,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825state">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825payments">
 @endsection
 
 @section('content')
@@ -1057,5 +1057,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825payments"></script>
 @endsection

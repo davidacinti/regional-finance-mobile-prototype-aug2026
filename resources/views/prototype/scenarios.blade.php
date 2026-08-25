@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825state">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825payments">
 @endsection
 
 @section('content')
@@ -178,5 +178,5 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('page-script')
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state2"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825payments"></script>
 @endsection
