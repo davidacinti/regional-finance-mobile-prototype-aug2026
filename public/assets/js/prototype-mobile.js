@@ -465,6 +465,76 @@
     syncWarning();
   }
 
+  const stateNode = document.querySelector('[data-prototype-state]');
+
+  if (stateNode) {
+    try {
+      const serverState = JSON.parse(stateNode.textContent || '{}');
+      const storageKey = 'regionalPrototypeStateV2';
+      const savedState = JSON.parse(window.localStorage.getItem(storageKey) || 'null');
+      const serverRevision = Number(serverState?.meta?.revision || 0);
+      const savedRevision = Number(savedState?.meta?.revision || 0);
+      const syncKey = `regionalPrototypeSync:${savedRevision}`;
+
+      if (savedState && savedRevision > serverRevision && !window.sessionStorage.getItem(syncKey)) {
+        window.sessionStorage.setItem(syncKey, '1');
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        window.fetch('/prototype/state/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, Accept: 'application/json' },
+          body: JSON.stringify({ state: savedState })
+        }).then(response => {
+          if (response.ok) window.location.reload();
+        });
+      } else {
+        window.localStorage.setItem(storageKey, JSON.stringify(serverState));
+      }
+    } catch (error) {
+      window.localStorage.removeItem('regionalPrototypeStateV2');
+    }
+  }
+
+  const stateBuilder = document.querySelector('[data-state-builder]');
+
+  if (stateBuilder) {
+    let submitTimer;
+    const submitBuilder = () => {
+      window.clearTimeout(submitTimer);
+      submitTimer = window.setTimeout(() => stateBuilder.requestSubmit(), 250);
+    };
+
+    stateBuilder.querySelectorAll('select, input[type="radio"], input[type="checkbox"]').forEach(control => {
+      control.addEventListener('change', () => {
+        if (control.matches('[data-origination-toggle]')) {
+          const stepControl = stateBuilder.querySelector('[data-origination-step]');
+          if (stepControl) stepControl.hidden = !control.checked;
+        }
+        submitBuilder();
+      });
+    });
+
+    stateBuilder.querySelectorAll('[data-stepper]').forEach(stepper => {
+      const input = stepper.querySelector('input[type="number"]');
+      const changeValue = delta => {
+        if (!input) return;
+        const min = Number(input.min || 0);
+        const max = Number(input.max || 99);
+        input.value = String(Math.max(min, Math.min(max, Number(input.value || 0) + delta)));
+        submitBuilder();
+      };
+      stepper.querySelector('[data-stepper-minus]')?.addEventListener('click', () => changeValue(-1));
+      stepper.querySelector('[data-stepper-plus]')?.addEventListener('click', () => changeValue(1));
+    });
+
+    stateBuilder.querySelectorAll('input[type="number"]:not([readonly])').forEach(input => {
+      input.addEventListener('change', submitBuilder);
+    });
+  }
+
+  document.querySelector('[data-reset-prototype]')?.addEventListener('submit', () => {
+    window.localStorage.removeItem('regionalPrototypeStateV2');
+  });
+
   const modal = document.querySelector('.prototype-modal');
 
   if (!modal) {

@@ -19,15 +19,16 @@ class PrototypeController extends Controller
 
     public function index(Request $request): View
     {
-        $scenarioId = $request->session()->get('prototype_scenario', PrototypeScenarioService::DEFAULT_SCENARIO);
-        $scenario = $this->scenarios->find($scenarioId);
+        $state = $this->scenarios->state($request);
+        $scenario = $this->scenarios->scenario($request);
 
         return view('prototype.index', [
-            'scenarioId' => $scenarioId,
+            'scenarioId' => $state['meta']['preset'] ?? PrototypeScenarioService::DEFAULT_SCENARIO,
+            'appState' => $state,
             'scenario' => $scenario,
             'modules' => $this->modules->build(
                 $scenario,
-                (bool) $request->session()->get("prototype_interstitial_dismissed.$scenarioId", false)
+                (bool) $request->session()->get('prototype_interstitial_dismissed', false)
             ),
             'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
         ]);
@@ -38,43 +39,137 @@ class PrototypeController extends Controller
         return $this->index($request);
     }
 
-    public function scenarios(): View
+    public function scenarios(Request $request): View
     {
         return view('prototype.scenarios', [
-            'groups' => $this->scenarios->groups(),
-            'activeScenarioId' => session('prototype_scenario', PrototypeScenarioService::DEFAULT_SCENARIO),
+            'appState' => $this->scenarios->state($request),
+            'presets' => $this->scenarios->presets(),
+            'options' => $this->scenarios->builderOptions(),
         ]);
     }
 
     public function selectScenario(Request $request, string $scenario): RedirectResponse
     {
-        $request->session()->put('prototype_scenario', $scenario);
+        $legacyPresets = [
+            'present-one-loan' => 'healthy-active',
+            'present-pcpq' => 'prequalified-renewal',
+            'default-30-days-past-due' => 'past-due',
+            'present-application-in-progress' => 'application-progress',
+            'former-no-loan' => 'former-borrower',
+            'origination-new-customer-started' => 'new-customer',
+        ];
+        $this->scenarios->applyPreset($request, $legacyPresets[$scenario] ?? $scenario);
 
         return redirect()->route('prototype.index');
     }
 
+    public function updateState(Request $request): RedirectResponse
+    {
+        $this->scenarios->update($request, [
+            'customer' => ['type' => $request->input('customer.type', 'active')],
+            'loans' => [
+                'count' => $request->integer('loans.count', 1),
+                'payment_status' => $request->input('loans.payment_status', 'current'),
+            ],
+            'offer' => ['type' => $request->input('offer.type', 'none')],
+            'origination' => [
+                'active' => $request->boolean('origination.active'),
+                'step' => $request->input('origination.step'),
+                'last_updated' => now()->toIso8601String(),
+            ],
+            'wellness' => [
+                'credit_score' => $request->integer('wellness.credit_score', 642),
+                'credit_score_change' => $request->input('wellness.credit_score_change', 'increase'),
+                'high_utilization' => $request->boolean('wellness.high_utilization'),
+                'budget_warning' => $request->boolean('wellness.budget_warning'),
+                'cash_flow' => $request->input('wellness.cash_flow', 'normal'),
+                'spending_trend' => $request->input('wellness.spending_trend', 'normal'),
+                'bank_connected' => $request->boolean('wellness.bank_connected'),
+            ],
+            'vehicles' => ['count' => $request->integer('vehicles.count', 0)],
+            'protection' => [
+                'enabled' => $request->boolean('protection.enabled'),
+                'context' => $request->input('protection.context', 'auto'),
+            ],
+            'meta' => ['preset' => 'custom'],
+        ]);
+
+        return redirect()->route('prototype.scenarios')->with('prototype_state_saved', true);
+    }
+
+    public function applyPreset(Request $request, string $preset): RedirectResponse
+    {
+        $this->scenarios->applyPreset($request, $preset);
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function resetPrototype(Request $request): RedirectResponse
+    {
+        $this->scenarios->reset($request);
+
+        return redirect()->route('prototype.scenarios');
+    }
+
+    public function syncState(Request $request): RedirectResponse
+    {
+        $state = $request->input('state');
+        if (is_array($state)) {
+            $this->scenarios->save($request, $state);
+        }
+
+        return back();
+    }
+
     public function dismissInterstitial(Request $request): RedirectResponse
     {
-        $scenarioId = $request->session()->get('prototype_scenario', PrototypeScenarioService::DEFAULT_SCENARIO);
-        $request->session()->put("prototype_interstitial_dismissed.$scenarioId", true);
+        $request->session()->put('prototype_interstitial_dismissed', true);
 
         return back();
     }
 
     public function detail(Request $request, string $type, ?string $id = null): View
     {
-        $scenario = $this->scenarios->find($request->session()->get('prototype_scenario'));
+        $scenario = $this->scenarios->scenario($request);
 
         return view('prototype.detail', [
             'type' => $type,
             'id' => $id,
             'scenario' => $scenario,
+            'appState' => $this->scenarios->state($request),
             'scheduledPayment' => $request->session()->get('prototype_scheduled_payment'),
             'paymentStatus' => $request->session()->get('prototype_payment_status'),
             'notifications' => $this->notifications($scenario, $request),
             'autopayOverride' => $request->session()->get('prototype_autopay_enrollment'),
             'autopayStatus' => $request->session()->get('prototype_autopay_status'),
         ]);
+    }
+
+    public function startApplication(Request $request): RedirectResponse
+    {
+        $state = $this->scenarios->startApplication($request);
+
+        return redirect()->route('prototype.application', 62001)
+            ->with('prototype_application_started', $state['origination']['step']);
+    }
+
+    public function advanceApplication(Request $request, string $application): RedirectResponse
+    {
+        $state = $this->scenarios->state($request);
+        if (($state['origination']['step'] ?? null) === 'complete') {
+            return redirect()->route('prototype.index');
+        }
+
+        $this->scenarios->moveApplication($request, 1);
+
+        return redirect()->route('prototype.application', $application);
+    }
+
+    public function previousApplication(Request $request, string $application): RedirectResponse
+    {
+        $this->scenarios->moveApplication($request, -1);
+
+        return redirect()->route('prototype.application', $application);
     }
 
     public function enrollAutopay(Request $request, string $loan): RedirectResponse
@@ -125,7 +220,7 @@ class PrototypeController extends Controller
 
     public function markAllNotificationsRead(Request $request): RedirectResponse
     {
-        $scenario = $this->scenarios->find($request->session()->get('prototype_scenario'));
+        $scenario = $this->scenarios->scenario($request);
         $notificationIds = array_column($this->notifications($scenario, $request), 'id');
 
         $request->session()->put('prototype_read_notifications', $notificationIds);
@@ -135,7 +230,7 @@ class PrototypeController extends Controller
 
     public function schedulePayment(Request $request): RedirectResponse
     {
-        $scenario = $this->scenarios->find($request->session()->get('prototype_scenario'));
+        $scenario = $this->scenarios->scenario($request);
         $loan = $scenario['loans'][0] ?? [];
         $minimumDue = (float) (($loan['past_due_amount'] ?? 0) > 0 ? $loan['past_due_amount'] : ($loan['next_payment_amount'] ?? 0));
         $amount = (float) $request->input('amount', $minimumDue);
@@ -184,23 +279,18 @@ class PrototypeController extends Controller
         $read = $request->session()->get('prototype_read_notifications', []);
         $application = $scenario['application'] ?? null;
         $loan = $scenario['loans'][0] ?? [];
+        $offer = $scenario['offer'] ?? [];
+        $wellness = $scenario['financial_wellness'] ?? [];
         $scheduledPayment = $request->session()->get('prototype_scheduled_payment');
 
         $notifications = [
             [
-                'id' => 'payment-reminder',
-                'type' => 'Payment',
-                'title' => 'Payment reminder',
-                'body' => '$' . number_format((float) ($loan['next_payment_amount'] ?? 214), 2) . ' is due soon on your personal loan.',
-                'time' => 'Today',
-                'icon' => 'ti-calendar-dollar',
-                'url' => route('prototype.payment'),
-            ],
-            [
                 'id' => 'money-hub-score',
                 'type' => 'Money Hub',
                 'title' => 'Credit score update',
-                'body' => 'Your credit score moved ' . (($scenario['financial_wellness']['credit_score_change'] ?? 0) >= 0 ? 'up' : 'down') . ' ' . abs((int) ($scenario['financial_wellness']['credit_score_change'] ?? 0)) . ' points.',
+                'body' => ($wellness['credit_score_change'] ?? 0) === 0
+                    ? 'Your credit score is holding steady.'
+                    : 'Your credit score moved ' . (($wellness['credit_score_change'] ?? 0) > 0 ? 'up' : 'down') . ' ' . abs((int) ($wellness['credit_score_change'] ?? 0)) . ' points.',
                 'time' => '2 hours ago',
                 'icon' => 'ti-chart-line',
                 'url' => route('prototype.wellness'),
@@ -214,16 +304,19 @@ class PrototypeController extends Controller
                 'icon' => 'ti-map-pin',
                 'url' => route('prototype.support'),
             ],
-            [
-                'id' => 'offer-check',
-                'type' => 'Offers',
-                'title' => 'Check for available options',
-                'body' => 'See available loan options with no impact to your credit score.',
-                'time' => '3 days ago',
-                'icon' => 'ti-sparkles',
-                'url' => route('prototype.offers'),
-            ],
         ];
+
+        if ($loan !== []) {
+            array_unshift($notifications, [
+                'id' => ($scenario['alerts']['late_payment'] ?? false) ? 'payment-past-due' : 'payment-reminder',
+                'type' => 'Payment',
+                'title' => ($scenario['alerts']['late_payment'] ?? false) ? 'Your account needs attention' : 'Payment reminder',
+                'body' => '$' . number_format((float) ($loan['next_payment_amount'] ?? 214), 2) . (($scenario['alerts']['late_payment'] ?? false) ? ' is past due.' : ' is due soon on your personal loan.'),
+                'time' => 'Today',
+                'icon' => ($scenario['alerts']['late_payment'] ?? false) ? 'ti-alert-triangle' : 'ti-calendar-dollar',
+                'url' => route('prototype.payment'),
+            ]);
+        }
 
         if ($application) {
             array_unshift($notifications, [
@@ -235,6 +328,16 @@ class PrototypeController extends Controller
                 'icon' => 'ti-clipboard-list',
                 'url' => route('prototype.application', $application['id']),
             ]);
+        } elseif (($offer['status'] ?? null) === 'available') {
+            $notifications[] = [
+                'id' => 'offer-' . ($offer['type'] ?? 'available'),
+                'type' => 'Explore',
+                'title' => $offer['headline'] ?? 'See available options',
+                'body' => $offer['highlight'] ?? 'Checking options will not impact your credit score.',
+                'time' => '3 days ago',
+                'icon' => ($offer['type'] ?? null) === 'prequalified_renewal' ? 'ti-award' : 'ti-sparkles',
+                'url' => route('prototype.offers'),
+            ];
         }
 
         if ($scheduledPayment) {

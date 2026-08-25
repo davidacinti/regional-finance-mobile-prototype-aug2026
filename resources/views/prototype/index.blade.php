@@ -11,17 +11,8 @@ $wellness = $scenario['financial_wellness'] ?? [];
 $vehicle = $scenario['assets']['vehicles'][0] ?? null;
 $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
-$secureLoanUrl = 'https://secure.regionalfinance.com/get-a-loan?experience=sp';
-$activeLoanLabel = count($loans) === 0 ? 'No active loans' : (count($loans) > 1 ? count($loans) . ' active loans' : '1 active loan');
-$vehicleValue = $vehicle['estimated_value'] ?? 21800;
-$vehicleEquity = $vehicle['estimated_equity'] ?? 3900;
+$secureLoanUrl = route('prototype.offers');
 $trackedVehicles = $scenario['assets']['vehicles'] ?? [];
-if (count($trackedVehicles) === 0) {
-    $trackedVehicles = [
-        ['year' => 2021, 'make' => 'Toyota', 'model' => 'Camry', 'estimated_value' => 21800, 'estimated_equity' => 3900, 'last_updated' => '2026-07-11'],
-        ['year' => 2019, 'make' => 'Ford', 'model' => 'F-150', 'estimated_value' => 26750, 'estimated_equity' => 6450, 'last_updated' => '2026-07-08'],
-    ];
-}
 $money = fn ($value) => '$' . number_format((float) $value, 2);
 $date = fn ($value) => \Carbon\Carbon::parse($value)->format('M j, Y');
 $servicingAlert = $scenario['servicing_alert'] ?? [];
@@ -77,8 +68,7 @@ $highlightCards[] = [
 @section('title', 'Regional Finance Mobile Prototype')
 
 @section('page-style')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260824simple">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825state">
 @endsection
 
 @section('content')
@@ -142,51 +132,8 @@ $highlightCards[] = [
       </div>
     </aside>
 
-    @if(! $modules['show_late_banner'] && $modules['show_application'])
-      <section class="message-card application-message-card {{ $application['urgency'] ?? $application['status'] }}">
-        <i class="ti {{ ($application['status'] ?? '') === 'approved' ? 'ti-circle-check' : (($application['urgency'] ?? '') === 'urgent' ? 'ti-alert-circle' : 'ti-clipboard-list') }}"></i>
-        <div>
-          <div class="application-status-row">
-            <span class="eyebrow">{{ ($application['status'] ?? '') === 'approved' ? 'Approved' : 'Application status' }}</span>
-            <strong>{{ $application['progress_percent'] }}%</strong>
-          </div>
-          <h2>{{ $application['headline'] ?? $application['current_step'] }}</h2>
-          <p>{{ $application['summary'] ?? $application['next_action'] }}</p>
-          <div class="progress" aria-label="Application progress">
-            <div class="progress-bar" style="width: {{ $application['progress_percent'] }}%"></div>
-          </div>
-          <div class="application-next-action">
-            <span>{{ $application['next_action'] }}</span>
-            @if(isset($application['due_by']))
-              <small>Due by {{ $date($application['due_by']) }}</small>
-            @elseif(isset($application['expires_at']))
-              <small>Complete by {{ $date($application['expires_at']) }}</small>
-            @endif
-          </div>
-          <a href="{{ route('prototype.application', $application['id']) }}" class="btn btn-primary w-100 mt-3">{{ $application['cta'] }}</a>
-        </div>
-      </section>
-    @elseif(! $modules['show_late_banner'])
-      <section class="highlights-carousel" aria-label="Latest account highlights">
-        <div class="highlights-track">
-          @foreach($highlightCards as $highlight)
-            <article class="highlight-card">
-              <div class="highlight-icon"><i class="ti {{ $highlight['icon'] }}"></i></div>
-              <div>
-                <span class="eyebrow">{{ $highlight['label'] }}</span>
-                <h2>{{ $highlight['title'] }}</h2>
-                <p>{{ $highlight['body'] }}</p>
-              </div>
-              <a href="{{ $highlight['url'] }}">{{ $highlight['cta'] }}<i class="ti ti-arrow-right"></i></a>
-            </article>
-          @endforeach
-        </div>
-        <div class="carousel-dots" aria-hidden="true">
-          @foreach($highlightCards as $highlight)
-            <span></span>
-          @endforeach
-        </div>
-      </section>
+    @if(! $modules['show_late_banner'] && $modules['show_application'] && $modules['next_best_action'])
+      <x-next-best-action-card :action="$modules['next_best_action']" />
     @endif
 
     <aside class="scenario-floater" aria-label="Prototype scenario controls">
@@ -196,7 +143,7 @@ $highlightCards[] = [
       <div class="scenario-floater-panel">
         <span class="eyebrow">Scenario lab</span>
         <strong>{{ $scenario['name'] }}</strong>
-        <a href="{{ route('prototype.scenarios') }}"><i class="ti ti-layout-grid"></i>View scenarios</a>
+        <a href="{{ route('prototype.scenarios') }}"><i class="ti ti-adjustments-horizontal"></i>Open builder</a>
       </div>
     </aside>
 
@@ -215,6 +162,17 @@ $highlightCards[] = [
           <span>{{ $money($firstLoan['next_payment_amount'] ?? 0) }} is due {{ $date($firstLoan['next_payment_date']) }}.</span>
         </div>
         <a href="{{ route('prototype.payment') }}" class="btn btn-primary btn-sm">Make a payment</a>
+      </section>
+    @endif
+
+    @if(! $modules['show_loans'] && ! $modules['show_application'])
+      <section class="app-card relationship-welcome-card">
+        <div class="relationship-welcome-icon"><i class="ti {{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'ti-history' : 'ti-sparkles' }}"></i></div>
+        <div>
+          <span class="eyebrow">{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'Welcome back' : 'Welcome to Regional Finance' }}</span>
+          <h2>{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'Need funds again?' : 'See what you qualify for' }}</h2>
+          <p>{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'See personalized options when you are ready.' : 'Check personalized loan options in minutes.' }}</p>
+        </div>
       </section>
     @endif
 
@@ -272,25 +230,8 @@ $highlightCards[] = [
       </section>
     @endif
 
-    @if($modules['show_offer'])
-      <section class="app-card offer-card {{ ($offer['type'] ?? '') === 'prequalified' ? 'featured' : '' }}">
-        <div class="offer-heading">
-          <div class="offer-icon"><i class="ti ti-sparkles"></i></div>
-          <span class="eyebrow">{{ ($offer['type'] ?? '') === 'prequalified' ? 'Personalized offer' : 'Explore options' }}</span>
-        </div>
-        @if(($offer['type'] ?? '') === 'prequalified')
-          <h2>You may be prequalified for an additional loan.</h2>
-          <div class="soft-credit-badge"><i class="ti ti-shield-check"></i>Checking will not impact your credit score</div>
-          <div class="offer-amount">{{ '$' . number_format($offer['amount']) }}</div>
-          <p>Review this personalized option in minutes. Offer expires {{ $date($offer['expires_at']) }}.</p>
-          <a href="{{ $secureLoanUrl }}" class="btn btn-primary w-100">View offer</a>
-        @else
-          <h2>See loan options in minutes.</h2>
-          <div class="soft-credit-badge"><i class="ti ti-shield-check"></i>No impact to your credit score</div>
-          <p>Check for available offers with no impact to your credit score.</p>
-          <a href="{{ $secureLoanUrl }}" class="btn btn-primary w-100">Check for offers</a>
-        @endif
-      </section>
+    @if(! $modules['show_application'] && $modules['next_best_action'])
+      <x-next-best-action-card :action="$modules['next_best_action']" />
     @endif
 
     @if($modules['show_credit_score'] || $modules['show_spending'])
@@ -305,7 +246,7 @@ $highlightCards[] = [
               <i class="ti ti-chart-line"></i>
               <span>Credit score</span>
               <strong>{{ $wellness['credit_score'] }}</strong>
-              <small>Up {{ $wellness['credit_score_change'] }} points</small>
+              <small>{{ $wellness['credit_score_change'] > 0 ? 'Up ' : ($wellness['credit_score_change'] < 0 ? 'Down ' : '') }}{{ abs($wellness['credit_score_change']) }}{{ $wellness['credit_score_change'] == 0 ? 'No change' : ' points' }}</small>
             </a>
           @endif
           @if($modules['show_spending'])
@@ -333,77 +274,38 @@ $highlightCards[] = [
       </section>
     @endif
 
-    <section class="app-card branch-card">
+    <section class="app-card branch-card branch-card-compact">
       <div class="card-heading">
         <span class="eyebrow">Your branch</span>
         <i class="ti ti-map-pin"></i>
       </div>
       <h2>{{ $branch['name'] ?? 'Regional Finance branch' }}</h2>
-      <div
-        class="branch-map"
-        data-branch-map
-        data-lat="{{ $branch['lat'] ?? 34.8334 }}"
-        data-lng="{{ $branch['lng'] ?? -82.3075 }}"
-        data-title="{{ $branch['name'] ?? 'Regional Finance branch' }}"
-        data-map-url="https://www.google.com/maps/search/?api=1&query={{ urlencode($branch['address'] ?? 'Regional Finance') }}"
-        role="link"
-        tabindex="0"
-        aria-label="Open {{ $branch['name'] ?? 'Regional Finance branch' }} in Google Maps"
-      >
-        <div class="branch-map-fallback">
-          <i class="ti ti-map-pin"></i>
-          <span>{{ $branch['address'] ?? 'Find your nearest branch' }}</span>
-        </div>
-      </div>
-      <div class="branch-detail-list">
-        <div>
-          <i class="ti ti-map-2"></i>
-          <span>Location</span>
-          <strong>{{ $branch['address'] ?? 'Find your nearest branch' }}</strong>
-        </div>
-        <div>
-          <i class="ti ti-clock-hour-4"></i>
-          <span>Hours</span>
-          <strong>{{ $branch['hours'] ?? 'Weekday hours available' }}</strong>
-        </div>
-        <div>
-          <i class="ti ti-phone"></i>
-          <span>Phone</span>
-          <strong>{{ $branch['phone'] ?? '(800) 000-0000' }}</strong>
-        </div>
-        <div>
-          <i class="ti ti-user-star"></i>
-          <span>Branch manager</span>
-          <strong>{{ $branch['manager'] ?? 'Branch team' }}</strong>
-        </div>
-      </div>
+      <p><i class="ti ti-map-2"></i>{{ $branch['address'] ?? 'Find your nearest branch' }}</p>
       <div class="button-row">
         <a href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}" class="btn btn-primary flex-fill"><i class="ti ti-phone"></i>Call</a>
         <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($branch['address'] ?? 'Regional Finance') }}" target="_blank" rel="noopener" class="btn btn-outline-primary flex-fill"><i class="ti ti-route"></i>Directions</a>
       </div>
-      <a href="{{ route('prototype.support') }}" class="btn btn-outline-primary w-100 branch-details-link"><i class="ti ti-building-store"></i>View branch details</a>
+      <a href="{{ route('prototype.support') }}" class="branch-details-link">View branch details<i class="ti ti-arrow-right"></i></a>
     </section>
 
-    <section class="app-card vehicle-teaser-card">
+    @if(count($trackedVehicles) > 0)
+    <section class="app-card vehicle-teaser-card compact-vehicle-teaser">
       <div class="card-heading">
         <span class="eyebrow">Track your cars</span>
         <i class="ti ti-car"></i>
       </div>
-      <h2>Track the value of your cars</h2>
       <div class="vehicle-carousel" aria-label="Tracked vehicle values">
         @foreach($trackedVehicles as $trackedVehicle)
           <article class="vehicle-value-card">
             <strong>{{ $trackedVehicle['year'] }} {{ $trackedVehicle['make'] }} {{ $trackedVehicle['model'] }}</strong>
-            <div class="vehicle-teaser-grid">
-              <div><span>Estimated value</span><strong>{{ $money($trackedVehicle['estimated_value']) }}</strong></div>
-              <div><span>Estimated equity</span><strong>{{ $money($trackedVehicle['estimated_equity']) }}</strong></div>
-            </div>
-            <small>Updated {{ $date($trackedVehicle['last_updated']) }}</small>
+            <span>{{ $trackedVehicle['trim'] ?? '' }} &bull; {{ $trackedVehicle['mileage'] ?? '' }} miles</span>
+            <div class="vehicle-value-line"><strong>{{ $money($trackedVehicle['estimated_value']) }}</strong><small>Estimated value</small></div>
           </article>
         @endforeach
       </div>
       <a href="{{ route('prototype.assets') }}" class="btn btn-outline-primary w-100"><i class="ti ti-car"></i>View vehicle details</a>
     </section>
+    @endif
 
     <nav class="bottom-nav" aria-label="Mobile app navigation">
       <a class="active" href="{{ route('prototype.index') }}"><i class="ti ti-home"></i><span>Home</span></a>
@@ -432,10 +334,12 @@ $highlightCards[] = [
       <button class="btn modal-secondary-action w-100 mt-2" type="submit">Not now</button>
     </form>
   </section>
+@elseif($modules['show_offer_interstitial'])
+  <x-offer-interstitial :offer="$offer" />
 @endif
+<script type="application/json" data-prototype-state>@json($appState)</script>
 @endsection
 
 @section('page-script')
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260824simple"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825state"></script>
 @endsection

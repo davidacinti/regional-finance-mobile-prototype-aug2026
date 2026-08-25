@@ -163,13 +163,21 @@ Route::get('/', [PrototypeController::class, 'index'])->name('prototype.index');
 Route::get('/dashboard', [PrototypeController::class, 'dashboard'])->name('prototype.dashboard');
 Route::get('/scenarios', [PrototypeController::class, 'scenarios'])->name('prototype.scenarios');
 Route::post('/scenarios/{scenario}', [PrototypeController::class, 'selectScenario'])->name('prototype.scenarios.select');
+Route::post('/prototype/state', [PrototypeController::class, 'updateState'])->name('prototype.state.update');
+Route::post('/prototype/state/sync', [PrototypeController::class, 'syncState'])->name('prototype.state.sync');
+Route::post('/prototype/presets/{preset}', [PrototypeController::class, 'applyPreset'])->name('prototype.presets.apply');
+Route::post('/prototype/reset', [PrototypeController::class, 'resetPrototype'])->name('prototype.reset');
 Route::post('/prototype/interstitial/dismiss', [PrototypeController::class, 'dismissInterstitial'])->name('prototype.interstitial.dismiss');
 Route::get('/loans/{loan}', fn (string $loan) => app(PrototypeController::class)->detail(request(), 'loan', $loan))->name('prototype.loan');
 Route::get('/loans/{loan}/autopay', fn (string $loan) => app(PrototypeController::class)->detail(request(), 'autopay', $loan))->name('prototype.loan.autopay');
 Route::post('/loans/{loan}/autopay', [PrototypeController::class, 'enrollAutopay'])->name('prototype.loan.autopay.enroll');
 Route::post('/loans/{loan}/autopay/cancel', [PrototypeController::class, 'cancelAutopay'])->name('prototype.loan.autopay.cancel');
 Route::get('/applications/{application}', fn (string $application) => app(PrototypeController::class)->detail(request(), 'application', $application))->name('prototype.application');
+Route::post('/applications/start', [PrototypeController::class, 'startApplication'])->name('prototype.application.start');
+Route::post('/applications/{application}/advance', [PrototypeController::class, 'advanceApplication'])->name('prototype.application.advance');
+Route::post('/applications/{application}/previous', [PrototypeController::class, 'previousApplication'])->name('prototype.application.previous');
 Route::get('/offers/{offer?}', fn (?string $offer = null) => app(PrototypeController::class)->detail(request(), 'offer', $offer))->name('prototype.offers');
+Route::get('/protection-benefits', fn () => app(PrototypeController::class)->detail(request(), 'protection'))->name('prototype.protection');
 Route::get('/financial-wellness', fn () => app(PrototypeController::class)->detail(request(), 'wellness'))->name('prototype.wellness');
 Route::get('/assets', fn () => app(PrototypeController::class)->detail(request(), 'assets'))->name('prototype.assets');
 Route::get('/profile', fn () => app(PrototypeController::class)->detail(request(), 'profile'))->name('prototype.profile');
@@ -378,5 +386,3 @@ Route::get('/templates/maps/leaflet', [Leaflet::class, 'index'])->name('template
 // laravel example
 Route::get('/templates/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('templates.laravel-example-user-management');
 Route::resource('/templates/user-list', UserManagement::class)->names('templates.user-list');
-
-
