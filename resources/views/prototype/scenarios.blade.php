@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825payments">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825scenario-position">
 @endsection
 
 @section('content')

@@ -332,9 +332,9 @@
   position: sticky;
   right: 0;
   bottom: 5.7rem;
-  z-index: 30;
+  z-index: 70;
   width: max-content;
-  margin: -4.2rem .15rem 1rem auto;
+  margin: -5.4rem .15rem 1rem auto;
   display: flex;
   justify-content: flex-end;
   animation: scenario-float 4.5s ease-in-out infinite;
@@ -357,8 +357,8 @@
 .scenario-floater-panel {
   position: absolute;
   right: 0;
-  bottom: 54px;
-  transform: translateY(8px);
+  top: 54px;
+  transform: translateY(-8px);
   width: 220px;
   padding: .85rem;
   border: 1px solid var(--border-soft, #dce7f2);
