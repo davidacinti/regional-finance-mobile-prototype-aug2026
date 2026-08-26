@@ -17,6 +17,8 @@ class PrototypeStateFlowTest extends TestCase
             ->assertOk()
             ->assertSee('Hi, Jordan')
             ->assertSee('Personal loan')
+            ->assertSee('Vehicle estimate')
+            ->assertDontSee('Track your cars')
             ->assertSee('data-branch-map', false);
     }
 

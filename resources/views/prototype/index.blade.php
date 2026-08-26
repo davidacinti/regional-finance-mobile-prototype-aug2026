@@ -12,7 +12,6 @@ $vehicle = $scenario['assets']['vehicles'][0] ?? null;
 $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
 $secureLoanUrl = route('prototype.offers');
-$trackedVehicles = $scenario['assets']['vehicles'] ?? [];
 $scheduledPayment = $scheduledPayment ?? ($scenario['payments']['pending'] ?? null);
 $money = fn ($value) => '$' . number_format((float) $value, 2);
 $date = fn ($value) => \Carbon\Carbon::parse($value)->format('M j, Y');
@@ -325,25 +324,6 @@ $highlightCards[] = [
       </div>
       <a href="{{ route('prototype.support') }}" class="branch-details-link">View branch details<i class="ti ti-arrow-right"></i></a>
     </section>
-
-    @if(count($trackedVehicles) > 0)
-    <section class="app-card vehicle-teaser-card compact-vehicle-teaser">
-      <div class="card-heading">
-        <span class="eyebrow">Track your cars</span>
-        <i class="ti ti-car"></i>
-      </div>
-      <div class="vehicle-carousel" aria-label="Tracked vehicle values">
-        @foreach($trackedVehicles as $trackedVehicle)
-          <article class="vehicle-value-card">
-            <strong>{{ $trackedVehicle['year'] }} {{ $trackedVehicle['make'] }} {{ $trackedVehicle['model'] }}</strong>
-            <span>{{ $trackedVehicle['trim'] ?? '' }} &bull; {{ $trackedVehicle['mileage'] ?? '' }} miles</span>
-            <div class="vehicle-value-line"><strong>{{ $money($trackedVehicle['estimated_value']) }}</strong><small>Estimated value</small></div>
-          </article>
-        @endforeach
-      </div>
-      <a href="{{ route('prototype.assets') }}" class="btn btn-outline-primary w-100"><i class="ti ti-car"></i>View vehicle details</a>
-    </section>
-    @endif
 
     <nav class="bottom-nav" aria-label="Mobile app navigation">
       <a class="active" href="{{ route('prototype.index') }}"><i class="ti ti-home"></i><span>Home</span></a>
