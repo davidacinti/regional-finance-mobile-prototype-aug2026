@@ -302,6 +302,10 @@ class PrototypeStateFlowTest extends TestCase
         ] as $path) {
             $this->get($path)->assertOk();
         }
+
+        $this->get('/profile')
+            ->assertDontSee('Date of birth')
+            ->assertDontSee('Last 4 of SSN');
     }
 
     public function test_multiple_products_render_as_a_compact_vertical_stack_in_product_order(): void

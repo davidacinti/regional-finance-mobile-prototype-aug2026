@@ -754,8 +754,6 @@ $pastLoanDocuments = [
                 <div class="profile-field-grid">
                   <label>First name<input type="text" value="{{ $scenario['customer']['first_name'] ?? 'Jordan' }}"></label>
                   <label>Last name<input type="text" value="{{ $scenario['customer']['last_name'] ?? 'Davis' }}"></label>
-                  <label>Date of birth<input type="text" value="04/18/1988"></label>
-                  <label>Last 4 of SSN<input type="text" value="***-**-4321" readonly></label>
                 </div>
               </section>
 
