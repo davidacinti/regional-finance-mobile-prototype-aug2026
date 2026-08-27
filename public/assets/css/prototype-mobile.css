@@ -4277,58 +4277,64 @@ button:focus-visible {
 
 /* Offer, vehicle, and compact servicing polish */
 .next-best-action {
-  grid-template-columns: 48px minmax(0, 1fr);
-  gap: 12px 14px;
-  overflow: hidden;
-  padding: 17px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 12px;
+  margin: 0 0 18px;
+  padding: 13px 14px;
   border: 1px solid #d8e5ef;
-  box-shadow: 0 10px 28px rgba(18, 52, 91, .09);
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(18, 52, 91, .07);
 }
 
 .next-best-action::before {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 4px;
-  content: "";
-  background: #437cbf;
+  content: none;
 }
 
 .next-best-action .next-best-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 13px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   color: #174a7d;
   background: #e6f2fb;
 }
 
-.next-best-copy h2 {
-  margin-top: 2px;
-  font-size: 17px;
-  line-height: 1.22;
+.next-best-copy {
+  min-width: 0;
 }
 
-.next-best-action form,
-.next-best-action .next-best-link {
-  grid-column: 2;
-  width: 100%;
+.next-best-copy h2 {
+  margin: 1px 0 2px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.next-best-copy p {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.next-best-action > form,
+.next-best-action > .next-best-link {
+  grid-column: 3;
+  grid-row: 1;
+  margin: 0;
+  width: auto;
 }
 
 .next-best-link {
-  justify-content: space-between;
-  min-height: 36px;
-  padding: 8px 11px;
-  border-radius: 9px;
-  color: #fff;
-  background: #437cbf;
+  justify-content: flex-end;
+  min-height: 32px;
+  padding: 5px 0;
+  border-radius: 0;
+  color: #2769b4;
+  background: transparent;
+  white-space: nowrap;
 }
 
 .next-best-action.prequalified_renewal {
-  border-color: #163f70;
-  background: #163f70;
-}
-
-.next-best-action.prequalified_renewal::before {
-  background: #cdd929;
+  border-color: #d8e5ef;
+  background: #fff;
 }
 
 .next-best-action.prequalified_renewal .next-best-icon {
@@ -4337,23 +4343,18 @@ button:focus-visible {
 }
 
 .next-best-action.prequalified_renewal .eyebrow,
-.next-best-action.prequalified_renewal h2,
 .next-best-action.prequalified_renewal p {
-  color: #fff;
+  color: #62758a;
+  opacity: 1;
 }
 
-.next-best-action.prequalified_renewal .eyebrow,
-.next-best-action.prequalified_renewal p {
-  opacity: .8;
+.next-best-action.prequalified_renewal h2 {
+  color: #12345b;
 }
 
 .next-best-action.prequalified_renewal .next-best-link {
-  color: #163f70;
-  background: #fff;
-}
-
-.next-best-action.invite_to_apply::before {
-  background: #8bab20;
+  color: #2769b4;
+  background: transparent;
 }
 
 .next-best-action.invite_to_apply .next-best-icon {
@@ -4362,11 +4363,17 @@ button:focus-visible {
 }
 
 .next-best-action.check_for_offers {
-  background: #f8fbfd;
+  background: #fff;
 }
 
 .next-best-action.check_for_offers .next-best-link {
-  background: #2f71b8;
+  color: #2769b4;
+  background: transparent;
+}
+
+.relationship-welcome-card {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .offer-interstitial {
@@ -4678,33 +4685,4 @@ button:focus-visible {
 
 .pending-funding-product .account-product-due > strong {
   color: #4f6c10;
-}
-
-.next-best-action.application .next-best-link,
-.next-best-action.application .next-best-link span,
-.next-best-action.application .next-best-link i {
-  color: #fff !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-.next-best-action.application .next-best-link {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  line-height: 1.2;
-  text-decoration: none;
-}
-
-.next-best-action.application .next-best-link span {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.next-best-action.application .next-best-link i {
-  display: inline-block;
-  font-size: 16px;
 }
