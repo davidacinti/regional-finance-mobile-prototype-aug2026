@@ -14,13 +14,11 @@ class PrototypeScenarioService
     private const ORIGINATION_STEPS = [
         'application_started',
         'confirm_information',
-        'verify_identity',
         'credit_eligibility',
-        'verify_income',
         'review_options',
-        'finalize',
+        'verify_income',
+        'funding_destination',
         'sign_documents',
-        'funding',
         'complete',
     ];
 
@@ -85,7 +83,7 @@ class PrototypeScenarioService
             'application-progress' => [
                 'loans' => ['count' => 0],
                 'offer' => ['type' => 'none'],
-                'origination' => ['active' => true, 'step' => 'verify_income', 'last_updated' => now()->toIso8601String()],
+                'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'standard', 'last_updated' => now()->toIso8601String()],
                 'vehicles' => ['count' => 0],
                 'wellness' => [
                     'credit_monitoring_enabled' => false,
@@ -102,9 +100,14 @@ class PrototypeScenarioService
 
     public function startApplication(Request $request): array
     {
+        $state = $this->state($request);
+        $journey = ($state['offer']['type'] ?? null) === 'prequalified_renewal' ? 'prequalified' : 'standard';
+
         return $this->update($request, ['origination' => [
             'active' => true,
             'step' => 'application_started',
+            'journey' => $journey,
+            'selected_offer' => null,
             'outcome' => null,
             'last_updated' => now()->toIso8601String(),
         ]]);
@@ -114,16 +117,25 @@ class PrototypeScenarioService
     {
         $state = $this->state($request);
         $current = $state['origination']['step'] ?? self::ORIGINATION_STEPS[0];
-        $index = array_search($current, self::ORIGINATION_STEPS, true);
+        $steps = self::ORIGINATION_STEPS;
+        if (($state['origination']['journey'] ?? 'standard') === 'prequalified') {
+            $steps = array_values(array_filter($steps, fn (string $step) => $step !== 'verify_income'));
+        }
+        $index = array_search($current, $steps, true);
         $index = $index === false ? 0 : $index;
-        $index = max(0, min(count(self::ORIGINATION_STEPS) - 1, $index + $direction));
+        $index = max(0, min(count($steps) - 1, $index + $direction));
 
-        return $this->update($request, ['origination' => [
+        $changes = [
             'active' => true,
-            'step' => self::ORIGINATION_STEPS[$index],
-            'outcome' => null,
+            'step' => $steps[$index],
+            'outcome' => $steps[$index] === 'complete' ? 'approved' : null,
             'last_updated' => now()->toIso8601String(),
-        ]]);
+        ];
+        if ($current === 'review_options' && $direction > 0) {
+            $changes['selected_offer'] = ['amount' => 3500, 'payment' => 168, 'term' => 24];
+        }
+
+        return $this->update($request, ['origination' => $changes]);
     }
 
     public function builderOptions(): array
@@ -160,7 +172,7 @@ class PrototypeScenarioService
             'loans' => ['count' => 1, 'payment_status' => 'current'],
             'products' => ['savings' => false, 'credit_card' => false],
             'offer' => ['type' => 'check_for_offers'],
-            'origination' => ['active' => false, 'step' => null, 'outcome' => null, 'last_updated' => null],
+            'origination' => ['active' => false, 'step' => null, 'journey' => 'standard', 'selected_offer' => null, 'outcome' => null, 'last_updated' => null],
             'wellness' => [
                 'credit_monitoring_enabled' => true,
                 'credit_score' => 642,
@@ -188,6 +200,7 @@ class PrototypeScenarioService
         }
         $state['offer']['type'] = $this->allowed($state['offer']['type'], array_keys($this->builderOptions()['offer_types']), 'none');
         $state['origination']['active'] = filter_var($state['origination']['active'], FILTER_VALIDATE_BOOL);
+        $state['origination']['journey'] = $this->allowed($state['origination']['journey'], ['standard', 'prequalified'], 'standard');
         $state['origination']['step'] = $state['origination']['active']
             ? $this->allowed($state['origination']['step'], self::ORIGINATION_STEPS, 'application_started')
             : null;
@@ -375,26 +388,29 @@ class PrototypeScenarioService
 
     private function applicationState(array $origination): array
     {
+        $prequalified = ($origination['journey'] ?? 'standard') === 'prequalified';
         $steps = [
-            'application_started' => [10, 1, 'About you', 'Let\'s get started', 'Confirm a few details to begin your application.', 'Start application'],
+            'application_started' => [8, 1, 'Explore', $prequalified ? 'Your pre-qualified option is ready' : 'A personal loan for what comes next', $prequalified ? 'Review your pre-qualified path and continue when you are ready.' : 'See loan options with a quick, guided application.', 'Continue'],
             'confirm_information' => [20, 1, 'About you', 'Confirm your information', 'Review your contact and personal details.', 'Confirm and continue'],
-            'verify_identity' => [30, 1, 'About you', 'Verify your identity', 'Confirm your mobile number and identity details.', 'Verify and continue'],
-            'credit_eligibility' => [40, 2, 'Financial information', 'Check your eligibility', 'Review the permission for a soft credit check.', 'Check eligibility'],
-            'verify_income' => [52, 2, 'Financial information', 'Finish verifying your income', 'Continue your application to see your available options.', 'Continue'],
-            'review_options' => [65, 3, 'Your options', 'Your loan options are ready', 'Review your available options and continue when you are ready.', 'Review options'],
-            'finalize' => [76, 4, 'Finalize', 'Finalize your application', 'Confirm your selection and review the final details.', 'Finalize application'],
-            'sign_documents' => [86, 4, 'Finalize', 'Your documents are ready', 'Review and sign your documents to finish your loan.', 'Review documents'],
-            'funding' => [94, 4, 'Finalize', 'Your loan is being finalized', 'We will let you know when your funds are ready.', 'View funding status'],
-            'complete' => [100, 5, 'Complete', 'Your application is complete', 'Your new loan is ready. You can return home to manage your account.', 'Return home'],
+            'credit_eligibility' => [35, 2, 'Credit review', $prequalified ? 'Complete your application' : 'Check your eligibility', $prequalified ? 'Authorize the credit review required to complete your selected application.' : 'See whether you pre-qualify without impacting your credit score.', $prequalified ? 'Authorize and continue' : 'Check eligibility'],
+            'review_options' => [52, 3, 'Your options', 'Your loan options are ready', 'Choose the amount and payment that work best for you.', 'Choose this option'],
+            'verify_income' => [64, 3, 'Income', 'Verify your income', 'One quick verification helps us finalize your selected option.', 'Verify income'],
+            'funding_destination' => [76, 4, 'Funding', 'Where should we send your funds?', 'Choose or add the account that will receive your loan proceeds.', 'Use this account'],
+            'sign_documents' => [88, 4, 'E-sign', 'Review and sign', 'Review your final loan documents and provide your electronic signature.', 'Sign and finish'],
+            'complete' => [100, 5, 'Complete', 'You\'re good to go', 'Your loan is approved and pending funding.', 'Return home'],
         ];
         $step = $origination['step'] ?? 'application_started';
         [$percent, $phase, $phaseLabel, $headline, $summary, $cta] = $steps[$step] ?? $steps['application_started'];
 
         return [
-            'id' => 62001, 'status' => $step === 'complete' ? 'complete' : 'in_progress', 'step' => $step,
+            'id' => 62001, 'status' => $step === 'complete' ? 'pending_funding' : 'in_progress', 'step' => $step,
             'technical_step' => ucwords(str_replace('_', ' ', $step)), 'progress_percent' => $percent,
             'phase' => $phase, 'phase_count' => 5, 'phase_label' => $phaseLabel, 'current_step' => $phaseLabel,
             'headline' => $headline, 'summary' => $summary, 'next_action' => $cta, 'cta' => $cta,
+            'journey' => $prequalified ? 'prequalified' : 'standard',
+            'prequalified' => $prequalified,
+            'income_required' => ! $prequalified,
+            'selected_offer' => $origination['selected_offer'] ?? null,
             'urgency' => in_array($step, ['verify_income', 'sign_documents'], true) ? 'action' : 'status',
             'last_updated' => $origination['last_updated'] ?? now()->toIso8601String(),
         ];

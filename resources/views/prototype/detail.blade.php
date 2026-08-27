@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827application-flow">
 @endsection
 
 @section('content')
@@ -437,8 +437,8 @@ $pastLoanDocuments = [
               'credit_eligibility' => 'ti-shield-check',
               'verify_income' => 'ti-file-dollar',
               'review_options' => 'ti-list-details',
+              'funding_destination' => 'ti-building-bank',
               'sign_documents' => 'ti-signature',
-              'funding' => 'ti-building-bank',
               'complete' => 'ti-circle-check',
               default => 'ti-clipboard-list',
             };
@@ -459,42 +459,48 @@ $pastLoanDocuments = [
 
             <article class="app-card application-step-card">
               @switch($step)
+                @case('application_started')
+                  <div class="application-marketing-card {{ ($application['prequalified'] ?? false) ? 'is-prequalified' : '' }}">
+                    <div class="application-marketing-amount"><span>Personal loans up to</span><strong>$25,000</strong></div>
+                    <p>{{ ($application['prequalified'] ?? false) ? 'You already have a pre-qualified path. Confirm your information to continue.' : 'A simple application, clear options, and support from your local branch.' }}</p>
+                    <div class="application-benefits"><span><i class="ti ti-clock"></i>Fast guided process</span><span><i class="ti ti-shield-check"></i>{{ ($application['prequalified'] ?? false) ? 'Pre-qualified' : 'Soft check to start' }}</span></div>
+                  </div>
+                  @break
                 @case('confirm_information')
                   <div class="review-row"><span>Name</span><strong>Jordan Davis</strong></div>
                   <div class="review-row"><span>Mobile</span><strong>(864) 555-2194</strong></div>
                   <div class="review-row"><span>Address</span><strong>Greenville, SC</strong></div>
                   @break
-                @case('verify_identity')
-                  <label class="application-field">Verification code<input type="text" inputmode="numeric" value="482913" maxlength="6"></label>
-                  <p class="application-helper"><i class="ti ti-message"></i>Code sent to the mobile number ending in 2194.</p>
-                  @break
                 @case('credit_eligibility')
-                  <div class="application-trust-row"><i class="ti ti-shield-check"></i><div><strong>Soft credit check</strong><span>Checking eligibility will not impact your credit score.</span></div></div>
-                  <label class="application-consent"><input type="checkbox"><span>I authorize Regional Finance to check my eligibility.</span></label>
-                  @break
-                @case('verify_income')
-                  <div class="application-choice"><i class="ti ti-building-bank"></i><div><strong>Connect your bank</strong><span>Securely verify recurring income.</span></div><i class="ti ti-chevron-right"></i></div>
-                  <div class="application-choice"><i class="ti ti-file-upload"></i><div><strong>Upload a pay stub</strong><span>PDF, JPG, or PNG accepted.</span></div><i class="ti ti-chevron-right"></i></div>
+                  @if($application['prequalified'] ?? false)
+                    <div class="application-trust-row hard-pull"><i class="ti ti-file-search"></i><div><strong>Credit application</strong><span>Continuing authorizes a hard credit inquiry, which may affect your credit score.</span></div></div>
+                    <label class="application-consent"><input type="checkbox" checked><span>I authorize Regional Finance to obtain my credit report to complete this application.</span></label>
+                  @else
+                    <div class="application-trust-row"><i class="ti ti-shield-check"></i><div><strong>Pre-qualify with no score impact</strong><span>This first eligibility check uses a soft inquiry and will not affect your credit score.</span></div></div>
+                    <label class="application-consent"><input type="checkbox" checked><span>I authorize Regional Finance to check whether I pre-qualify.</span></label>
+                  @endif
                   @break
                 @case('review_options')
-                  <label class="loan-option-choice selected"><input type="radio" name="loan-option" checked><span><strong>$3,500</strong><small>$168/mo &bull; 24 months</small></span><em>Recommended</em></label>
-                  <label class="loan-option-choice"><input type="radio" name="loan-option"><span><strong>$2,500</strong><small>$126/mo &bull; 24 months</small></span></label>
+                  <label class="loan-option-choice selected"><input type="radio" name="loan-option" checked><span><strong>$3,500</strong><small>$168/mo &bull; 24 months &bull; 24.90% APR</small></span><em>Recommended</em></label>
+                  <label class="loan-option-choice"><input type="radio" name="loan-option"><span><strong>$2,500</strong><small>$126/mo &bull; 24 months &bull; 24.90% APR</small></span></label>
+                  <div class="application-option-note"><i class="ti ti-info-circle"></i>Choosing an option does not send funds yet.</div>
                   @break
-                @case('finalize')
-                  <div class="review-row"><span>Selected amount</span><strong>$3,500</strong></div>
-                  <div class="review-row"><span>Estimated payment</span><strong>$168/month</strong></div>
-                  <div class="review-row"><span>Deposit account</span><strong>Checking &bull; 4203</strong></div>
+                @case('verify_income')
+                  <div class="application-choice selected"><i class="ti ti-building-bank"></i><div><strong>Connect your bank</strong><span>Securely verify recurring income.</span></div><i class="ti ti-check"></i></div>
+                  <div class="application-choice"><i class="ti ti-file-upload"></i><div><strong>Upload a pay stub</strong><span>PDF, JPG, or PNG accepted.</span></div><i class="ti ti-chevron-right"></i></div>
+                  @break
+                @case('funding_destination')
+                  <label class="funding-account-choice selected"><input type="radio" name="funding-account" checked><i class="ti ti-building-bank"></i><span><strong>Primary Checking &bull; 4203</strong><small>Funds arrive in 1-2 business days</small></span><i class="ti ti-circle-check-filled"></i></label>
+                  <button class="application-add-account" type="button"><i class="ti ti-plus"></i>Add another account</button>
                   @break
                 @case('sign_documents')
                   <div class="application-choice"><i class="ti ti-file-text"></i><div><strong>Loan agreement</strong><span>Ready to review and sign</span></div><i class="ti ti-chevron-right"></i></div>
                   <div class="application-choice"><i class="ti ti-file-certificate"></i><div><strong>Truth in Lending disclosure</strong><span>Ready to review</span></div><i class="ti ti-chevron-right"></i></div>
-                  @break
-                @case('funding')
-                  <div class="funding-status"><span></span><div><strong>Final review</strong><small>In progress</small></div></div>
-                  <div class="funding-status"><span></span><div><strong>Funds sent</strong><small>Usually within one business day</small></div></div>
+                  <label class="application-consent"><input type="checkbox" checked><span>I agree to use my electronic signature for these documents.</span></label>
                   @break
                 @case('complete')
-                  <div class="application-complete"><i class="ti ti-circle-check"></i><strong>All done</strong><span>Your application and signed documents are available in Document Center.</span></div>
+                  <div class="application-complete"><i class="ti ti-circle-check"></i><strong>Approved for $3,500</strong><span>Your signed documents are complete. Funding is now pending to Checking &bull; 4203.</span></div>
+                  <div class="funding-status"><span></span><div><strong>Funding pending</strong><small>Expected within one business day</small></div></div>
                   @break
                 @default
                   <div class="application-trust-row"><i class="ti ti-lock"></i><div><strong>Your progress is saved</strong><span>You can leave at any time and continue from this exact step.</span></div></div>

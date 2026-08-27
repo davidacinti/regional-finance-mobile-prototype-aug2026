@@ -45,7 +45,7 @@ class PrototypeStateFlowTest extends TestCase
         $this->postJson('/prototype/presets/application-progress')
             ->assertOk()
             ->assertJsonPath('state.meta.preset', 'application-progress')
-            ->assertJsonPath('state.origination.step', 'verify_income');
+            ->assertJsonPath('state.origination.step', 'application_started');
 
         $this->postJson('/prototype/state', [
             'loans' => ['count' => 0, 'payment_status' => 'current'],
@@ -140,19 +140,56 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/')->assertDontSee('pending-payment-dashboard', false);
     }
 
-    public function test_application_resumes_and_moves_one_step_at_a_time(): void
+    public function test_standard_application_progresses_to_pending_funding(): void
     {
         $this->post('/prototype/presets/application-progress')->assertRedirect('/');
 
         $this->get('/applications/62001')
             ->assertOk()
-            ->assertSee('Finish verifying your income');
+            ->assertSee('Personal loans up to')
+            ->assertSee('$25,000');
 
-        $this->post('/applications/62001/previous')->assertRedirect('/applications/62001');
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001')->assertSee('Confirm your information');
+
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001')->assertSee('Pre-qualify with no score impact');
+
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/')->assertSee('Your loan options are ready');
+
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001')->assertSee('Verify your income');
+
+        foreach (['Where should we send your funds?', 'Review and sign', "You're good to go"] as $headline) {
+            $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+            $this->get('/applications/62001')->assertSee($headline);
+        }
+
+        $this->post('/applications/62001/advance')->assertRedirect('/');
+        $this->get('/')
+            ->assertSee('pending-funding-product', false)
+            ->assertSee('Funding')
+            ->assertSee('$3,500.00');
+    }
+
+    public function test_prequalified_application_uses_hard_pull_and_skips_income(): void
+    {
+        $this->post('/prototype/presets/prequalified-renewal')->assertRedirect('/');
+        $this->post('/applications/start')->assertRedirect('/applications/62001');
+
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001')
+            ->assertSee('hard credit inquiry')
+            ->assertSee('complete this application');
+
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
 
         $this->get('/applications/62001')
-            ->assertOk()
-            ->assertSee('Check your eligibility');
+            ->assertSee('Where should we send your funds?')
+            ->assertDontSee('Verify your income');
     }
 
     public function test_offer_marketplace_and_zero_vehicle_state_are_clickable(): void

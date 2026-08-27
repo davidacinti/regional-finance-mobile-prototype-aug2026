@@ -4528,3 +4528,154 @@ button:focus-visible {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+/* Guided application and pending-funding experience */
+.application-marketing-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 14px;
+  color: #fff;
+  background: #163f70;
+}
+
+.application-marketing-card.is-prequalified {
+  box-shadow: inset 5px 0 #cdd929;
+}
+
+.application-marketing-amount span,
+.application-marketing-amount strong {
+  display: block;
+}
+
+.application-marketing-amount span {
+  color: rgba(255, 255, 255, .72);
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.application-marketing-amount strong {
+  margin-top: 3px;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.application-marketing-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, .82);
+  font-size: .82rem;
+}
+
+.application-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.application-benefits span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: #163f70;
+  background: #fff;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.application-trust-row.hard-pull {
+  color: #7c4a0d;
+  background: #fff8e9;
+}
+
+.application-trust-row.hard-pull > i {
+  color: #a26013;
+}
+
+.application-option-note {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  color: #66798d;
+  font-size: .7rem;
+}
+
+.application-choice.selected {
+  border-radius: 10px;
+  background: #eef7fc;
+}
+
+.funding-account-choice {
+  display: grid;
+  grid-template-columns: auto 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 13px;
+  border: 1px solid #d7e3ec;
+  border-radius: 12px;
+}
+
+.funding-account-choice input {
+  width: 16px;
+  height: 16px;
+  accent-color: #437cbf;
+}
+
+.funding-account-choice > i:first-of-type {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 9px;
+  color: #2769b4;
+  background: #eaf4fb;
+}
+
+.funding-account-choice strong,
+.funding-account-choice small {
+  display: block;
+}
+
+.funding-account-choice strong {
+  color: #12345b;
+  font-size: .82rem;
+}
+
+.funding-account-choice small {
+  color: #6a7c8e;
+  font-size: .67rem;
+}
+
+.funding-account-choice > i:last-child {
+  color: #2f7d50;
+}
+
+.application-add-account {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  color: #2769b4;
+  background: transparent;
+  font-size: .75rem;
+  font-weight: 800;
+}
+
+.pending-funding-product {
+  border-color: #c9d88a;
+  background: #fbfdec;
+}
+
+.pending-funding-product .account-product-icon {
+  color: #516d0d;
+  background: #e8f1b8;
+}
+
+.pending-funding-product .account-product-due > strong {
+  color: #4f6c10;
+}

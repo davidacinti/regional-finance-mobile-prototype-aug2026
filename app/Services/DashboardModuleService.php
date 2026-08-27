@@ -12,6 +12,7 @@ class DashboardModuleService
         $wellness = $scenario['financial_wellness'] ?? [];
         $vehicles = $scenario['assets']['vehicles'] ?? [];
         $interstitial = $scenario['interstitial'] ?? null;
+        $pendingFunding = ($application['status'] ?? null) === 'pending_funding';
 
         return [
             'show_late_interstitial' => $hasLatePayment && $interstitial === 'late_payment' && ! $interstitialDismissed,
@@ -19,7 +20,8 @@ class DashboardModuleService
                 && in_array($interstitial, ['prequalified', 'invite_to_apply'], true) && ! $interstitialDismissed,
             'show_payment_due_banner' => ($scenario['alerts']['payment_due_soon'] ?? false) && ! $hasLatePayment,
             'show_late_banner' => $hasLatePayment,
-            'show_application' => filled($application),
+            'show_application' => filled($application) && ! $pendingFunding,
+            'show_pending_funding' => $pendingFunding,
             'show_loans' => count($scenario['loans'] ?? []) > 0,
             'show_offer' => ! $hasLatePayment && ! filled($application) && ($offer['status'] ?? null) === 'available',
             'show_credit_score' => (bool) ($wellness['credit_monitoring_enabled'] ?? false),
@@ -36,7 +38,7 @@ class DashboardModuleService
             return ['label' => 'Make a payment', 'url' => route('prototype.payment')];
         }
 
-        if (filled($scenario['application'] ?? null)) {
+        if (filled($scenario['application'] ?? null) && ($scenario['application']['status'] ?? null) !== 'pending_funding') {
             return ['label' => $scenario['application']['cta'], 'url' => route('prototype.application', $scenario['application']['id'])];
         }
 

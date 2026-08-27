@@ -13,7 +13,8 @@ $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
 $savings = $scenario['products']['savings'] ?? null;
 $creditCard = $scenario['products']['credit_card'] ?? null;
-$accountCount = count($loans) + ($savings ? 1 : 0) + ($creditCard ? 1 : 0);
+$pendingFunding = ($application['status'] ?? null) === 'pending_funding' ? $application : null;
+$accountCount = count($loans) + ($savings ? 1 : 0) + ($creditCard ? 1 : 0) + ($pendingFunding ? 1 : 0);
 $compactAccounts = $accountCount > 1;
 $secureLoanUrl = route('prototype.offers');
 $scheduledPayment = $scheduledPayment ?? ($scenario['payments']['pending'] ?? null);
@@ -73,7 +74,7 @@ $highlightCards[] = [
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827offer-polish">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827application-flow">
 @endsection
 
 @section('content')
@@ -199,6 +200,18 @@ $highlightCards[] = [
           <h2>My accounts</h2>
         </div>
         <div class="product-stack {{ $compactAccounts ? 'is-compact' : 'is-expanded' }}">
+          @if($pendingFunding)
+            <a class="app-card account-product-card compact pending-funding-product" href="{{ route('prototype.application', $pendingFunding['id']) }}">
+              <span class="account-product-icon"><i class="ti ti-clock-check"></i></span>
+              <span class="account-product-main">
+                <span class="account-product-title">Personal loan <em>Approved</em></span>
+                <strong>$3,500.00</strong>
+                <small>Loan amount</small>
+              </span>
+              <span class="account-product-due"><small>Status</small><strong>Funding</strong><span>Within 1 business day</span></span>
+              <i class="ti ti-chevron-right account-product-chevron"></i>
+            </a>
+          @endif
           @foreach($loans as $loan)
             @php
               $loanIsPastDue = $loan['status'] !== 'current';
