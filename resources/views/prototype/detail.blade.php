@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827application-flow">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827profile-refine">
 @endsection
 
 @section('content')
@@ -739,85 +739,96 @@ $pastLoanDocuments = [
                 {{ strtoupper(substr($scenario['customer']['first_name'] ?? 'J', 0, 1)) }}{{ strtoupper(substr($scenario['customer']['last_name'] ?? 'D', 0, 1)) }}
               </div>
               <div>
-                <span class="eyebrow">Profile</span>
                 <h2>{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</h2>
-                <p>Keep your contact details current so Regional Finance can reach you about payments, documents, applications, and account alerts.</p>
+                <p>Regional Finance customer since 2021</p>
               </div>
             </div>
 
-            <form class="profile-edit-form" action="javascript:void(0)">
-              <section class="profile-form-section">
-                <div class="profile-section-heading">
-                  <i class="ti ti-id"></i>
-                  <h3>Personal information</h3>
-                </div>
-                <div class="profile-field-grid">
-                  <label>First name<input type="text" value="{{ $scenario['customer']['first_name'] ?? 'Jordan' }}"></label>
-                  <label>Last name<input type="text" value="{{ $scenario['customer']['last_name'] ?? 'Davis' }}"></label>
-                </div>
-              </section>
+            <nav class="profile-tabs" aria-label="Profile navigation">
+              <span class="active">My info</span>
+              <a href="{{ route('prototype.settings') }}">Settings</a>
+            </nav>
 
-              <section class="profile-form-section">
-                <div class="profile-section-heading">
-                  <i class="ti ti-address-book"></i>
-                  <h3>Contact details</h3>
-                </div>
-                <div class="profile-field-grid">
-                  <label>Mobile phone<input type="tel" value="(864) 555-2194"></label>
-                  <label>Email<input type="email" value="jordan.davis@example.com"></label>
-                  <label>Street address<input type="text" value="1450 Woodruff Rd"></label>
-                  <label>City<input type="text" value="Greenville"></label>
-                  <label>State<input type="text" value="SC"></label>
-                  <label>ZIP code<input type="text" value="29607"></label>
-                </div>
-              </section>
-
-              <section class="profile-form-section">
-                <div class="profile-section-heading">
-                  <i class="ti ti-briefcase"></i>
-                  <h3>Employment and income</h3>
-                </div>
-                <div class="profile-field-grid">
-                  <label>Employment status<select><option selected>Employed full time</option><option>Employed part time</option><option>Self employed</option><option>Retired</option></select></label>
-                  <label>Employer<input type="text" value="Carolina Logistics"></label>
-                  <label>Monthly net income<input type="text" value="$4,850"></label>
-                  <label>Pay frequency<select><option selected>Biweekly</option><option>Weekly</option><option>Monthly</option></select></label>
-                </div>
-                <div class="profile-note">
-                  <i class="ti ti-shield-check"></i>
-                  <span>Income updates may be reviewed before they are used for lending decisions.</span>
-                </div>
-              </section>
-
-              <section class="profile-form-section">
-                <div class="profile-section-heading">
-                  <i class="ti ti-bell-ringing"></i>
-                  <h3>Communication preferences</h3>
-                </div>
-                <div class="profile-toggle-list">
-                  <label><span><strong>Payment reminders</strong><small>Texts before a due date or missed payment</small></span><input type="checkbox" checked></label>
-                  <label><span><strong>Document alerts</strong><small>New statements, notices, and loan documents</small></span><input type="checkbox" checked></label>
-                  <label><span><strong>Offer updates</strong><small>Prequalification and product messages</small></span><input type="checkbox"></label>
-                </div>
-              </section>
-
-              <section class="profile-form-section">
-                <div class="profile-section-heading">
-                  <i class="ti ti-users"></i>
-                  <h3>Trusted contact</h3>
-                </div>
-                <div class="profile-field-grid">
-                  <label>Name<input type="text" value="Morgan Davis"></label>
-                  <label>Relationship<input type="text" value="Spouse"></label>
-                  <label>Phone<input type="tel" value="(864) 555-8012"></label>
-                </div>
-              </section>
-
-              <div class="profile-action-stack">
-                <button class="btn btn-primary w-100" type="button">Save profile updates</button>
-                <a class="btn btn-outline-primary w-100" href="{{ route('prototype.settings') }}">Security and notification settings</a>
+            <section class="profile-info-section profile-about-section">
+              <div class="profile-section-heading">
+                <h3>About me</h3>
               </div>
-            </form>
+              <p class="profile-help-copy">To change your legal name or other verified identity information, contact your branch.</p>
+              <div class="profile-read-list">
+                <div><span>Legal name</span><strong>{{ $scenario['customer']['first_name'] ?? 'Jordan' }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</strong></div>
+                <div><span>Member since</span><strong>2021</strong></div>
+              </div>
+              <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'your branch' }}</a>
+            </section>
+
+            <section class="profile-info-section" data-profile-section>
+              <div class="profile-section-heading">
+                <h3>Contact information</h3>
+                <button type="button" data-profile-edit-button aria-expanded="false">Edit</button>
+              </div>
+              <div class="profile-read-list" data-profile-read-panel>
+                <div><span>Home address</span><strong data-profile-value="address">1450 Woodruff Rd, Greenville, SC 29607</strong></div>
+                <div><span>Email address</span><strong data-profile-value="email">jordan.davis@example.com</strong></div>
+                <div><span>Mobile phone</span><strong data-profile-value="phone">(864) 555-2194</strong></div>
+              </div>
+              <form class="profile-edit-panel" data-profile-edit-panel hidden>
+                <label class="profile-edit-wide">Home address<input data-profile-input="address" type="text" value="1450 Woodruff Rd, Greenville, SC 29607"></label>
+                <label>Email address<input data-profile-input="email" type="email" value="jordan.davis@example.com"></label>
+                <label>Mobile phone<input data-profile-input="phone" type="tel" value="(864) 555-2194"></label>
+                <div class="profile-edit-actions">
+                  <button class="btn btn-primary" type="submit">Save</button>
+                  <button class="btn btn-outline-primary" type="button" data-profile-cancel>Cancel</button>
+                </div>
+              </form>
+              <p class="profile-save-status" data-profile-save-status hidden><i class="ti ti-circle-check"></i>Changes saved</p>
+            </section>
+
+            <section class="profile-info-section" data-profile-section>
+              <div class="profile-section-heading">
+                <h3>Career</h3>
+                <button type="button" data-profile-edit-button aria-expanded="false">Edit</button>
+              </div>
+              <div class="profile-read-list" data-profile-read-panel>
+                <div><span>Employment status</span><strong data-profile-value="employment">Employed full time</strong></div>
+                <div><span>Current employer</span><strong data-profile-value="employer">Carolina Logistics</strong></div>
+                <div><span>Monthly net income</span><strong data-profile-value="income">$4,850</strong></div>
+                <div><span>Pay frequency</span><strong data-profile-value="frequency">Biweekly</strong></div>
+              </div>
+              <form class="profile-edit-panel" data-profile-edit-panel hidden>
+                <label>Employment status<select data-profile-input="employment"><option selected>Employed full time</option><option>Employed part time</option><option>Self employed</option><option>Retired</option></select></label>
+                <label>Current employer<input data-profile-input="employer" type="text" value="Carolina Logistics"></label>
+                <label>Monthly net income<input data-profile-input="income" type="text" value="$4,850"></label>
+                <label>Pay frequency<select data-profile-input="frequency"><option selected>Biweekly</option><option>Weekly</option><option>Monthly</option></select></label>
+                <div class="profile-edit-actions">
+                  <button class="btn btn-primary" type="submit">Save</button>
+                  <button class="btn btn-outline-primary" type="button" data-profile-cancel>Cancel</button>
+                </div>
+              </form>
+              <p class="profile-disclosure"><i class="ti ti-shield-check"></i>Income updates may be reviewed before they are used for lending decisions.</p>
+              <p class="profile-save-status" data-profile-save-status hidden><i class="ti ti-circle-check"></i>Changes saved</p>
+            </section>
+
+            <section class="profile-info-section" data-profile-section>
+              <div class="profile-section-heading">
+                <h3>Trusted contact</h3>
+                <button type="button" data-profile-edit-button aria-expanded="false">Edit</button>
+              </div>
+              <div class="profile-read-list" data-profile-read-panel>
+                <div><span>Name</span><strong data-profile-value="trusted-name">Morgan Davis</strong></div>
+                <div><span>Relationship</span><strong data-profile-value="trusted-relationship">Spouse</strong></div>
+                <div><span>Phone</span><strong data-profile-value="trusted-phone">(864) 555-8012</strong></div>
+              </div>
+              <form class="profile-edit-panel" data-profile-edit-panel hidden>
+                <label>Name<input data-profile-input="trusted-name" type="text" value="Morgan Davis"></label>
+                <label>Relationship<input data-profile-input="trusted-relationship" type="text" value="Spouse"></label>
+                <label>Phone<input data-profile-input="trusted-phone" type="tel" value="(864) 555-8012"></label>
+                <div class="profile-edit-actions">
+                  <button class="btn btn-primary" type="submit">Save</button>
+                  <button class="btn btn-outline-primary" type="button" data-profile-cancel>Cancel</button>
+                </div>
+              </form>
+              <p class="profile-save-status" data-profile-save-status hidden><i class="ti ti-circle-check"></i>Changes saved</p>
+            </section>
           </section>
           @break
         @case('documents')
@@ -997,7 +1008,6 @@ $pastLoanDocuments = [
             </div>
 
             <div class="simple-list-card">
-              <a href="{{ route('prototype.notifications') }}"><i class="ti ti-bell"></i><span>Notifications</span><strong>Manage</strong></a>
               <a href="{{ route('prototype.support') }}"><i class="ti ti-headphones"></i><span>Support</span><strong>Contact</strong></a>
               <button type="button"><i class="ti ti-shield-lock"></i><span>Privacy and security</span><strong>View</strong></button>
             </div>
@@ -1086,5 +1096,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825scenario-save"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260827profile-refine"></script>
 @endsection

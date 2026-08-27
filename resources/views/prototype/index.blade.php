@@ -127,8 +127,6 @@ $highlightCards[] = [
         @endif
         <a href="{{ route('prototype.documents') }}"><i class="ti ti-folder"></i><span>Document Center</span></a>
         <a href="{{ route('prototype.settings') }}"><i class="ti ti-settings"></i><span>Settings</span></a>
-        <a href="{{ route('prototype.chat') }}"><i class="ti ti-message-chatbot"></i><span>AI Assistant</span></a>
-        <a href="{{ route('prototype.notifications') }}"><i class="ti ti-bell"></i><span>Notifications</span></a>
         <a href="{{ route('prototype.support') }}"><i class="ti ti-headset"></i><span>Support</span></a>
       </nav>
       <div class="side-menu-footer">

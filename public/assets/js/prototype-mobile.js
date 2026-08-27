@@ -147,6 +147,73 @@
     window.addEventListener('pageshow', () => setMenuOpen(false));
   }
 
+  const profileStorageKey = 'regionalProfileDetailsV1';
+  let savedProfileDetails = {};
+
+  try {
+    savedProfileDetails = JSON.parse(window.sessionStorage.getItem(profileStorageKey) || '{}');
+  } catch (error) {
+    window.sessionStorage.removeItem(profileStorageKey);
+  }
+
+  document.querySelectorAll('[data-profile-section]').forEach(section => {
+    const editButton = section.querySelector('[data-profile-edit-button]');
+    const readPanel = section.querySelector('[data-profile-read-panel]');
+    const editPanel = section.querySelector('[data-profile-edit-panel]');
+    const cancelButton = section.querySelector('[data-profile-cancel]');
+    const saveStatus = section.querySelector('[data-profile-save-status]');
+
+    if (!editButton || !readPanel || !editPanel) {
+      return;
+    }
+
+    editPanel.querySelectorAll('[data-profile-input]').forEach(input => {
+      const key = input.dataset.profileInput;
+      const savedValue = savedProfileDetails[key];
+
+      if (typeof savedValue === 'string') {
+        input.value = savedValue;
+        section.querySelector(`[data-profile-value="${key}"]`)?.replaceChildren(savedValue);
+      }
+    });
+
+    const setEditing = isEditing => {
+      readPanel.hidden = isEditing;
+      editPanel.hidden = !isEditing;
+      editButton.setAttribute('aria-expanded', String(isEditing));
+      editButton.textContent = isEditing ? 'Close' : 'Edit';
+      saveStatus.hidden = true;
+
+      if (isEditing) {
+        editPanel.querySelector('input, select')?.focus();
+      }
+    };
+
+    editButton.addEventListener('click', () => setEditing(editPanel.hidden));
+    cancelButton?.addEventListener('click', () => {
+      editPanel.querySelectorAll('[data-profile-input]').forEach(input => {
+        const currentValue = section.querySelector(`[data-profile-value="${input.dataset.profileInput}"]`)?.textContent;
+        if (typeof currentValue === 'string') input.value = currentValue.trim();
+      });
+      setEditing(false);
+    });
+
+    editPanel.addEventListener('submit', event => {
+      event.preventDefault();
+
+      editPanel.querySelectorAll('[data-profile-input]').forEach(input => {
+        const key = input.dataset.profileInput;
+        const value = input.value.trim();
+        section.querySelector(`[data-profile-value="${key}"]`)?.replaceChildren(value);
+        savedProfileDetails[key] = value;
+      });
+
+      window.sessionStorage.setItem(profileStorageKey, JSON.stringify(savedProfileDetails));
+      setEditing(false);
+      saveStatus.hidden = false;
+    });
+  });
+
   const mockChat = document.querySelector('[data-mock-chat]');
 
   if (mockChat) {
@@ -613,6 +680,7 @@
 
   document.querySelector('[data-reset-prototype]')?.addEventListener('submit', () => {
     window.localStorage.removeItem('regionalPrototypeStateV2');
+    window.sessionStorage.removeItem(profileStorageKey);
   });
 
   const modal = document.querySelector('.prototype-modal');

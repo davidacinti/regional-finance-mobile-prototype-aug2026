@@ -20,6 +20,8 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->get('/')
             ->assertOk()
+            ->assertDontSee('AI Assistant')
+            ->assertDontSee('<span>Notifications</span>', false)
             ->assertSee('Hi, Jordan')
             ->assertSee('Personal loan')
             ->assertSee('Vehicle estimate')
@@ -304,6 +306,11 @@ class PrototypeStateFlowTest extends TestCase
         }
 
         $this->get('/profile')
+            ->assertSee('Contact information')
+            ->assertSee('Career')
+            ->assertSee('Trusted contact')
+            ->assertSee('data-profile-edit-button', false)
+            ->assertDontSee('Communication preferences')
             ->assertDontSee('Date of birth')
             ->assertDontSee('Last 4 of SSN');
     }
