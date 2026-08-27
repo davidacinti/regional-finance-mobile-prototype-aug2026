@@ -176,7 +176,9 @@ Route::post('/loans/{loan}/autopay', [PrototypeController::class, 'enrollAutopay
 Route::post('/loans/{loan}/autopay/cancel', [PrototypeController::class, 'cancelAutopay'])->name('prototype.loan.autopay.cancel');
 Route::get('/applications/{application}', fn (string $application) => app(PrototypeController::class)->detail(request(), 'application', $application))->name('prototype.application');
 Route::post('/applications/start', [PrototypeController::class, 'startApplication'])->name('prototype.application.start');
+Route::get('/applications/{application}/advance', fn (string $application) => redirect()->route('prototype.application', $application));
 Route::post('/applications/{application}/advance', [PrototypeController::class, 'advanceApplication'])->name('prototype.application.advance');
+Route::get('/applications/{application}/previous', fn (string $application) => redirect()->route('prototype.application', $application));
 Route::post('/applications/{application}/previous', [PrototypeController::class, 'previousApplication'])->name('prototype.application.previous');
 Route::get('/offers/{offer?}', fn (?string $offer = null) => app(PrototypeController::class)->detail(request(), 'offer', $offer))->name('prototype.offers');
 Route::get('/protection-benefits', fn () => app(PrototypeController::class)->detail(request(), 'protection'))->name('prototype.protection');

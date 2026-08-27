@@ -192,6 +192,12 @@ class PrototypeStateFlowTest extends TestCase
             ->assertDontSee('Verify your income');
     }
 
+    public function test_application_transition_urls_are_safe_when_opened_directly(): void
+    {
+        $this->get('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001/previous')->assertRedirect('/applications/62001');
+    }
+
     public function test_offer_marketplace_and_zero_vehicle_state_are_clickable(): void
     {
         $this->get('/offers')
