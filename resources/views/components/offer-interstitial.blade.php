@@ -10,9 +10,13 @@ $isInvite = ($offer['type'] ?? '') === 'invite_to_apply';
     @csrf
     <button class="modal-close" type="submit" aria-label="Dismiss offer"><i class="ti ti-x"></i></button>
   </form>
-  <div class="modal-icon-wrap" aria-hidden="true"><i class="ti {{ $isInvite ? 'ti-sparkles' : 'ti-award' }} modal-icon"></i></div>
-  <span class="eyebrow">{{ $offer['eyebrow'] ?? 'For you' }}</span>
-  <h2 id="offer-interstitial-title">{{ $offer['headline'] }}</h2>
+  <div class="offer-interstitial-hero">
+    <div class="modal-icon-wrap" aria-hidden="true"><i class="ti {{ $isInvite ? 'ti-sparkles' : 'ti-award' }} modal-icon"></i></div>
+    <div>
+      <span class="eyebrow">{{ $offer['eyebrow'] ?? 'For you' }}</span>
+      <h2 id="offer-interstitial-title">{{ $offer['headline'] }}</h2>
+    </div>
+  </div>
   <p>{{ $offer['body'] }}</p>
   <div class="interstitial-highlight"><i class="ti ti-shield-check"></i>{{ $offer['highlight'] }}</div>
   <form method="POST" action="{{ route('prototype.application.start') }}">

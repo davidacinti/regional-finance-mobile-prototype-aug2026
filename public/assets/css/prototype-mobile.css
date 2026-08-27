@@ -4274,3 +4274,251 @@ button:focus-visible {
     width: min(220px, calc(100vw - 4rem));
   }
 }
+
+/* Offer, vehicle, and compact servicing polish */
+.next-best-action {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px 14px;
+  overflow: hidden;
+  padding: 17px;
+  border: 1px solid #d8e5ef;
+  box-shadow: 0 10px 28px rgba(18, 52, 91, .09);
+}
+
+.next-best-action::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  content: "";
+  background: #437cbf;
+}
+
+.next-best-action .next-best-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  color: #174a7d;
+  background: #e6f2fb;
+}
+
+.next-best-copy h2 {
+  margin-top: 2px;
+  font-size: 17px;
+  line-height: 1.22;
+}
+
+.next-best-action form,
+.next-best-action .next-best-link {
+  grid-column: 2;
+  width: 100%;
+}
+
+.next-best-link {
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  color: #fff;
+  background: #437cbf;
+}
+
+.next-best-action.prequalified_renewal {
+  border-color: #163f70;
+  background: #163f70;
+}
+
+.next-best-action.prequalified_renewal::before {
+  background: #cdd929;
+}
+
+.next-best-action.prequalified_renewal .next-best-icon {
+  color: #163f70;
+  background: #cdd929;
+}
+
+.next-best-action.prequalified_renewal .eyebrow,
+.next-best-action.prequalified_renewal h2,
+.next-best-action.prequalified_renewal p {
+  color: #fff;
+}
+
+.next-best-action.prequalified_renewal .eyebrow,
+.next-best-action.prequalified_renewal p {
+  opacity: .8;
+}
+
+.next-best-action.prequalified_renewal .next-best-link {
+  color: #163f70;
+  background: #fff;
+}
+
+.next-best-action.invite_to_apply::before {
+  background: #8bab20;
+}
+
+.next-best-action.invite_to_apply .next-best-icon {
+  color: #516d0d;
+  background: #eef5cb;
+}
+
+.next-best-action.check_for_offers {
+  background: #f8fbfd;
+}
+
+.next-best-action.check_for_offers .next-best-link {
+  background: #2f71b8;
+}
+
+.offer-interstitial {
+  overflow: hidden;
+  border: 1px solid rgba(67, 124, 191, .24);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.offer-interstitial::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  content: "";
+  background: #437cbf;
+}
+
+.offer-interstitial.prequalified::before {
+  background: linear-gradient(90deg, #437cbf 0 78%, #cdd929 78% 100%);
+}
+
+.offer-interstitial-hero {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  clear: both;
+  padding-top: 6px;
+}
+
+.offer-interstitial .modal-icon-wrap {
+  width: 58px;
+  height: 58px;
+  margin: 0;
+  border: 0;
+  border-radius: 14px;
+  color: #163f70;
+  background: #e3f0fa;
+}
+
+.offer-interstitial.prequalified .modal-icon-wrap {
+  background: #eef5cb;
+}
+
+.offer-interstitial .modal-icon {
+  color: #2769b4;
+  font-size: 1.8rem;
+}
+
+.offer-interstitial.prequalified .modal-icon {
+  color: #5c760f;
+}
+
+.offer-interstitial .eyebrow {
+  margin: 0 0 3px;
+}
+
+.offer-interstitial h2 {
+  margin: 0;
+  font-size: 1.38rem;
+}
+
+.offer-interstitial > p {
+  margin: 16px 0 0;
+  color: #607286;
+  font-size: .92rem;
+}
+
+.offer-interstitial .interstitial-highlight {
+  border: 1px solid #dbe79c;
+  background: #f3f7d4;
+}
+
+.offer-interstitial .modal-primary-action {
+  background: #437cbf !important;
+  border-color: #437cbf !important;
+  box-shadow: 0 9px 20px rgba(67, 124, 191, .22) !important;
+}
+
+.offer-interstitial .modal-primary-action:hover,
+.offer-interstitial .modal-primary-action:focus {
+  background: #2f6da8 !important;
+  border-color: #2f6da8 !important;
+}
+
+.vehicle-card {
+  border-color: #d8e5ef;
+}
+
+.vehicle-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 92px;
+}
+
+.vehicle-card-heading h2 {
+  margin: 7px 0 0;
+  color: var(--rf-navy);
+  font-size: 1.18rem;
+}
+
+.vehicle-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.vehicle-card-label > i {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 9px;
+  color: #2f6fae;
+  background: #eaf4fb;
+  font-size: 1rem;
+}
+
+.vehicle-card-image {
+  display: grid;
+  width: 76px;
+  height: 92px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #e5edf3, #f8fbfd);
+}
+
+.vehicle-card-image img {
+  width: auto;
+  height: 82px;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 7px rgba(18, 52, 91, .2));
+}
+
+.account-product-card.compact.past-due {
+  border-color: #e5a4a4;
+  background: #fff8f8;
+  box-shadow: 0 8px 22px rgba(159, 29, 29, .1);
+}
+
+.account-product-card.compact.past-due .account-product-icon {
+  color: #a72a2a;
+  background: #fde8e8;
+}
+
+.account-product-card.compact.past-due .account-product-due > small,
+.account-product-card.compact.past-due .account-product-due > strong,
+.account-product-card.compact.past-due .account-product-due > span,
+.account-product-card.compact.past-due .account-product-chevron {
+  color: #a72a2a;
+}

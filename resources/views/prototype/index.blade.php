@@ -73,7 +73,7 @@ $highlightCards[] = [
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827offer-polish">
 @endsection
 
 @section('content')
@@ -227,10 +227,10 @@ $highlightCards[] = [
               $loanAmountDue = (float) ($loan['amount_due'] ?? 0);
             @endphp
             @if($compactAccounts)
-              <a class="app-card account-product-card compact loan-product" href="{{ route('prototype.loan', $loan['id']) }}">
+              <a class="app-card account-product-card compact loan-product {{ $loanIsPastDue ? 'past-due' : '' }}" href="{{ route('prototype.loan', $loan['id']) }}">
                 <span class="account-product-icon"><i class="ti ti-wallet"></i></span>
                 <span class="account-product-main">
-                  <span class="account-product-title">{{ $loan['name'] }}</span>
+                  <span class="account-product-title">{{ $loan['name'] }} @if($loanIsPastDue)<em class="danger">Past due</em>@endif</span>
                   <strong>{{ $money($loan['balance']) }}</strong>
                   <small>Balance</small>
                 </span>
@@ -339,8 +339,15 @@ $highlightCards[] = [
 
     @if($modules['show_vehicle'])
       <section class="app-card vehicle-card">
-        <span class="eyebrow">Vehicle estimate</span>
-        <h2>{{ $vehicle['year'] }} {{ $vehicle['make'] }} {{ $vehicle['model'] }}</h2>
+        <div class="vehicle-card-heading">
+          <div>
+            <span class="vehicle-card-label"><i class="ti ti-car"></i><span class="eyebrow">Vehicle estimate</span></span>
+            <h2>{{ $vehicle['year'] }} {{ $vehicle['make'] }} {{ $vehicle['model'] }}</h2>
+          </div>
+          <div class="vehicle-card-image">
+            <img src="{{ asset('assets/img/illustrations/fleet-car.png') }}" alt="Top view of {{ $vehicle['year'] }} {{ $vehicle['make'] }} {{ $vehicle['model'] }}">
+          </div>
+        </div>
         <div class="loan-grid">
           <div><span>Estimated value</span><strong>{{ $money($vehicle['estimated_value']) }}</strong></div>
           <div><span>Estimated equity</span><strong>{{ $money($vehicle['estimated_equity']) }}</strong></div>

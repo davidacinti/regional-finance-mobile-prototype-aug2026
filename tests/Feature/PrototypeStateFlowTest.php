@@ -20,6 +20,8 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Hi, Jordan')
             ->assertSee('Personal loan')
             ->assertSee('Vehicle estimate')
+            ->assertSee('assets/img/illustrations/fleet-car.png', false)
+            ->assertSee('ti-car', false)
             ->assertDontSee('Track your cars')
             ->assertSee('data-branch-map', false);
     }
@@ -83,6 +85,26 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Payment past due')
             ->assertDontSee('A new loan option is ready')
             ->assertDontSee('offer-interstitial', false);
+    }
+
+    public function test_compact_delinquent_loan_keeps_urgent_status_on_the_product_card(): void
+    {
+        $this->postJson('/prototype/state', [
+            'customer' => ['type' => 'active'],
+            'loans' => ['count' => 1, 'payment_status' => 'past_due_30'],
+            'products' => ['savings' => true, 'credit_card' => false],
+            'offer' => ['type' => 'none'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 642, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 1],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertOk();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('account-product-card compact loan-product past-due', false)
+            ->assertSee('Past due')
+            ->assertSee('$428.00');
     }
 
     public function test_pending_payment_persists_across_pages_and_presets_until_reset(): void
