@@ -169,6 +169,8 @@ Route::post('/prototype/presets/{preset}', [PrototypeController::class, 'applyPr
 Route::post('/prototype/reset', [PrototypeController::class, 'resetPrototype'])->name('prototype.reset');
 Route::post('/prototype/interstitial/dismiss', [PrototypeController::class, 'dismissInterstitial'])->name('prototype.interstitial.dismiss');
 Route::get('/loans/{loan}', fn (string $loan) => app(PrototypeController::class)->detail(request(), 'loan', $loan))->name('prototype.loan');
+Route::get('/products/savings', fn () => app(PrototypeController::class)->detail(request(), 'savings'))->name('prototype.product.savings');
+Route::get('/products/credit-card', fn () => app(PrototypeController::class)->detail(request(), 'credit-card'))->name('prototype.product.credit-card');
 Route::get('/loans/{loan}/autopay', fn (string $loan) => app(PrototypeController::class)->detail(request(), 'autopay', $loan))->name('prototype.loan.autopay');
 Route::post('/loans/{loan}/autopay', [PrototypeController::class, 'enrollAutopay'])->name('prototype.loan.autopay.enroll');
 Route::post('/loans/{loan}/autopay/cancel', [PrototypeController::class, 'cancelAutopay'])->name('prototype.loan.autopay.cancel');

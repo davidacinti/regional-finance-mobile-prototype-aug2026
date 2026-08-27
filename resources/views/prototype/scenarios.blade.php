@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825sparse-customer">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
 @endsection
 
 @section('content')
@@ -72,6 +72,13 @@ $customizerHidden = 'customizer-hide';
           <button type="button" data-stepper-minus aria-label="Remove loan"><i class="ti ti-minus"></i></button>
           <input type="number" name="loans[count]" value="{{ $appState['loans']['count'] }}" min="0" max="2" readonly>
           <button type="button" data-stepper-plus aria-label="Add loan"><i class="ti ti-plus"></i></button>
+        </div>
+      </div>
+      <div class="builder-control">
+        <label>Additional demo products</label>
+        <div class="builder-toggle-grid product-toggle-grid">
+          <label class="builder-switch"><span><strong>Savings account</strong><small>Add a deposit product to the dashboard</small></span><input type="hidden" name="products[savings]" value="0"><input type="checkbox" name="products[savings]" value="1" @checked($appState['products']['savings'])></label>
+          <label class="builder-switch"><span><strong>Credit card</strong><small>Add a revolving credit product</small></span><input type="hidden" name="products[credit_card]" value="0"><input type="checkbox" name="products[credit_card]" value="1" @checked($appState['products']['credit_card'])></label>
         </div>
       </div>
     </section>

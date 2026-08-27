@@ -11,6 +11,10 @@ $wellness = $scenario['financial_wellness'] ?? [];
 $vehicle = $scenario['assets']['vehicles'][0] ?? null;
 $branch = $scenario['branch'] ?? [];
 $firstLoan = $loans[0] ?? null;
+$savings = $scenario['products']['savings'] ?? null;
+$creditCard = $scenario['products']['credit_card'] ?? null;
+$accountCount = count($loans) + ($savings ? 1 : 0) + ($creditCard ? 1 : 0);
+$compactAccounts = $accountCount > 1;
 $secureLoanUrl = route('prototype.offers');
 $scheduledPayment = $scheduledPayment ?? ($scenario['payments']['pending'] ?? null);
 $money = fn ($value) => '$' . number_format((float) $value, 2);
@@ -69,7 +73,7 @@ $highlightCards[] = [
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825sparse-customer">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
 @endsection
 
 @section('content')
@@ -178,7 +182,7 @@ $highlightCards[] = [
       </section>
     @endif
 
-    @if(! $modules['show_loans'] && ! $modules['show_application'])
+    @if($accountCount === 0 && ! $modules['show_application'])
       <section class="app-card relationship-welcome-card">
         <div class="relationship-welcome-icon"><i class="ti {{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'ti-history' : 'ti-sparkles' }}"></i></div>
         <div>
@@ -189,15 +193,12 @@ $highlightCards[] = [
       </section>
     @endif
 
-    @if($modules['show_loans'])
+    @if($accountCount > 0)
       <section class="section-block">
         <div class="section-title">
           <h2>My accounts</h2>
-          @if(count($loans) > 1)
-            <a href="{{ route('prototype.wellness') }}">View all accounts</a>
-          @endif
         </div>
-        <div class="{{ count($loans) > 1 ? 'loan-strip' : '' }}">
+        <div class="product-stack {{ $compactAccounts ? 'is-compact' : 'is-expanded' }}">
           @foreach($loans as $loan)
             @php
               $loanIsPastDue = $loan['status'] !== 'current';
@@ -223,29 +224,84 @@ $highlightCards[] = [
                 $loanAlertTitle = 'Payment pending';
                 $loanAlertBody = $money($loanPendingPayment['amount']) . ' is scheduled for ' . $date($loanPendingPayment['payment_date']) . '.';
               }
+              $loanAmountDue = (float) ($loan['amount_due'] ?? 0);
             @endphp
-            <article class="app-card loan-card">
-              <div class="card-heading">
-                <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] }}</span>
-                <span class="loan-status-pills">
-                  <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
-                  <span class="status-pill autopay-pill {{ $loanAutopayEnabled ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loanAutopayEnabled ? 'On' : 'Off' }}</span>
-                  @if($loanPendingPayment)<span class="status-pill pending"><i class="ti ti-clock-check"></i>Payment pending</span>@endif
+            @if($compactAccounts)
+              <a class="app-card account-product-card compact loan-product" href="{{ route('prototype.loan', $loan['id']) }}">
+                <span class="account-product-icon"><i class="ti ti-wallet"></i></span>
+                <span class="account-product-main">
+                  <span class="account-product-title">{{ $loan['name'] }}</span>
+                  <strong>{{ $money($loan['balance']) }}</strong>
+                  <small>Balance</small>
                 </span>
-              </div>
-              <div class="balance">{{ $money($loan['balance']) }}</div>
-              <p class="muted">Current balance</p>
-              <div class="loan-grid">
-                <div><i class="ti ti-cash"></i><span>Next payment</span><strong>{{ $money($loan['next_payment_amount']) }}</strong></div>
-                <div><i class="ti ti-calendar-due"></i><span>Due date</span><strong>{{ $date($loan['next_payment_date']) }}</strong></div>
-              </div>
-              <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
-              <div class="button-row">
-                <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti {{ $loanPendingPayment ? 'ti-clock-check' : 'ti-credit-card' }}"></i>{{ $loanPendingPayment ? 'View payment' : 'Make a payment' }}</a>
-                <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-chevron-right"></i>Details</a>
-              </div>
-            </article>
+                <span class="account-product-due">
+                  <small>Amount due</small>
+                  <strong>{{ $money($loanAmountDue) }}</strong>
+                  <span>{{ $date($loan['next_payment_date']) }}</span>
+                </span>
+                <i class="ti ti-chevron-right account-product-chevron"></i>
+              </a>
+            @else
+              <article class="app-card loan-card account-product-card expanded">
+                <div class="card-heading">
+                  <span class="card-title-with-icon"><i class="ti ti-wallet"></i>{{ $loan['name'] }}</span>
+                  <span class="loan-status-pills">
+                    <span class="status-pill {{ $loan['status'] === 'current' ? 'success' : 'danger' }}">{{ $loan['status'] === 'current' ? 'Current' : ($scenario['default_status']['label'] ?? 'Past due') }}</span>
+                    <span class="status-pill autopay-pill {{ $loanAutopayEnabled ? 'success' : 'neutral' }}"><i class="ti ti-refresh"></i>AutoPay {{ $loanAutopayEnabled ? 'On' : 'Off' }}</span>
+                    @if($loanPendingPayment)<span class="status-pill pending"><i class="ti ti-clock-check"></i>Payment pending</span>@endif
+                  </span>
+                </div>
+                <div class="balance">{{ $money($loan['balance']) }}</div>
+                <p class="muted">Current balance</p>
+                <div class="loan-grid">
+                  <div><i class="ti ti-cash"></i><span>Next payment</span><strong>{{ $money($loan['next_payment_amount']) }}</strong></div>
+                  <div><i class="ti ti-calendar-due"></i><span>Due date</span><strong>{{ $date($loan['next_payment_date']) }}</strong></div>
+                </div>
+                <x-account-alert :tone="$loanAlertTone" :title="$loanAlertTitle" :body="$loanAlertBody" />
+                <div class="button-row">
+                  <a href="{{ route('prototype.payment') }}" class="btn btn-primary flex-fill"><i class="ti {{ $loanPendingPayment ? 'ti-clock-check' : 'ti-credit-card' }}"></i>{{ $loanPendingPayment ? 'View payment' : 'Make a payment' }}</a>
+                  <a href="{{ route('prototype.loan', $loan['id']) }}" class="btn btn-outline-primary flex-fill"><i class="ti ti-chevron-right"></i>Details</a>
+                </div>
+              </article>
+            @endif
           @endforeach
+
+          @if($savings)
+            @if($compactAccounts)
+              <a class="app-card account-product-card compact savings-product" href="{{ route('prototype.product.savings') }}">
+                <span class="account-product-icon"><i class="ti ti-pig-money"></i></span>
+                <span class="account-product-main"><span class="account-product-title">{{ $savings['name'] }}</span><strong>{{ $money($savings['balance']) }}</strong><small>Balance</small></span>
+                <span class="account-product-due"><small>Available</small><strong>{{ $money($savings['available_balance']) }}</strong><span>&bull;&bull;{{ $savings['last_four'] }}</span></span>
+                <i class="ti ti-chevron-right account-product-chevron"></i>
+              </a>
+            @else
+              <article class="app-card account-product-card expanded deposit-product-card">
+                <div class="card-heading"><span class="card-title-with-icon"><i class="ti ti-pig-money"></i>{{ $savings['name'] }}</span><span class="status-pill success">Active</span></div>
+                <div class="balance">{{ $money($savings['balance']) }}</div><p class="muted">Current balance &bull; &bull;&bull;{{ $savings['last_four'] }}</p>
+                <div class="loan-grid"><div><i class="ti ti-cash"></i><span>Available balance</span><strong>{{ $money($savings['available_balance']) }}</strong></div><div><i class="ti ti-percentage"></i><span>APY</span><strong>{{ number_format($savings['apy'], 2) }}%</strong></div></div>
+                <a href="{{ route('prototype.product.savings') }}" class="btn btn-outline-primary w-100"><i class="ti ti-chevron-right"></i>View savings</a>
+              </article>
+            @endif
+          @endif
+
+          @if($creditCard)
+            @if($compactAccounts)
+              <a class="app-card account-product-card compact card-product" href="{{ route('prototype.product.credit-card') }}">
+                <span class="account-product-icon"><i class="ti ti-credit-card"></i></span>
+                <span class="account-product-main"><span class="account-product-title">{{ $creditCard['name'] }}</span><strong>{{ $money($creditCard['balance']) }}</strong><small>Balance &bull; &bull;&bull;{{ $creditCard['last_four'] }}</small></span>
+                <span class="account-product-due"><small>Amount due</small><strong>{{ $money($creditCard['amount_due']) }}</strong><span>{{ $date($creditCard['due_date']) }}</span></span>
+                <i class="ti ti-chevron-right account-product-chevron"></i>
+              </a>
+            @else
+              <article class="app-card account-product-card expanded credit-product-card">
+                <div class="card-heading"><span class="card-title-with-icon"><i class="ti ti-credit-card"></i>{{ $creditCard['name'] }}</span><span class="status-pill success">Current</span></div>
+                <div class="balance">{{ $money($creditCard['balance']) }}</div><p class="muted">Current balance &bull; &bull;&bull;{{ $creditCard['last_four'] }}</p>
+                <div class="loan-grid"><div><i class="ti ti-cash"></i><span>Amount due</span><strong>{{ $money($creditCard['amount_due']) }}</strong></div><div><i class="ti ti-calendar-due"></i><span>Due date</span><strong>{{ $date($creditCard['due_date']) }}</strong></div></div>
+                <x-account-alert tone="success" title="Nothing due right now" body="Your account is current through this statement cycle." />
+                <a href="{{ route('prototype.product.credit-card') }}" class="btn btn-outline-primary w-100"><i class="ti ti-chevron-right"></i>View credit card</a>
+              </article>
+            @endif
+          @endif
         </div>
       </section>
     @endif

@@ -164,9 +164,10 @@ class PrototypeScenarioService
     public function defaultState(): array
     {
         return [
-            'meta' => ['version' => 2, 'revision' => 1, 'preset' => self::DEFAULT_SCENARIO],
+            'meta' => ['version' => 3, 'revision' => 1, 'preset' => self::DEFAULT_SCENARIO],
             'customer' => ['type' => 'active', 'first_name' => 'Jordan', 'last_name' => 'Davis'],
             'loans' => ['count' => 1, 'payment_status' => 'current'],
+            'products' => ['savings' => false, 'credit_card' => false],
             'offer' => ['type' => 'check_for_offers'],
             'origination' => ['active' => false, 'step' => null, 'outcome' => null, 'last_updated' => null],
             'wellness' => [
@@ -191,6 +192,9 @@ class PrototypeScenarioService
         $state['customer']['type'] = $this->allowed($state['customer']['type'], ['new', 'former', 'active'], 'active');
         $state['loans']['count'] = $state['customer']['type'] === 'active' ? max(0, min(2, (int) $state['loans']['count'])) : 0;
         $state['loans']['payment_status'] = $this->allowed($state['loans']['payment_status'], array_keys($this->builderOptions()['payment_statuses']), 'current');
+        foreach (['savings', 'credit_card'] as $key) {
+            $state['products'][$key] = filter_var($state['products'][$key], FILTER_VALIDATE_BOOL);
+        }
         $state['offer']['type'] = $this->allowed($state['offer']['type'], array_keys($this->builderOptions()['offer_types']), 'none');
         $state['origination']['active'] = filter_var($state['origination']['active'], FILTER_VALIDATE_BOOL);
         $state['origination']['step'] = $state['origination']['active']
@@ -240,11 +244,17 @@ class PrototypeScenarioService
         ];
         $loans = [];
         foreach (array_slice($loanTemplates, 0, $state['loans']['count']) as $index => $loan) {
+            $isPrimaryLoan = $index === 0;
+            $loanStatus = $isPrimaryLoan ? $payment['loan_status'] : 'current';
+            $amountDue = $isPrimaryLoan && ($payment['is_late'] || in_array($state['loans']['payment_status'], ['due_soon', 'due_today'], true))
+                ? ($payment['past_due_amount'] > 0 ? $payment['past_due_amount'] : $loan['next_payment_amount'])
+                : 0;
             $loans[] = array_replace($loan, [
-                'status' => $payment['loan_status'],
-                'next_payment_date' => $index === 0 ? $payment['due_date'] : $today->addDays(21)->toDateString(),
-                'past_due_amount' => $index === 0 ? $payment['past_due_amount'] : 0,
-                'autopay_enabled' => $index === 0 && $payment['loan_status'] === 'current' ? $loan['autopay_enabled'] : false,
+                'status' => $loanStatus,
+                'amount_due' => $amountDue,
+                'next_payment_date' => $isPrimaryLoan ? $payment['due_date'] : $today->addDays(21)->toDateString(),
+                'past_due_amount' => $isPrimaryLoan ? $payment['past_due_amount'] : 0,
+                'autopay_enabled' => $isPrimaryLoan && $payment['loan_status'] === 'current' ? $loan['autopay_enabled'] : false,
             ]);
         }
 
@@ -263,6 +273,30 @@ class PrototypeScenarioService
                 'last_name' => $state['customer']['last_name'],
             ],
             'loans' => $loans,
+            'products' => [
+                'savings' => $state['products']['savings'] ? [
+                    'id' => 'savings-4203',
+                    'type' => 'savings',
+                    'name' => 'Regional Savings',
+                    'balance' => 8350.72,
+                    'available_balance' => 8350.72,
+                    'apy' => 0.45,
+                    'last_four' => '4203',
+                    'status' => 'Active',
+                ] : null,
+                'credit_card' => $state['products']['credit_card'] ? [
+                    'id' => 'credit-card-8842',
+                    'type' => 'credit_card',
+                    'name' => 'Regional Credit Card',
+                    'balance' => 1248.42,
+                    'amount_due' => 0,
+                    'due_date' => '2026-09-12',
+                    'available_credit' => 3751.58,
+                    'credit_limit' => 5000.00,
+                    'last_four' => '8842',
+                    'status' => 'Current',
+                ] : null,
+            ],
             'application' => $application,
             'offer' => $offer,
             'financial_wellness' => $wellness,

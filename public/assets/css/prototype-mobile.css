@@ -722,13 +722,149 @@
   font-size: 1.2rem;
 }
 
-.loan-strip {
+.product-stack {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(295px, 92%);
-  gap: .85rem;
-  overflow-x: auto;
-  padding-bottom: .25rem;
+  gap: .65rem;
+}
+
+.account-product-card.compact {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) minmax(94px, auto) 16px;
+  align-items: center;
+  gap: .65rem;
+  min-height: 88px;
+  padding: .68rem .72rem;
+  color: var(--rf-navy);
+  text-decoration: none;
+}
+
+.account-product-card.compact:hover,
+.account-product-card.compact:focus-visible {
+  border-color: var(--rf-blue);
+  color: var(--rf-navy);
+}
+
+.account-product-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 10px;
+  background: #eaf4ff;
+  color: var(--rf-blue);
+  font-size: 1.2rem;
+}
+
+.savings-product .account-product-icon {
+  background: #eef7df;
+  color: #527516;
+}
+
+.card-product .account-product-icon {
+  background: #f5f7d8;
+  color: #647c00;
+}
+
+.account-product-main,
+.account-product-due {
+  display: block;
+  min-width: 0;
+}
+
+.account-product-title {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  overflow: hidden;
+  color: var(--rf-navy);
+  font-size: .83rem;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.account-product-title em {
+  flex: 0 0 auto;
+  padding: .12rem .32rem;
+  border-radius: 999px;
+  background: #e9f7ec;
+  color: #247037;
+  font-size: .59rem;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
+.account-product-title em.danger {
+  background: #fff0f0;
+  color: #b42318;
+}
+
+.account-product-main > strong,
+.account-product-due > strong {
+  display: block;
+  color: var(--rf-navy);
+}
+
+.account-product-main > strong {
+  margin-top: .13rem;
+  font-size: 1.15rem;
+  line-height: 1.1;
+}
+
+.account-product-main > small,
+.account-product-due > small,
+.account-product-due > span {
+  display: block;
+  color: #667587;
+  font-size: .66rem;
+  line-height: 1.2;
+}
+
+.account-product-due {
+  text-align: right;
+}
+
+.account-product-due > small {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.account-product-due > strong {
+  margin: .05rem 0;
+  font-size: .95rem;
+}
+
+.account-product-chevron {
+  color: var(--rf-blue);
+  font-size: 1rem;
+}
+
+.product-experience-page {
+  display: grid;
+  min-height: 420px;
+  align-content: center;
+  justify-items: center;
+  gap: .7rem;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.product-experience-page .account-product-icon {
+  width: 56px;
+  height: 56px;
+  font-size: 1.5rem;
+}
+
+.product-experience-page h1 {
+  margin: 0;
+  color: var(--rf-navy);
+  font-size: 1.5rem;
+}
+
+.product-experience-page p {
+  max-width: 280px;
+  margin: 0;
+  color: #617080;
 }
 
 .balance,

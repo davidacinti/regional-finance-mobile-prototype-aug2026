@@ -18,6 +18,8 @@ $titles = [
   'support' => 'Support',
   'settings' => 'Settings',
   'payment' => 'Make a payment',
+  'savings' => 'Savings',
+  'credit-card' => 'Credit card',
 ];
 $loans = $scenario['loans'] ?? [];
 $branch = $scenario['branch'] ?? [];
@@ -81,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260825sparse-customer">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
 @endsection
 
 @section('content')
@@ -302,6 +304,22 @@ $pastLoanDocuments = [
           <h2 class="detail-page-title">{{ $titles[$type] ?? 'Details' }}</h2>
         @endif
         @switch($type)
+        @case('savings')
+          <section class="product-experience-page savings-product">
+            <span class="account-product-icon"><i class="ti ti-pig-money"></i></span>
+            <span class="eyebrow">Product experience</span>
+            <h1>Regional Savings</h1>
+            <p>This would be the full savings account experience.</p>
+          </section>
+          @break
+        @case('credit-card')
+          <section class="product-experience-page card-product">
+            <span class="account-product-icon"><i class="ti ti-credit-card"></i></span>
+            <span class="eyebrow">Product experience</span>
+            <h1>Regional Credit Card</h1>
+            <p>This would be the full credit card account experience.</p>
+          </section>
+          @break
         @case('payment')
           <section
             class="payment-flow"

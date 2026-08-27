@@ -73,6 +73,10 @@ class PrototypeController extends Controller
                 'count' => $request->integer('loans.count', 1),
                 'payment_status' => $request->input('loans.payment_status', 'current'),
             ],
+            'products' => [
+                'savings' => $request->boolean('products.savings'),
+                'credit_card' => $request->boolean('products.credit_card'),
+            ],
             'offer' => ['type' => $request->input('offer.type', 'none')],
             'origination' => [
                 'active' => $request->boolean('origination.active'),

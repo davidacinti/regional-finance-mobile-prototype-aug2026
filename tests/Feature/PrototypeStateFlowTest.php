@@ -11,7 +11,9 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/scenarios')
             ->assertOk()
             ->assertSee('Scenario Builder')
-            ->assertSee('Quick presets');
+            ->assertSee('Quick presets')
+            ->assertSee('Savings account')
+            ->assertSee('Credit card');
 
         $this->get('/')
             ->assertOk()
@@ -201,8 +203,69 @@ class PrototypeStateFlowTest extends TestCase
             '/settings',
             '/support',
             '/payments/new',
+            '/products/savings',
+            '/products/credit-card',
         ] as $path) {
             $this->get($path)->assertOk();
         }
+    }
+
+    public function test_multiple_products_render_as_a_compact_vertical_stack_in_product_order(): void
+    {
+        $this->postJson('/prototype/state', [
+            'customer' => ['type' => 'active'],
+            'loans' => ['count' => 2, 'payment_status' => 'current'],
+            'products' => ['savings' => true, 'credit_card' => true],
+            'offer' => ['type' => 'none'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 642, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 1],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertOk()
+            ->assertJsonPath('state.loans.count', 2)
+            ->assertJsonPath('state.products.savings', true)
+            ->assertJsonPath('state.products.credit_card', true);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('product-stack is-compact', false)
+            ->assertDontSee('loan-strip', false)
+            ->assertSeeInOrder([
+                'Personal loan',
+                'Home improvement loan',
+                'Regional Savings',
+                'Regional Credit Card',
+            ])
+            ->assertSee('$0.00')
+            ->assertSee('/products/savings', false)
+            ->assertSee('/products/credit-card', false);
+    }
+
+    public function test_a_single_product_uses_the_expanded_account_card(): void
+    {
+        $this->postJson('/prototype/state', [
+            'customer' => ['type' => 'active'],
+            'loans' => ['count' => 0, 'payment_status' => 'current'],
+            'products' => ['savings' => true, 'credit_card' => false],
+            'offer' => ['type' => 'none'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 642, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 0],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertOk();
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('product-stack is-expanded', false)
+            ->assertSee('deposit-product-card', false)
+            ->assertDontSee('account-product-card compact savings-product', false);
+
+        $this->get('/products/savings')
+            ->assertOk()
+            ->assertSee('This would be the full savings account experience.');
+
+        $this->get('/products/credit-card')
+            ->assertOk()
+            ->assertSee('This would be the full credit card account experience.');
     }
 }
