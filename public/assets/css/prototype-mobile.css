@@ -4522,3 +4522,9 @@ button:focus-visible {
 .account-product-card.compact.past-due .account-product-chevron {
   color: #a72a2a;
 }
+
+@media (min-width: 681px) {
+  .preset-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

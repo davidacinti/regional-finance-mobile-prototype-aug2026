@@ -69,9 +69,7 @@ class PrototypeScenarioService
             'healthy-active' => ['label' => 'Healthy active borrower', 'description' => 'One current loan with standard wellness and one vehicle.', 'icon' => 'ti-circle-check'],
             'prequalified-renewal' => ['label' => 'Pre-qualified renewal', 'description' => 'Current borrower with the strongest personalized offer.', 'icon' => 'ti-award'],
             'past-due' => ['label' => 'Past-due customer', 'description' => 'One loan 30 days past due; servicing takes priority.', 'icon' => 'ti-alert-triangle'],
-            'application-progress' => ['label' => 'Application in progress', 'description' => 'Application paused at income verification.', 'icon' => 'ti-clipboard-list'],
-            'former-borrower' => ['label' => 'Former borrower', 'description' => 'No active loan, prior relationship, eligible to check.', 'icon' => 'ti-history'],
-            'new-customer' => ['label' => 'New customer', 'description' => 'No prior loan and a clear path into originations.', 'icon' => 'ti-user-plus'],
+            'application-progress' => ['label' => 'Application in progress', 'description' => 'New customer paused at income verification.', 'icon' => 'ti-clipboard-list'],
         ];
     }
 
@@ -85,16 +83,10 @@ class PrototypeScenarioService
             'prequalified-renewal' => ['offer' => ['type' => 'prequalified_renewal']],
             'past-due' => ['loans' => ['payment_status' => 'past_due_30'], 'offer' => ['type' => 'prequalified_renewal']],
             'application-progress' => [
-                'offer' => ['type' => 'prequalified_renewal'],
+                'loans' => ['count' => 0],
+                'offer' => ['type' => 'none'],
                 'origination' => ['active' => true, 'step' => 'verify_income', 'last_updated' => now()->toIso8601String()],
-            ],
-            'former-borrower' => [
-                'customer' => ['type' => 'former'], 'loans' => ['count' => 0],
-                'offer' => ['type' => 'check_for_offers'], 'vehicles' => ['count' => 0],
-            ],
-            'new-customer' => [
-                'customer' => ['type' => 'new'], 'loans' => ['count' => 0],
-                'offer' => ['type' => 'check_for_offers'], 'vehicles' => ['count' => 0],
+                'vehicles' => ['count' => 0],
                 'wellness' => [
                     'credit_monitoring_enabled' => false,
                     'bank_connected' => false,
@@ -137,7 +129,6 @@ class PrototypeScenarioService
     public function builderOptions(): array
     {
         return [
-            'customer_types' => ['new' => 'New customer', 'former' => 'Former borrower', 'active' => 'Active borrower'],
             'offer_types' => [
                 'none' => 'None',
                 'prequalified_renewal' => 'Pre-qualified renewal',
@@ -164,8 +155,8 @@ class PrototypeScenarioService
     public function defaultState(): array
     {
         return [
-            'meta' => ['version' => 3, 'revision' => 1, 'preset' => self::DEFAULT_SCENARIO],
-            'customer' => ['type' => 'active', 'first_name' => 'Jordan', 'last_name' => 'Davis'],
+            'meta' => ['version' => 4, 'revision' => 1, 'preset' => self::DEFAULT_SCENARIO],
+            'customer' => ['first_name' => 'Jordan', 'last_name' => 'Davis'],
             'loans' => ['count' => 1, 'payment_status' => 'current'],
             'products' => ['savings' => false, 'credit_card' => false],
             'offer' => ['type' => 'check_for_offers'],
@@ -189,8 +180,8 @@ class PrototypeScenarioService
     private function normalize(array $state): array
     {
         $state = array_replace_recursive($this->defaultState(), $state);
-        $state['customer']['type'] = $this->allowed($state['customer']['type'], ['new', 'former', 'active'], 'active');
-        $state['loans']['count'] = $state['customer']['type'] === 'active' ? max(0, min(2, (int) $state['loans']['count'])) : 0;
+        unset($state['customer']['type']);
+        $state['loans']['count'] = max(0, min(2, (int) $state['loans']['count']));
         $state['loans']['payment_status'] = $this->allowed($state['loans']['payment_status'], array_keys($this->builderOptions()['payment_statuses']), 'current');
         foreach (['savings', 'credit_card'] as $key) {
             $state['products'][$key] = filter_var($state['products'][$key], FILTER_VALIDATE_BOOL);
@@ -267,8 +258,7 @@ class PrototypeScenarioService
             'name' => $this->stateName($state),
             'description' => 'Customer-facing screens are derived from the shared prototype state.',
             'customer' => [
-                'relationship_status' => $state['customer']['type'] . '_customer',
-                'type' => $state['customer']['type'],
+                'relationship_status' => 'customer',
                 'first_name' => $state['customer']['first_name'],
                 'last_name' => $state['customer']['last_name'],
             ],
@@ -452,8 +442,7 @@ class PrototypeScenarioService
         if ($state['origination']['active']) return 'Application: ' . ucwords(str_replace('_', ' ', $state['origination']['step']));
         if (in_array($state['loans']['payment_status'], ['past_due_30', 'past_due_60', 'charged_off', 'bankruptcy'], true)) return $this->builderOptions()['payment_statuses'][$state['loans']['payment_status']];
         if ($state['offer']['type'] === 'prequalified_renewal') return 'Pre-qualified renewal';
-        if ($state['customer']['type'] === 'former') return 'Former borrower';
-        if ($state['customer']['type'] === 'new') return 'New customer';
+        if ($state['loans']['count'] === 0) return 'No active loans';
         return $state['loans']['count'] === 2 ? 'Two active loans' : 'Healthy active borrower';
     }
 }

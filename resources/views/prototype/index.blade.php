@@ -184,11 +184,11 @@ $highlightCards[] = [
 
     @if($accountCount === 0 && ! $modules['show_application'])
       <section class="app-card relationship-welcome-card">
-        <div class="relationship-welcome-icon"><i class="ti {{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'ti-history' : 'ti-sparkles' }}"></i></div>
+        <div class="relationship-welcome-icon"><i class="ti ti-sparkles"></i></div>
         <div>
-          <span class="eyebrow">{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'Welcome back' : 'Welcome to Regional Finance' }}</span>
-          <h2>{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'Need funds again?' : 'See what you qualify for' }}</h2>
-          <p>{{ ($scenario['customer']['type'] ?? 'new') === 'former' ? 'See personalized options when you are ready.' : 'Check personalized loan options in minutes.' }}</p>
+          <span class="eyebrow">Explore</span>
+          <h2>See what you qualify for</h2>
+          <p>Check personalized loan options in minutes.</p>
         </div>
       </section>
     @endif

@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827multi-product">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827simple-scenarios">
 @endsection
 
 @section('content')
@@ -57,17 +57,9 @@ $customizerHidden = 'customizer-hide';
     @csrf
 
     <section class="builder-section">
-      <div class="builder-section-heading"><div><span>1</span><h2>Customer & loan status</h2></div><i class="ti ti-user-circle"></i></div>
-      <div class="builder-control">
-        <label>Customer type</label>
-        <div class="builder-segments three">
-          @foreach($options['customer_types'] as $value => $label)
-            <label><input type="radio" name="customer[type]" value="{{ $value }}" @checked($appState['customer']['type'] === $value)><span>{{ $label }}</span></label>
-          @endforeach
-        </div>
-      </div>
+      <div class="builder-section-heading"><div><span>1</span><h2>Accounts & loan status</h2></div><i class="ti ti-wallet"></i></div>
       <div class="builder-control inline-control">
-        <div><label>Active loans</label><small>Shown for active borrowers</small></div>
+        <div><label>Personal loans</label><small>Choose 0, 1, or 2 active loans</small></div>
         <div class="builder-stepper" data-stepper>
           <button type="button" data-stepper-minus aria-label="Remove loan"><i class="ti ti-minus"></i></button>
           <input type="number" name="loans[count]" value="{{ $appState['loans']['count'] }}" min="0" max="2" readonly>

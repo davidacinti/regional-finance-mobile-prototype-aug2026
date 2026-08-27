@@ -57,8 +57,6 @@ class PrototypeController extends Controller
             'present-pcpq' => 'prequalified-renewal',
             'default-30-days-past-due' => 'past-due',
             'present-application-in-progress' => 'application-progress',
-            'former-no-loan' => 'former-borrower',
-            'origination-new-customer-started' => 'new-customer',
         ];
         $this->scenarios->applyPreset($request, $legacyPresets[$scenario] ?? $scenario);
 
@@ -68,7 +66,6 @@ class PrototypeController extends Controller
     public function updateState(Request $request): JsonResponse|RedirectResponse
     {
         $state = $this->scenarios->update($request, [
-            'customer' => ['type' => $request->input('customer.type', 'active')],
             'loans' => [
                 'count' => $request->integer('loans.count', 1),
                 'payment_status' => $request->input('loans.payment_status', 'current'),

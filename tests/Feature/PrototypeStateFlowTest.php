@@ -13,7 +13,10 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Scenario Builder')
             ->assertSee('Quick presets')
             ->assertSee('Savings account')
-            ->assertSee('Credit card');
+            ->assertSee('Credit card')
+            ->assertDontSee('/prototype/presets/former-borrower', false)
+            ->assertDontSee('/prototype/presets/new-customer', false)
+            ->assertDontSee('name="customer[type]"', false);
 
         $this->get('/')
             ->assertOk()
@@ -45,7 +48,6 @@ class PrototypeStateFlowTest extends TestCase
             ->assertJsonPath('state.origination.step', 'verify_income');
 
         $this->postJson('/prototype/state', [
-            'customer' => ['type' => 'former'],
             'loans' => ['count' => 0, 'payment_status' => 'current'],
             'offer' => ['type' => 'check_for_offers'],
             'origination' => ['active' => false],
@@ -54,14 +56,13 @@ class PrototypeStateFlowTest extends TestCase
             'protection' => ['enabled' => false, 'context' => 'auto'],
         ])->assertOk()
             ->assertJsonPath('state.meta.preset', 'custom')
-            ->assertJsonPath('state.customer.type', 'former')
+            ->assertJsonMissingPath('state.customer.type')
             ->assertJsonPath('state.loans.count', 0);
     }
 
     public function test_explicit_builder_save_redirects_to_rendered_home(): void
     {
         $this->post('/prototype/state', [
-            'customer' => ['type' => 'former'],
             'loans' => ['count' => 0, 'payment_status' => 'current'],
             'offer' => ['type' => 'check_for_offers'],
             'origination' => ['active' => false],
@@ -72,7 +73,7 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('Need funds again?')
+            ->assertSee('See what you qualify for')
             ->assertDontSee('Personal loan');
     }
 
@@ -90,7 +91,6 @@ class PrototypeStateFlowTest extends TestCase
     public function test_compact_delinquent_loan_keeps_urgent_status_on_the_product_card(): void
     {
         $this->postJson('/prototype/state', [
-            'customer' => ['type' => 'active'],
             'loans' => ['count' => 1, 'payment_status' => 'past_due_30'],
             'products' => ['savings' => true, 'credit_card' => false],
             'offer' => ['type' => 'none'],
@@ -162,7 +162,7 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Products and options picked for you')
             ->assertSee('Protection & benefits', false);
 
-        $this->post('/prototype/presets/new-customer')->assertRedirect('/');
+        $this->post('/prototype/presets/application-progress')->assertRedirect('/');
 
         $this->get('/assets')
             ->assertOk()
@@ -170,9 +170,9 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Add vehicle');
     }
 
-    public function test_new_customer_does_not_assume_credit_bank_or_vehicle_data(): void
+    public function test_application_customer_does_not_assume_credit_bank_or_vehicle_data(): void
     {
-        $this->post('/prototype/presets/new-customer')->assertRedirect('/');
+        $this->post('/prototype/presets/application-progress')->assertRedirect('/');
 
         $this->get('/')
             ->assertOk()
@@ -194,7 +194,7 @@ class PrototypeStateFlowTest extends TestCase
 
     public function test_add_vehicle_action_updates_shared_scenario_state(): void
     {
-        $this->post('/prototype/presets/new-customer')->assertRedirect('/');
+        $this->post('/prototype/presets/application-progress')->assertRedirect('/');
 
         $this->post('/assets')->assertRedirect('/assets');
 
@@ -235,7 +235,6 @@ class PrototypeStateFlowTest extends TestCase
     public function test_multiple_products_render_as_a_compact_vertical_stack_in_product_order(): void
     {
         $this->postJson('/prototype/state', [
-            'customer' => ['type' => 'active'],
             'loans' => ['count' => 2, 'payment_status' => 'current'],
             'products' => ['savings' => true, 'credit_card' => true],
             'offer' => ['type' => 'none'],
@@ -266,7 +265,6 @@ class PrototypeStateFlowTest extends TestCase
     public function test_a_single_product_uses_the_expanded_account_card(): void
     {
         $this->postJson('/prototype/state', [
-            'customer' => ['type' => 'active'],
             'loans' => ['count' => 0, 'payment_status' => 'current'],
             'products' => ['savings' => true, 'credit_card' => false],
             'offer' => ['type' => 'none'],
