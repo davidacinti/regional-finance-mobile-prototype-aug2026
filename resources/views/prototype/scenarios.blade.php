@@ -178,5 +178,5 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('page-script')
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260825scenario-save"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260827preset-launch"></script>
 @endsection

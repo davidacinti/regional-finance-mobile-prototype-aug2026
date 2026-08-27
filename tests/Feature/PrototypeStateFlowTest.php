@@ -107,7 +107,7 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('$428.00');
     }
 
-    public function test_pending_payment_persists_across_pages_and_presets_until_reset(): void
+    public function test_selecting_a_preset_resets_transient_state_and_loads_that_experience(): void
     {
         $paymentDate = now()->addDays(2)->toDateString();
 
@@ -130,14 +130,13 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->postJson('/prototype/presets/prequalified-renewal')
             ->assertOk()
-            ->assertJsonPath('state.payments.pending.amount', 214);
+            ->assertJsonPath('state.meta.preset', 'prequalified-renewal')
+            ->assertJsonPath('state.payments.pending', null);
 
-        $this->get('/scenarios')
+        $this->get('/')
             ->assertOk()
-            ->assertSee('This payment remains in the prototype until it is cancelled or the scenario is reset.');
-
-        $this->post('/prototype/reset')->assertRedirect('/scenarios');
-        $this->get('/')->assertDontSee('pending-payment-dashboard', false);
+            ->assertSee('A new loan option is ready')
+            ->assertDontSee('pending-payment-dashboard', false);
     }
 
     public function test_standard_application_progresses_to_pending_funding(): void

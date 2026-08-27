@@ -73,10 +73,14 @@ class PrototypeScenarioService
 
     public function applyPreset(Request $request, string $preset): array
     {
-        $pendingPayment = $this->state($request)['payments']['pending'] ?? null;
+        $request->session()->forget([
+            'prototype_scheduled_payment',
+            'prototype_payment_status',
+            'prototype_autopay_enrollment',
+            'prototype_read_notifications',
+        ]);
         $state = $this->defaultState();
         $state['meta']['preset'] = $preset;
-        $state['payments']['pending'] = $pendingPayment;
         $changes = match ($preset) {
             'prequalified-renewal' => ['offer' => ['type' => 'prequalified_renewal']],
             'past-due' => ['loans' => ['payment_status' => 'past_due_30'], 'offer' => ['type' => 'prequalified_renewal']],

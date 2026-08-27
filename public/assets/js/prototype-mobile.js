@@ -574,10 +574,12 @@
     });
 
     document.querySelectorAll('[data-preset-form]').forEach(form => {
-      form.addEventListener('submit', event => {
+      form.addEventListener('submit', async event => {
         event.preventDefault();
         window.clearTimeout(submitTimer);
-        queueSave(form);
+        setSaveStatus('Loading...');
+        const saved = await queueSave(form);
+        if (saved) window.location.assign(stateBuilder.dataset.successUrl || '/');
       });
     });
 
