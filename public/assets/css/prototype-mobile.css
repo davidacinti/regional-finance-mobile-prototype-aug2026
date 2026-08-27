@@ -4679,3 +4679,32 @@ button:focus-visible {
 .pending-funding-product .account-product-due > strong {
   color: #4f6c10;
 }
+
+.next-best-action.application .next-best-link,
+.next-best-action.application .next-best-link span,
+.next-best-action.application .next-best-link i {
+  color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.next-best-action.application .next-best-link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.next-best-action.application .next-best-link span {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.next-best-action.application .next-best-link i {
+  display: inline-block;
+  font-size: 16px;
+}
