@@ -401,12 +401,7 @@ $highlightCards[] = [
       <a href="{{ route('prototype.support') }}" class="branch-details-link">View branch details<i class="ti ti-arrow-right"></i></a>
     </section>
 
-    <nav class="bottom-nav" aria-label="Mobile app navigation">
-      <a class="active" href="{{ route('prototype.index') }}"><i class="ti ti-home"></i><span>Home</span></a>
-      <a href="{{ $firstLoan ? route('prototype.loan', $firstLoan['id']) : ($application ? route('prototype.application', $application['id']) : route('prototype.offers')) }}"><i class="ti {{ $firstLoan ? 'ti-wallet' : 'ti-clipboard-list' }}"></i><span>{{ $firstLoan ? (count($loans) > 1 ? 'Loans' : 'Loan') : ($application ? 'Apply' : 'Explore') }}</span></a>
-      <a href="{{ route('prototype.offers') }}"><i class="ti ti-sparkles"></i><span>Explore</span></a>
-      <a href="{{ route('prototype.wellness') }}"><i class="ti ti-heart-rate-monitor"></i><span>Money Hub</span></a>
-    </nav>
+    <x-prototype-bottom-nav :scenario="$scenario" current="home" />
   </main>
 </div>
 

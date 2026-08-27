@@ -198,6 +198,36 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/applications/62001/previous')->assertRedirect('/applications/62001');
     }
 
+    public function test_application_and_product_state_control_bottom_navigation(): void
+    {
+        $this->post('/prototype/presets/application-progress')->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('data-nav-item="home"', false)
+            ->assertSee('data-nav-item="application"', false)
+            ->assertDontSee('data-nav-item="explore"', false)
+            ->assertDontSee('data-nav-item="wellness"', false);
+
+        $this->postJson('/prototype/state', [
+            'loans' => ['count' => 1, 'payment_status' => 'current'],
+            'products' => ['savings' => true, 'credit_card' => true],
+            'offer' => ['type' => 'none'],
+            'origination' => ['active' => false],
+            'wellness' => ['credit_score' => 642, 'credit_score_change' => 'increase'],
+            'vehicles' => ['count' => 0],
+            'protection' => ['enabled' => false, 'context' => 'auto'],
+        ])->assertOk();
+
+        $this->get('/products/savings')
+            ->assertOk()
+            ->assertSee('data-nav-item="loan"', false)
+            ->assertSee('data-nav-item="savings"', false)
+            ->assertSee('data-nav-item="credit-card"', false)
+            ->assertDontSee('data-nav-item="explore"', false)
+            ->assertDontSee('data-nav-item="wellness"', false);
+    }
+
     public function test_offer_marketplace_and_zero_vehicle_state_are_clickable(): void
     {
         $this->get('/offers')

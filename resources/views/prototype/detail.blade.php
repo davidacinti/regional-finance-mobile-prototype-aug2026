@@ -1078,12 +1078,7 @@ $pastLoanDocuments = [
       </section>
 
     @endif
-    <nav class="bottom-nav" aria-label="Mobile app navigation">
-      <a class="{{ $type === 'home' ? 'active' : '' }}" href="{{ route('prototype.index') }}"><i class="ti ti-home"></i><span>Home</span></a>
-      <a class="{{ in_array($type, ['loan', 'application', 'payment'], true) ? 'active' : '' }}" href="{{ $loanNavUrl }}"><i class="ti {{ $loanNavIcon }}"></i><span>{{ $loanNavLabel }}</span></a>
-      <a class="{{ in_array($type, ['offer', 'protection'], true) ? 'active' : '' }}" href="{{ route('prototype.offers') }}"><i class="ti ti-sparkles"></i><span>Explore</span></a>
-      <a class="{{ $type === 'wellness' ? 'active' : '' }}" href="{{ route('prototype.wellness') }}"><i class="ti ti-heart-rate-monitor"></i><span>Money Hub</span></a>
-    </nav>
+    <x-prototype-bottom-nav :scenario="$scenario" :current="$type" />
   </main>
 </div>
 <script type="application/json" data-prototype-state>@json($appState)</script>

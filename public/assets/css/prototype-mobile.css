@@ -2301,7 +2301,7 @@
   z-index: 20;
   height: 76px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(var(--bottom-nav-items, 4), minmax(0, 1fr));
   background: #fff;
   border-top: 1px solid #dce4eb;
   padding: .45rem .35rem .7rem;
