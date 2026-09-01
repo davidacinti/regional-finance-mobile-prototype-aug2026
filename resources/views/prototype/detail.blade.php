@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827profile-refine">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260901offer-banner">
 @endsection
 
 @section('content')
@@ -536,7 +536,7 @@ $pastLoanDocuments = [
                 <div class="offer-product-icon"><i class="ti {{ $offer['type'] === 'prequalified_renewal' ? 'ti-award' : 'ti-sparkles' }}"></i></div>
                 <div><span class="eyebrow">{{ $offer['eyebrow'] }}</span><h3>{{ $offer['headline'] }}</h3><p>{{ $offer['body'] }}</p></div>
                 <div class="soft-credit-callout compact"><i class="ti ti-shield-check"></i><span>{{ $offer['highlight'] }}</span></div>
-                <form method="POST" action="{{ route('prototype.application.start') }}">@csrf<button class="btn btn-primary w-100" type="submit">{{ $offer['cta'] }}</button></form>
+                <form class="offer-check-form" method="POST" action="{{ route('prototype.application.start') }}">@csrf<button class="btn btn-primary w-100" type="submit">{{ $offer['cta'] }}</button></form>
               </article>
             @endif
 

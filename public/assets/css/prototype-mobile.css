@@ -2079,6 +2079,29 @@
   color: rgba(255, 255, 255, .78) !important;
 }
 
+.offer-product-card.featured {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.offer-product-card.featured > .soft-credit-callout,
+.offer-product-card.featured > .offer-check-form {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.offer-product-card.featured > .soft-credit-callout {
+  align-items: center;
+  padding: .65rem .75rem;
+  line-height: 1.3;
+}
+
+.offer-product-card.featured > .offer-check-form .btn {
+  width: 100%;
+}
+
 .offer-product-icon {
   width: 44px;
   height: 44px;
