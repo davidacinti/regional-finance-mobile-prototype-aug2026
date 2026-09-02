@@ -7,6 +7,7 @@
   $savings = $scenario['products']['savings'] ?? null;
   $creditCard = $scenario['products']['credit_card'] ?? null;
   $wellness = $scenario['financial_wellness'] ?? [];
+  $liteMode = ($scenario['experience']['mode'] ?? 'full') === 'origination_lite';
   $hasApplication = filled($application) && ($application['status'] ?? null) !== 'pending_funding';
   $items = [[
     'key' => 'home', 'label' => 'Home', 'icon' => 'ti-home', 'url' => route('prototype.index'),
@@ -28,17 +29,17 @@
     ];
   }
 
-  if ($savings && count($items) < 4) {
+  if (! $liteMode && $savings && count($items) < 4) {
     $items[] = ['key' => 'savings', 'label' => 'Savings', 'icon' => 'ti-pig-money', 'url' => route('prototype.product.savings'), 'active' => $current === 'savings'];
   }
-  if ($creditCard && count($items) < 4) {
+  if (! $liteMode && $creditCard && count($items) < 4) {
     $items[] = ['key' => 'credit-card', 'label' => 'Card', 'icon' => 'ti-credit-card', 'url' => route('prototype.product.credit-card'), 'active' => $current === 'credit-card'];
   }
 
-  if (! $hasApplication && count($items) < 4) {
+  if (! $liteMode && ! $hasApplication && count($items) < 4) {
     $items[] = ['key' => 'explore', 'label' => 'Explore', 'icon' => 'ti-sparkles', 'url' => route('prototype.offers'), 'active' => in_array($current, ['offer', 'protection'], true)];
   }
-  if (! $hasApplication && count($items) < 4 && (($wellness['credit_monitoring_enabled'] ?? false) || ($wellness['bank_connected'] ?? false))) {
+  if (! $liteMode && ! $hasApplication && count($items) < 4 && (($wellness['credit_monitoring_enabled'] ?? false) || ($wellness['bank_connected'] ?? false))) {
     $items[] = ['key' => 'wellness', 'label' => 'Money Hub', 'icon' => 'ti-heart-rate-monitor', 'url' => route('prototype.wellness'), 'active' => $current === 'wellness'];
   }
 @endphp

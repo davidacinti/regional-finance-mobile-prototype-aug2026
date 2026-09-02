@@ -6,6 +6,106 @@ use Tests\TestCase;
 
 class PrototypeStateFlowTest extends TestCase
 {
+    public function test_lendingtree_lite_entry_authenticates_into_restricted_application_dashboard(): void
+    {
+        $this->post('/prototype/presets/lendingtree-prequalified')->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Your prequalified loan offers')
+            ->assertSee('Regional Finance')
+            ->assertSee('$8,500');
+
+        $this->post('/lite/select-offer')->assertRedirect('/');
+        $this->get('/')->assertSee("You're prequalified for up to", false);
+
+        $this->post('/lite/continue-offer')->assertRedirect('/');
+        $this->get('/')->assertSee('Verify your phone');
+        $this->post('/lite/send-code')->assertRedirect('/');
+        $this->get('/')->assertSee('Enter verification code');
+        $this->post('/lite/verify-code')->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Welcome, Michael')
+            ->assertSee('Verify your income')
+            ->assertSee('data-nav-item="home"', false)
+            ->assertSee('data-nav-item="application"', false)
+            ->assertDontSee('data-nav-item="explore"', false)
+            ->assertDontSee('data-nav-item="wellness"', false)
+            ->assertDontSee('data-nav-item="loan"', false);
+
+        $this->get('/profile')->assertRedirect('/');
+        $this->get('/payments/new')->assertRedirect('/');
+        $this->get('/documents')->assertRedirect('/');
+    }
+
+    public function test_lite_application_tasks_progress_through_greenville_closing(): void
+    {
+        $this->post('/prototype/presets/lendingtree-prequalified');
+        $this->post('/lite/select-offer');
+        $this->post('/lite/continue-offer');
+        $this->post('/lite/send-code');
+        $this->post('/lite/verify-code');
+
+        $this->get('/applications/62001/income')
+            ->assertOk()
+            ->assertSee('Take photo')
+            ->assertSee('Upload file');
+        $this->post('/applications/62001/income', ['income_document' => 'paystub.pdf'])->assertRedirect('/');
+        $this->get('/')->assertSee('Upload vehicle photos')->assertSee('Income verification');
+
+        $this->get('/applications/62001/vehicle-photos')
+            ->assertOk()
+            ->assertSee('Passenger side')
+            ->assertSee('VIN / dashboard');
+        $this->post('/applications/62001/vehicle-photos')->assertRedirect('/');
+        $this->get('/')->assertSee('Schedule your closing');
+
+        $this->get('/applications/62001/closing')
+            ->assertOk()
+            ->assertSee('Greenville Branch')
+            ->assertSee('1450 Woodruff Rd')
+            ->assertDontSee('Danbury');
+        $this->post('/applications/62001/closing', [
+            'appointment_date' => '2026-09-10',
+            'appointment_time' => '10:30 AM',
+        ])->assertRedirect('/');
+
+        $this->get('/')
+            ->assertSee('Closing scheduled')
+            ->assertSee('Greenville Branch')
+            ->assertSee('View appointment')
+            ->assertDontSee('Danbury');
+        $this->get('/applications/62001/closing')
+            ->assertSee("You're scheduled", false)
+            ->assertSee('Thursday, September 10')
+            ->assertSee('Greenville Branch');
+    }
+
+    public function test_scenario_builder_can_jump_to_any_origination_lite_stage(): void
+    {
+        $this->get('/scenarios')
+            ->assertOk()
+            ->assertSee('New customer - LendingTree')
+            ->assertSee('Origination lite - LendingTree')
+            ->assertSee('Dashboard - closing required');
+
+        $this->postJson('/prototype/state', [
+            'experience' => ['mode' => 'origination_lite'],
+            'lite' => ['stage' => 'closing_ready', 'prequalified_amount' => 12000],
+        ])->assertOk()
+            ->assertJsonPath('state.experience.mode', 'origination_lite')
+            ->assertJsonPath('state.loans.count', 0)
+            ->assertJsonPath('state.products.savings', false)
+            ->assertJsonPath('state.products.credit_card', false);
+
+        $this->get('/')
+            ->assertSee('$12,000')
+            ->assertSee('Schedule your closing')
+            ->assertSee('data-nav-item="application"', false);
+    }
+
     public function test_scenario_builder_and_default_dashboard_render(): void
     {
         $this->get('/scenarios')

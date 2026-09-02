@@ -595,6 +595,12 @@
       const stepControl = stateBuilder.querySelector('[data-origination-step]');
       if (originationToggle && stepControl) stepControl.hidden = !originationToggle.checked;
 
+      const liteMode = state?.experience?.mode === 'origination_lite';
+      const standardControls = stateBuilder.querySelector('[data-standard-origination]');
+      const liteControls = stateBuilder.querySelector('[data-lite-controls]');
+      if (standardControls) standardControls.hidden = liteMode;
+      if (liteControls) liteControls.hidden = !liteMode;
+
       document.querySelectorAll('[data-preset-form]').forEach(form => {
         form.querySelector('.preset-button')?.classList.toggle('active', form.dataset.presetId === state?.meta?.preset);
       });
@@ -656,6 +662,13 @@
           const stepControl = stateBuilder.querySelector('[data-origination-step]');
           if (stepControl) stepControl.hidden = !control.checked;
         }
+        if (control.matches('[data-experience-mode]')) {
+          const liteMode = control.value === 'origination_lite';
+          const standardControls = stateBuilder.querySelector('[data-standard-origination]');
+          const liteControls = stateBuilder.querySelector('[data-lite-controls]');
+          if (standardControls) standardControls.hidden = liteMode;
+          if (liteControls) liteControls.hidden = !liteMode;
+        }
         submitBuilder();
       });
     });
@@ -677,6 +690,60 @@
       input.addEventListener('change', submitBuilder);
     });
   }
+
+  const otpInputs = Array.from(document.querySelectorAll('[data-otp-input]'));
+  otpInputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      input.value = input.value.replace(/\D/g, '').slice(-1);
+      if (input.value && otpInputs[index + 1]) otpInputs[index + 1].focus();
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Backspace' && !input.value && otpInputs[index - 1]) otpInputs[index - 1].focus();
+    });
+    input.addEventListener('paste', event => {
+      const digits = event.clipboardData?.getData('text').replace(/\D/g, '').slice(0, otpInputs.length);
+      if (!digits) return;
+      event.preventDefault();
+      digits.split('').forEach((digit, digitIndex) => {
+        if (otpInputs[digitIndex]) otpInputs[digitIndex].value = digit;
+      });
+      otpInputs[Math.min(digits.length, otpInputs.length) - 1]?.focus();
+    });
+  });
+
+  document.querySelectorAll('[data-lite-file-input]').forEach(input => {
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const form = input.closest('[data-lite-upload-form]');
+      const filename = form?.querySelector('[data-lite-filename]');
+      const hiddenFilename = form?.querySelector('[data-upload-filename]');
+      if (filename) filename.textContent = file.name;
+      if (hiddenFilename) hiddenFilename.value = file.name;
+      form?.querySelector('[data-lite-file-preview]')?.classList.add('has-file');
+    });
+  });
+
+  document.querySelectorAll('[data-vehicle-photo-input]').forEach(input => {
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      const row = input.closest('[data-vehicle-photo]');
+      if (!file || !row) return;
+      const preview = row.querySelector('.vehicle-photo-preview');
+      if (preview && file.type.startsWith('image/')) {
+        const image = document.createElement('img');
+        image.src = URL.createObjectURL(file);
+        image.alt = '';
+        image.addEventListener('load', () => URL.revokeObjectURL(image.src), { once: true });
+        preview.replaceChildren(image);
+      }
+      row.classList.add('added');
+      const status = row.querySelector('[data-photo-status]');
+      if (status) status.textContent = 'Added';
+      const action = row.querySelector('.vehicle-photo-action');
+      if (action) action.innerHTML = '<i class="ti ti-circle-check"></i>Added';
+    });
+  });
 
   document.querySelector('[data-reset-prototype]')?.addEventListener('submit', () => {
     window.localStorage.removeItem('regionalPrototypeStateV2');

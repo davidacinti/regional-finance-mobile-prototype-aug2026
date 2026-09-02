@@ -4744,3 +4744,837 @@ button:focus-visible {
 .pending-funding-product .account-product-due > strong {
   color: #4f6c10;
 }
+
+/* LendingTree entry and origination-lite experience */
+.builder-lite-controls {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.builder-lite-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.builder-lite-context span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border: 1px solid #d7e3ec;
+  border-radius: 7px;
+  color: #315c82;
+  background: #f4f8fb;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.lite-frame {
+  color: var(--rf-navy);
+  background: #f4f7f9;
+}
+
+.lite-frame:not(.lendingtree-frame) {
+  padding-top: .8rem;
+}
+
+.lendingtree-frame {
+  padding: 0 0 2rem;
+  background: #f3f5f4;
+}
+
+.lendingtree-topbar,
+.lite-regional-header {
+  display: grid;
+  align-items: center;
+}
+
+.lendingtree-topbar {
+  grid-template-columns: 1fr auto;
+  min-height: 62px;
+  padding: 0 18px;
+  border-bottom: 1px solid #dce3e0;
+  background: #fff;
+}
+
+.lendingtree-topbar > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #53645f;
+  font-size: .69rem;
+  font-weight: 700;
+}
+
+.lendingtree-brand {
+  color: #167b57 !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+}
+
+.lendingtree-brand i {
+  font-size: 1.25rem;
+}
+
+.lendingtree-marketplace {
+  display: grid;
+  gap: 12px;
+  padding: 24px 18px;
+}
+
+.lite-kicker {
+  display: block;
+  color: #617487;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.lendingtree-marketplace > h1,
+.lite-gate-screen h1,
+.lite-task-page h1,
+.lite-welcome h1 {
+  margin: 3px 0 0;
+  color: var(--rf-navy);
+  font-size: 1.55rem;
+  line-height: 1.18;
+  letter-spacing: 0;
+}
+
+.lendingtree-marketplace > p,
+.lite-gate-screen > p,
+.lite-task-page > p {
+  margin: -3px 0 4px;
+  color: #647588;
+  font-size: .83rem;
+  line-height: 1.5;
+}
+
+.lender-offer {
+  border: 1px solid #d8e1df;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.regional-lender-offer {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 2px solid #2972b8;
+  box-shadow: 0 10px 24px rgba(21, 72, 113, .1);
+}
+
+.lender-offer-heading,
+.comparison-offer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lender-offer-heading img {
+  width: 130px;
+  height: auto;
+}
+
+.lender-offer-heading span {
+  padding: 5px 7px;
+  border-radius: 5px;
+  color: #3f5a0c;
+  background: #eef4bd;
+  font-size: .63rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.lender-amount {
+  font-size: 1.4rem;
+}
+
+.lender-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.lender-metrics div {
+  min-width: 0;
+  padding-right: 6px;
+  border-right: 1px solid #e1e6e4;
+}
+
+.lender-metrics div:last-child {
+  border-right: 0;
+}
+
+.lender-metrics span,
+.lender-metrics strong,
+.comparison-offer span,
+.comparison-offer strong {
+  display: block;
+}
+
+.lender-metrics span,
+.comparison-offer span {
+  color: #6a7975;
+  font-size: .61rem;
+  line-height: 1.3;
+}
+
+.lender-metrics strong {
+  margin-top: 4px;
+  font-size: .78rem;
+}
+
+.comparison-offer {
+  min-height: 72px;
+  padding: 13px 14px;
+}
+
+.comparison-offer > div:nth-child(2) {
+  margin-left: auto;
+  text-align: right;
+}
+
+.comparison-offer strong {
+  font-size: .78rem;
+}
+
+.comparison-offer button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  color: #4d615b;
+  background: transparent;
+}
+
+.lendingtree-disclosure {
+  margin: 0 !important;
+  color: #788580 !important;
+  font-size: .62rem !important;
+}
+
+.lite-regional-header {
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  min-height: 56px;
+  margin-bottom: 16px;
+}
+
+.lite-regional-header .top-logo-link {
+  justify-self: center;
+}
+
+.lite-regional-header .regional-logo {
+  width: 128px;
+}
+
+.lite-regional-header .top-nav-btn,
+.lite-secure-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #d6e2eb;
+  border-radius: 50%;
+  color: #2e73b8;
+  background: #fff;
+}
+
+.lite-mode-label {
+  color: #697b8d;
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.lite-gate-screen,
+.lite-task-page,
+.lite-dashboard {
+  display: grid;
+  gap: 16px;
+}
+
+.lite-gate-screen {
+  min-height: 560px;
+  align-content: center;
+  padding: 30px 22px;
+  border: 1px solid #d9e4ec;
+  border-radius: 8px;
+  background: #fff;
+  text-align: center;
+}
+
+.lite-gate-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #164e85;
+  background: #e8f2f8;
+  font-size: 1.7rem;
+}
+
+.regional-offer-screen .lite-gate-icon {
+  color: #455b0b;
+  background: #edf3b8;
+}
+
+.regional-offer-amount {
+  color: #164e85;
+  font-size: 3.1rem;
+  line-height: 1;
+}
+
+.lite-trust-line,
+.password-requirements {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 11px;
+  border-radius: 7px;
+  color: #355c20;
+  background: #f1f5d1;
+  font-size: .73rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.masked-phone {
+  padding: 16px;
+  border: 1px solid #d8e4ec;
+  border-radius: 7px;
+  background: #f5f8fa;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.otp-screen > small {
+  color: #7a8997;
+  font-size: .65rem;
+}
+
+.otp-code-inputs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.otp-code-inputs input {
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+  border: 1px solid #b9cad8;
+  border-radius: 7px;
+  color: var(--rf-navy);
+  background: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.otp-code-inputs input:focus {
+  border-color: #2f74ba;
+  outline: 3px solid rgba(67, 124, 191, .14);
+}
+
+.lite-text-button {
+  border: 0;
+  color: #2f71b5;
+  background: transparent;
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.lite-task-page {
+  padding: 18px;
+  border: 1px solid #d9e4ec;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.lite-upload-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.lite-upload-options label {
+  display: grid;
+  min-height: 88px;
+  padding: 10px 6px;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  border: 1px solid #bcd0df;
+  border-radius: 7px;
+  color: #245f99;
+  background: #f7fafc;
+  font-size: .67rem;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+}
+
+.lite-upload-options i {
+  font-size: 1.25rem;
+}
+
+.lite-file-preview,
+.closing-branch-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid #dbe5eb;
+  border-radius: 7px;
+  background: #f5f8fa;
+}
+
+.lite-file-preview > i,
+.closing-branch-summary > i {
+  color: #2f75b9;
+  font-size: 1.55rem;
+}
+
+.lite-file-preview strong,
+.lite-file-preview span,
+.closing-branch-summary strong,
+.closing-branch-summary span {
+  display: block;
+}
+
+.lite-file-preview strong {
+  overflow-wrap: anywhere;
+  font-size: .76rem;
+}
+
+.lite-file-preview span {
+  margin-top: 3px;
+  color: #2f7d50;
+  font-size: .66rem;
+  font-weight: 700;
+}
+
+.vehicle-photo-list {
+  display: grid;
+  gap: 8px;
+}
+
+.vehicle-photo-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 64px;
+  padding: 8px;
+  border: 1px solid #d7e3eb;
+  border-radius: 7px;
+  background: #f9fbfc;
+  cursor: pointer;
+}
+
+.vehicle-photo-preview {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 6px;
+  color: #2e72b7;
+  background: #e8f2f8;
+  font-size: 1.25rem;
+}
+
+.vehicle-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vehicle-photo-row strong,
+.vehicle-photo-row small {
+  display: block;
+}
+
+.vehicle-photo-row strong {
+  font-size: .77rem;
+}
+
+.vehicle-photo-row small {
+  margin-top: 2px;
+  color: #718293;
+  font-size: .64rem;
+}
+
+.vehicle-photo-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2f73b7;
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.vehicle-photo-row.added {
+  border-color: #9ec2ac;
+  background: #f3faf5;
+}
+
+.vehicle-photo-row.added .vehicle-photo-action,
+.vehicle-photo-row.added small {
+  color: #2f7d50;
+}
+
+.closing-scheduler,
+.lite-password-form {
+  display: grid;
+  gap: 16px;
+}
+
+.closing-scheduler fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.closing-scheduler legend,
+.lite-password-form label {
+  margin-bottom: 8px;
+  color: #52687b;
+  font-size: .7rem;
+  font-weight: 800;
+}
+
+.closing-day-options,
+.closing-time-options {
+  display: grid;
+  gap: 7px;
+}
+
+.closing-day-options {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.closing-time-options {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.closing-day-options input,
+.closing-time-options input {
+  position: absolute;
+  opacity: 0;
+}
+
+.closing-day-options span,
+.closing-time-options span {
+  display: grid;
+  min-height: 50px;
+  place-items: center;
+  border: 1px solid #c8d8e4;
+  border-radius: 7px;
+  background: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.closing-day-options small,
+.closing-day-options strong {
+  display: block;
+  line-height: 1;
+}
+
+.closing-day-options input:checked + span,
+.closing-time-options input:checked + span {
+  border-color: #2f74ba;
+  color: #174f86;
+  background: #eaf3fa;
+  box-shadow: inset 0 0 0 1px #2f74ba;
+}
+
+.closing-branch-summary span {
+  margin-top: 2px;
+  color: #6b7c8d;
+  font-size: .67rem;
+}
+
+.appointment-confirmation {
+  display: grid;
+  gap: 13px;
+  padding: 18px 0;
+  text-align: center;
+}
+
+.appointment-confirmation h1 {
+  margin: 0;
+}
+
+.appointment-confirmation > strong {
+  color: #245f99;
+  font-size: 1.3rem;
+}
+
+.appointment-confirmation p {
+  margin: 0 0 8px;
+  color: #66798b;
+  line-height: 1.55;
+}
+
+.lite-password-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.lite-password-form input {
+  min-width: 0;
+  height: 44px;
+  padding: 0 11px;
+  border: 1px solid #cbd9e4;
+  border-radius: 7px;
+  color: var(--rf-navy);
+  background: #fff;
+}
+
+.lite-dashboard {
+  padding-bottom: 12px;
+}
+
+.lite-welcome {
+  padding: 2px 2px 0;
+}
+
+.lite-application-summary,
+.lite-next-step,
+.lite-progress-card,
+.lite-password-prompt,
+.lite-appointment-card,
+.lite-ready-card {
+  border: 1px solid #d8e3eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.lite-application-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+}
+
+.lite-application-summary span,
+.lite-application-summary strong {
+  display: block;
+}
+
+.lite-application-summary > div > span {
+  color: #64778a;
+  font-size: .67rem;
+  font-weight: 700;
+}
+
+.lite-application-summary > div > strong {
+  margin-top: 3px;
+  font-size: 1.55rem;
+}
+
+.lite-status-pill {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  color: #3d5c0d;
+  background: #edf3c6;
+  font-size: .64rem;
+  font-weight: 900;
+}
+
+.lite-application-summary > p {
+  grid-column: 1 / -1;
+  margin: -2px 0 0;
+  color: #687b8d;
+  font-size: .73rem;
+}
+
+.lite-next-step {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 12px;
+  padding: 16px;
+  border-top: 4px solid #3477b8;
+}
+
+.lite-next-step-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 8px;
+  color: #174f86;
+  background: #e8f2f8;
+  font-size: 1.35rem;
+}
+
+.lite-next-step h2,
+.lite-progress-card h2,
+.lite-password-prompt h2,
+.lite-appointment-card h2,
+.lite-ready-card h2 {
+  margin: 3px 0 0;
+  color: var(--rf-navy);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.lite-next-step p,
+.lite-password-prompt p,
+.lite-appointment-card p,
+.lite-ready-card p {
+  margin: 5px 0 0;
+  color: #697b8c;
+  font-size: .72rem;
+  line-height: 1.45;
+}
+
+.lite-next-step > .btn {
+  grid-column: 1 / -1;
+}
+
+.lite-next-step .btn,
+.lite-task-page .btn,
+.lite-gate-screen .btn,
+.appointment-confirmation .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+}
+
+.lite-progress-card {
+  padding: 16px;
+}
+
+.lite-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lite-section-heading h2 {
+  margin: 0;
+}
+
+.lite-section-heading > span {
+  color: #2e73b7;
+  font-size: .73rem;
+  font-weight: 900;
+}
+
+.lite-progress-card .application-progress {
+  height: 7px;
+  margin: 12px 0 8px;
+}
+
+.lite-progress-list {
+  display: grid;
+}
+
+.lite-progress-list > div {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  border-bottom: 1px solid #e5eaee;
+  color: #7b8996;
+}
+
+.lite-progress-list > div:last-child {
+  border-bottom: 0;
+}
+
+.lite-progress-list > div > i {
+  font-size: 1.1rem;
+}
+
+.lite-progress-list strong,
+.lite-progress-list small {
+  display: block;
+}
+
+.lite-progress-list strong {
+  color: #40566b;
+  font-size: .74rem;
+}
+
+.lite-progress-list small {
+  margin-top: 2px;
+  font-size: .63rem;
+}
+
+.lite-progress-list .complete > i,
+.lite-progress-list .complete small {
+  color: #2f7d50;
+}
+
+.lite-progress-list .active > i,
+.lite-progress-list .active small {
+  color: #2f74ba;
+}
+
+.lite-password-prompt,
+.lite-appointment-card,
+.lite-ready-card {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 11px;
+  padding: 15px;
+}
+
+.lite-password-prompt > i,
+.lite-appointment-card > i,
+.lite-ready-card > i {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 8px;
+  color: #45600b;
+  background: #edf3c5;
+  font-size: 1.2rem;
+}
+
+.lite-password-prompt > a,
+.lite-appointment-card > a {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #2e73b7;
+  font-size: .72rem;
+  font-weight: 900;
+}
+
+@media (max-width: 480px) {
+  .lite-frame {
+    border-radius: 0;
+  }
+
+  .lender-metrics {
+    gap: 6px;
+  }
+
+  .lite-regional-header .regional-logo {
+    width: 118px;
+  }
+}

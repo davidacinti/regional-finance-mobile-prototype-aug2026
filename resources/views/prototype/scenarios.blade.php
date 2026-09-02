@@ -12,7 +12,7 @@ $customizerHidden = 'customizer-hide';
 @section('title', 'Scenario Builder')
 
 @section('page-style')
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827simple-scenarios">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260902origination-lite">
 @endsection
 
 @section('content')
@@ -128,14 +128,40 @@ $customizerHidden = 'customizer-hide';
 
     <section class="builder-section">
       <div class="builder-section-heading"><div><span>5</span><h2>Originations</h2></div><i class="ti ti-clipboard-list"></i></div>
-      <label class="builder-switch primary-switch"><span><strong>Application in progress</strong><small>Replaces acquisition messages with resume actions</small></span><input type="hidden" name="origination[active]" value="0"><input type="checkbox" name="origination[active]" value="1" @checked($appState['origination']['active']) data-origination-toggle></label>
-      <div class="builder-control" data-origination-step @if(!$appState['origination']['active']) hidden @endif>
-        <label for="origination-step">Current step</label>
-        <select id="origination-step" name="origination[step]" class="form-select">
-          @foreach($options['origination_steps'] as $value => $label)
-            <option value="{{ $value }}" @selected(($appState['origination']['step'] ?? '') === $value)>{{ $label }}</option>
+      <div class="builder-control">
+        <label for="experience-mode">Customer experience</label>
+        <select id="experience-mode" name="experience[mode]" class="form-select" data-experience-mode>
+          @foreach($options['experience_modes'] as $value => $label)
+            <option value="{{ $value }}" @selected(($appState['experience']['mode'] ?? 'full') === $value)>{{ $label }}</option>
           @endforeach
         </select>
+      </div>
+      <div data-standard-origination @if(($appState['experience']['mode'] ?? 'full') === 'origination_lite') hidden @endif>
+        <label class="builder-switch primary-switch"><span><strong>Application in progress</strong><small>Replaces acquisition messages with resume actions</small></span><input type="hidden" name="origination[active]" value="0"><input type="checkbox" name="origination[active]" value="1" @checked($appState['origination']['active']) data-origination-toggle></label>
+        <div class="builder-control" data-origination-step @if(!$appState['origination']['active']) hidden @endif>
+          <label for="origination-step">Current step</label>
+          <select id="origination-step" name="origination[step]" class="form-select">
+            @foreach($options['origination_steps'] as $value => $label)
+              <option value="{{ $value }}" @selected(($appState['origination']['step'] ?? '') === $value)>{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
+      </div>
+      <div class="builder-lite-controls" data-lite-controls @if(($appState['experience']['mode'] ?? 'full') !== 'origination_lite') hidden @endif>
+        <div class="builder-lite-context"><span><i class="ti ti-trees"></i>LendingTree entry</span><span><i class="ti ti-device-mobile-message"></i>Phone OTP</span></div>
+        <div class="builder-control">
+          <label for="lite-stage">Origination lite stage</label>
+          <select id="lite-stage" name="lite[stage]" class="form-select">
+            @foreach($options['lite_stages'] as $value => $label)
+              <option value="{{ $value }}" @selected(($appState['lite']['stage'] ?? '') === $value)>{{ $label }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div class="builder-control inline-control">
+          <div><label for="lite-amount">Prequalified amount</label><small>Shown throughout the lite experience</small></div>
+          <input id="lite-amount" class="builder-number-input" type="number" name="lite[prequalified_amount]" value="{{ $appState['lite']['prequalified_amount'] ?? 8500 }}" min="500" max="25000" step="500">
+        </div>
+        <label class="builder-switch"><span><strong>Password created</strong><small>Hide the secondary account setup prompt</small></span><input type="hidden" name="lite[password_created]" value="0"><input type="checkbox" name="lite[password_created]" value="1" @checked($appState['lite']['password_created'] ?? false)></label>
       </div>
     </section>
 
@@ -178,5 +204,5 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('page-script')
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260827preset-launch"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260902origination-lite"></script>
 @endsection

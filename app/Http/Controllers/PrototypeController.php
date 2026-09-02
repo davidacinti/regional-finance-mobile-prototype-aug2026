@@ -23,6 +23,10 @@ class PrototypeController extends Controller
         $state = $this->scenarios->state($request);
         $scenario = $this->scenarios->scenario($request);
 
+        if (($state['experience']['mode'] ?? 'full') === 'origination_lite') {
+            return $this->liteView($state, $scenario, 'home');
+        }
+
         return view('prototype.index', [
             'scenarioId' => $state['meta']['preset'] ?? PrototypeScenarioService::DEFAULT_SCENARIO,
             'appState' => $state,
@@ -75,10 +79,18 @@ class PrototypeController extends Controller
                 'credit_card' => $request->boolean('products.credit_card'),
             ],
             'offer' => ['type' => $request->input('offer.type', 'none')],
+            'experience' => [
+                'mode' => $request->input('experience.mode', 'full'),
+            ],
             'origination' => [
                 'active' => $request->boolean('origination.active'),
                 'step' => $request->input('origination.step'),
                 'last_updated' => now()->toIso8601String(),
+            ],
+            'lite' => [
+                'stage' => $request->input('lite.stage', 'lendingtree_offer'),
+                'prequalified_amount' => $request->integer('lite.prequalified_amount', 8500),
+                'password_created' => $request->boolean('lite.password_created'),
             ],
             'wellness' => [
                 'credit_monitoring_enabled' => $request->boolean('wellness.credit_monitoring_enabled'),
@@ -140,15 +152,24 @@ class PrototypeController extends Controller
         return back();
     }
 
-    public function detail(Request $request, string $type, ?string $id = null): View
+    public function detail(Request $request, string $type, ?string $id = null): View|RedirectResponse
     {
+        $state = $this->scenarios->state($request);
         $scenario = $this->scenarios->scenario($request);
+
+        if (($state['experience']['mode'] ?? 'full') === 'origination_lite') {
+            if ($type === 'application') {
+                return $this->liteView($state, $scenario, 'application');
+            }
+
+            return redirect()->route('prototype.index');
+        }
 
         return view('prototype.detail', [
             'type' => $type,
             'id' => $id,
             'scenario' => $scenario,
-            'appState' => $this->scenarios->state($request),
+            'appState' => $state,
             'scheduledPayment' => $scenario['payments']['pending'] ?? null,
             'paymentStatus' => $request->session()->get('prototype_payment_status'),
             'notifications' => $this->notifications($scenario, $request),
@@ -182,6 +203,86 @@ class PrototypeController extends Controller
         $this->scenarios->moveApplication($request, -1);
 
         return redirect()->route('prototype.application', $application);
+    }
+
+    public function liteScreen(Request $request, string $screen): View|RedirectResponse
+    {
+        $state = $this->scenarios->state($request);
+        if (($state['experience']['mode'] ?? 'full') !== 'origination_lite') {
+            return redirect()->route('prototype.index');
+        }
+
+        $allowed = ['income', 'vehicle', 'closing', 'password'];
+        if (! in_array($screen, $allowed, true)) {
+            return redirect()->route('prototype.index');
+        }
+
+        return $this->liteView($state, $this->scenarios->scenario($request), $screen);
+    }
+
+    public function selectLendingTreeOffer(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'regional_offer');
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function continueLiteOffer(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'otp_phone');
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function sendLiteOtp(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'otp_code');
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function verifyLiteOtp(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'income_verification');
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function submitLiteIncome(Request $request): RedirectResponse
+    {
+        $filename = $request->input('income_document', 'Michael-Reed-paystub.pdf');
+        $this->scenarios->updateLiteStage($request, 'vehicle_photos', ['income_document' => $filename]);
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function submitLiteVehiclePhotos(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'closing_ready', [
+            'vehicle_photos' => ['Front', 'Rear', 'Driver side', 'Passenger side', 'VIN / dashboard'],
+        ]);
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function scheduleLiteClosing(Request $request): RedirectResponse
+    {
+        $this->scenarios->updateLiteStage($request, 'closing_scheduled', [
+            'appointment' => [
+                'date' => $request->input('appointment_date', '2026-09-10'),
+                'time' => $request->input('appointment_time', '10:30 AM'),
+                'branch' => 'Greenville Branch',
+            ],
+        ]);
+
+        return redirect()->route('prototype.index');
+    }
+
+    public function setupLitePassword(Request $request): RedirectResponse
+    {
+        $this->scenarios->update($request, ['lite' => ['password_created' => true]]);
+
+        return redirect()->route('prototype.index');
     }
 
     public function enrollAutopay(Request $request, string $loan): RedirectResponse
@@ -390,8 +491,17 @@ class PrototypeController extends Controller
         }, $notifications);
     }
 
-    public function settings(Request $request): View
+    public function settings(Request $request): View|RedirectResponse
     {
         return $this->detail($request, 'settings');
+    }
+
+    private function liteView(array $state, array $scenario, string $screen): View
+    {
+        return view('prototype.lite', [
+            'appState' => $state,
+            'scenario' => $scenario,
+            'screen' => $screen,
+        ]);
     }
 }

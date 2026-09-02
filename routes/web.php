@@ -180,6 +180,18 @@ Route::get('/applications/{application}/advance', fn (string $application) => re
 Route::post('/applications/{application}/advance', [PrototypeController::class, 'advanceApplication'])->name('prototype.application.advance');
 Route::get('/applications/{application}/previous', fn (string $application) => redirect()->route('prototype.application', $application));
 Route::post('/applications/{application}/previous', [PrototypeController::class, 'previousApplication'])->name('prototype.application.previous');
+Route::post('/lite/select-offer', [PrototypeController::class, 'selectLendingTreeOffer'])->name('prototype.lite.select-offer');
+Route::post('/lite/continue-offer', [PrototypeController::class, 'continueLiteOffer'])->name('prototype.lite.continue-offer');
+Route::post('/lite/send-code', [PrototypeController::class, 'sendLiteOtp'])->name('prototype.lite.send-code');
+Route::post('/lite/verify-code', [PrototypeController::class, 'verifyLiteOtp'])->name('prototype.lite.verify-code');
+Route::get('/applications/62001/income', fn () => app(PrototypeController::class)->liteScreen(request(), 'income'))->name('prototype.lite.income');
+Route::post('/applications/62001/income', [PrototypeController::class, 'submitLiteIncome'])->name('prototype.lite.income.submit');
+Route::get('/applications/62001/vehicle-photos', fn () => app(PrototypeController::class)->liteScreen(request(), 'vehicle'))->name('prototype.lite.vehicle');
+Route::post('/applications/62001/vehicle-photos', [PrototypeController::class, 'submitLiteVehiclePhotos'])->name('prototype.lite.vehicle.submit');
+Route::get('/applications/62001/closing', fn () => app(PrototypeController::class)->liteScreen(request(), 'closing'))->name('prototype.lite.closing');
+Route::post('/applications/62001/closing', [PrototypeController::class, 'scheduleLiteClosing'])->name('prototype.lite.closing.submit');
+Route::get('/account/set-password', fn () => app(PrototypeController::class)->liteScreen(request(), 'password'))->name('prototype.lite.password');
+Route::post('/account/set-password', [PrototypeController::class, 'setupLitePassword'])->name('prototype.lite.password.submit');
 Route::get('/offers/{offer?}', fn (?string $offer = null) => app(PrototypeController::class)->detail(request(), 'offer', $offer))->name('prototype.offers');
 Route::get('/protection-benefits', fn () => app(PrototypeController::class)->detail(request(), 'protection'))->name('prototype.protection');
 Route::get('/financial-wellness', fn () => app(PrototypeController::class)->detail(request(), 'wellness'))->name('prototype.wellness');
