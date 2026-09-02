@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260901offer-banner">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260902settings-switches">
 @endsection
 
 @section('content')

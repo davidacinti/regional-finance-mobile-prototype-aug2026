@@ -2180,9 +2180,56 @@
 }
 
 .settings-list input {
-  width: 22px;
-  height: 22px;
-  accent-color: var(--rf-blue);
+  position: relative;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  border: 1px solid #bdcad6;
+  border-radius: 999px;
+  appearance: none;
+  background: #dce3e9;
+  cursor: pointer;
+  transition: background .16s ease, border-color .16s ease;
+}
+
+.settings-list label {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 58px;
+}
+
+.settings-list label > span {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.settings-list input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(16, 43, 81, .22);
+  transition: transform .16s ease;
+}
+
+.settings-list input:checked {
+  border-color: var(--rf-blue);
+  background: var(--rf-blue);
+}
+
+.settings-list input:checked::after {
+  transform: translateX(18px);
+}
+
+.settings-list input:focus-visible {
+  outline: 3px solid rgba(67, 124, 191, .2);
+  outline-offset: 2px;
 }
 
 .wellness-score-ring {
