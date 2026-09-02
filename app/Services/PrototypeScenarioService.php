@@ -24,9 +24,9 @@ class PrototypeScenarioService
 
     private const LITE_STAGES = [
         'lendingtree_offer',
-        'regional_offer',
         'otp_phone',
         'otp_code',
+        'regional_offer',
         'income_verification',
         'vehicle_photos',
         'closing_ready',
@@ -80,7 +80,7 @@ class PrototypeScenarioService
             'prequalified-renewal' => ['label' => 'Pre-qualified renewal', 'description' => 'Current borrower with the strongest personalized offer.', 'icon' => 'ti-award'],
             'past-due' => ['label' => 'Past-due customer', 'description' => 'One loan 30 days past due; servicing takes priority.', 'icon' => 'ti-alert-triangle'],
             'application-progress' => ['label' => 'Application in progress', 'description' => 'New customer paused at income verification.', 'icon' => 'ti-clipboard-list'],
-            'lendingtree-prequalified' => ['label' => 'New customer - LendingTree', 'description' => 'Pre-qualified applicant entering the origination lite experience.', 'icon' => 'ti-plant'],
+            'lendingtree-prequalified' => ['label' => 'New customer - LendingTree', 'description' => 'Applicant who selected a Regional offer through LendingTree.', 'icon' => 'ti-plant'],
         ];
     }
 
@@ -115,7 +115,7 @@ class PrototypeScenarioService
                 'loans' => ['count' => 0],
                 'products' => ['savings' => false, 'credit_card' => false],
                 'offer' => ['type' => 'none'],
-                'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
+                'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'standard', 'last_updated' => now()->toIso8601String()],
                 'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'graduated' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
                 'vehicles' => ['count' => 0],
                 'wellness' => ['credit_monitoring_enabled' => false, 'bank_connected' => false, 'high_utilization' => false, 'budget_warning' => false],
@@ -179,7 +179,7 @@ class PrototypeScenarioService
                 'authentication' => $graduated ? 'password' : 'phone_otp',
             ],
             'lite' => array_replace($changes, ['stage' => $stage]),
-            'origination' => ['active' => true, 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
+            'origination' => ['active' => true, 'journey' => 'standard', 'last_updated' => now()->toIso8601String()],
         ]);
     }
 
@@ -212,9 +212,9 @@ class PrototypeScenarioService
             ],
             'lite_stages' => [
                 'lendingtree_offer' => 'LendingTree offer',
-                'regional_offer' => 'Regional welcome and offer',
                 'otp_phone' => 'Phone verification',
                 'otp_code' => 'Enter OTP code',
+                'regional_offer' => 'Credit review consent',
                 'income_verification' => 'Dashboard - income required',
                 'vehicle_photos' => 'Dashboard - vehicle photos required',
                 'closing_ready' => 'Dashboard - closing required',
@@ -294,7 +294,7 @@ class PrototypeScenarioService
             $state['offer']['type'] = 'none';
             $state['origination']['active'] = true;
             $state['origination']['step'] = 'application_started';
-            $state['origination']['journey'] = 'prequalified';
+            $state['origination']['journey'] = 'standard';
             $state['wellness']['credit_monitoring_enabled'] = false;
             $state['wellness']['bank_connected'] = false;
             $state['vehicles']['count'] = 0;
@@ -541,7 +541,7 @@ class PrototypeScenarioService
             },
             'summary' => 'Complete the steps below to finish your loan.',
             'cta' => $nextSteps[$stage]['cta'] ?? 'View application',
-            'prequalified' => true,
+            'prequalified' => false,
             'prequalified_amount' => (int) ($lite['prequalified_amount'] ?? 8500),
             'authenticated' => $stageIndex >= $incomeIndex,
             'password_created' => (bool) ($lite['password_created'] ?? false),
@@ -555,7 +555,7 @@ class PrototypeScenarioService
                 default => 10,
             },
             'tasks' => [
-                ['key' => 'prequalified', 'label' => 'Prequalified', 'status' => 'Complete'],
+                ['key' => 'offer', 'label' => 'Offer selected', 'status' => 'Complete'],
                 ['key' => 'income', 'label' => 'Income verification', 'status' => $taskStatus($stageIndex, $incomeIndex)],
                 ['key' => 'vehicle', 'label' => 'Vehicle photos', 'status' => $taskStatus($stageIndex, $vehicleIndex)],
                 ['key' => 'closing', 'label' => 'Closing appointment', 'status' => $stageIndex === $scheduledIndex ? 'Scheduled' : $taskStatus($stageIndex, $closingIndex)],

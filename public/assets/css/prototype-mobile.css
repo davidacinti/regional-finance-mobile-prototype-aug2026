@@ -5045,6 +5045,40 @@ button:focus-visible {
   text-align: left;
 }
 
+.regional-offer-screen form {
+  display: grid;
+  gap: 14px;
+}
+
+.lite-credit-consent {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid #d3dee7;
+  border-radius: 7px;
+  color: #556b7e;
+  background: #f6f8fa;
+  font-size: .72rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.lite-credit-consent input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: #2f74ba;
+}
+
+.lite-credit-consent strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--rf-navy);
+  font-size: .76rem;
+}
+
 .masked-phone {
   padding: 16px;
   border: 1px solid #d8e4ec;

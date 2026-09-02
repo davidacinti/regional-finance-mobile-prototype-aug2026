@@ -17,13 +17,15 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('$8,500');
 
         $this->post('/lite/select-offer')->assertRedirect('/');
-        $this->get('/')->assertSee("You're prequalified for up to", false);
-
-        $this->post('/lite/continue-offer')->assertRedirect('/');
         $this->get('/')->assertSee('Verify your phone');
         $this->post('/lite/send-code')->assertRedirect('/');
         $this->get('/')->assertSee('Enter verification code');
         $this->post('/lite/verify-code')->assertRedirect('/');
+        $this->get('/')
+            ->assertSee('Complete your application')
+            ->assertSee('Authorize credit review')
+            ->assertSee('hard credit inquiry');
+        $this->post('/lite/continue-offer')->assertRedirect('/');
 
         $this->get('/')
             ->assertOk()
@@ -44,9 +46,9 @@ class PrototypeStateFlowTest extends TestCase
     {
         $this->post('/prototype/presets/lendingtree-prequalified');
         $this->post('/lite/select-offer');
-        $this->post('/lite/continue-offer');
         $this->post('/lite/send-code');
         $this->post('/lite/verify-code');
+        $this->post('/lite/continue-offer');
 
         $this->get('/applications/62001/income')
             ->assertOk()
@@ -110,9 +112,9 @@ class PrototypeStateFlowTest extends TestCase
     {
         $this->post('/prototype/presets/lendingtree-prequalified');
         $this->post('/lite/select-offer');
-        $this->post('/lite/continue-offer');
         $this->post('/lite/send-code');
         $this->post('/lite/verify-code');
+        $this->post('/lite/continue-offer');
 
         $this->post('/account/set-password')->assertRedirect('/');
 

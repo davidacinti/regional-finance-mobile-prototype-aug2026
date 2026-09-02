@@ -85,15 +85,17 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
 
       @if($stage === 'regional_offer')
         <section class="lite-gate-screen regional-offer-screen">
-          <div class="lite-gate-icon"><i class="ti ti-award"></i></div>
-          <span class="lite-kicker">Your Regional Finance offer</span>
-          <h1>You're prequalified for up to</h1>
-          <strong class="regional-offer-amount">{{ $amount }}</strong>
-          <p>Finish a few quick steps to complete your application.</p>
-          <div class="lite-trust-line"><i class="ti ti-shield-check"></i>Your offer is ready to review securely.</div>
+          <div class="lite-gate-icon"><i class="ti ti-file-search"></i></div>
+          <span class="lite-kicker">Credit review</span>
+          <h1>Complete your application</h1>
+          <p>You selected the {{ $amount }} loan offer. To continue, Regional Finance needs to review your credit.</p>
           <form method="POST" action="{{ route('prototype.lite.continue-offer') }}">
             @csrf
-            <button class="btn btn-primary w-100" type="submit">Continue</button>
+            <label class="lite-credit-consent">
+              <input type="checkbox" required checked>
+              <span><strong>Authorize credit review</strong>I authorize Regional Finance to obtain my credit report. This is a hard credit inquiry and may impact my credit score.</span>
+            </label>
+            <button class="btn btn-primary w-100" type="submit">Authorize and continue</button>
           </form>
         </section>
       @elseif($stage === 'otp_phone')
@@ -228,7 +230,7 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
 
           <section class="lite-application-summary">
             <div>
-              <span>Prequalified up to</span>
+              <span>Selected loan amount</span>
               <strong>{{ $amount }}</strong>
             </div>
             <span class="lite-status-pill"><i class="ti {{ $stage === 'closing_scheduled' ? 'ti-calendar-check' : ($stage === 'complete' ? 'ti-circle-check' : 'ti-progress-check') }}"></i>{{ $application['headline'] }}</span>

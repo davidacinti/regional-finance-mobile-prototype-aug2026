@@ -158,7 +158,7 @@ $customizerHidden = 'customizer-hide';
           </select>
         </div>
         <div class="builder-control inline-control">
-          <div><label for="lite-amount">Prequalified amount</label><small>Shown throughout the lite experience</small></div>
+          <div><label for="lite-amount">Selected offer amount</label><small>Shown throughout the application experience</small></div>
           <input id="lite-amount" class="builder-number-input" type="number" name="lite[prequalified_amount]" value="{{ $appState['lite']['prequalified_amount'] ?? 8500 }}" min="500" max="25000" step="500">
         </div>
         <label class="builder-switch"><span><strong>Password created</strong><small>Hide the secondary account setup prompt</small></span><input type="hidden" name="lite[password_created]" value="0"><input type="checkbox" name="lite[password_created]" value="1" @checked($appState['lite']['password_created'] ?? false)></label>

@@ -234,14 +234,14 @@ class PrototypeController extends Controller
 
     public function selectLendingTreeOffer(Request $request): RedirectResponse
     {
-        $this->scenarios->updateLiteStage($request, 'regional_offer');
+        $this->scenarios->updateLiteStage($request, 'otp_phone');
 
         return redirect()->route('prototype.index');
     }
 
     public function continueLiteOffer(Request $request): RedirectResponse
     {
-        $this->scenarios->updateLiteStage($request, 'otp_phone');
+        $this->scenarios->updateLiteStage($request, 'income_verification');
 
         return redirect()->route('prototype.index');
     }
@@ -255,7 +255,7 @@ class PrototypeController extends Controller
 
     public function verifyLiteOtp(Request $request): RedirectResponse
     {
-        $this->scenarios->updateLiteStage($request, 'income_verification');
+        $this->scenarios->updateLiteStage($request, 'regional_offer');
 
         return redirect()->route('prototype.index');
     }
