@@ -106,6 +106,42 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('data-nav-item="application"', false);
     }
 
+    public function test_password_setup_graduates_lite_customer_into_full_authenticated_app_without_losing_progress(): void
+    {
+        $this->post('/prototype/presets/lendingtree-prequalified');
+        $this->post('/lite/select-offer');
+        $this->post('/lite/continue-offer');
+        $this->post('/lite/send-code');
+        $this->post('/lite/verify-code');
+
+        $this->post('/account/set-password')->assertRedirect('/');
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Hi, Michael')
+            ->assertSee('data-menu-toggle', false)
+            ->assertSee('View profile')
+            ->assertSee('Document Center')
+            ->assertSee('Settings')
+            ->assertSee('Support')
+            ->assertSee('Verify your income')
+            ->assertSee('Upload income document')
+            ->assertSee('/applications/62001/income', false)
+            ->assertDontSee('lite-dashboard', false)
+            ->assertDontSee('Save your account');
+
+        $this->get('/profile')->assertOk()->assertSee('Michael Reed');
+        $this->get('/applications/62001')->assertRedirect('/applications/62001/income');
+        $this->get('/applications/62001/income')->assertOk()->assertSee('Verify your income');
+
+        $this->post('/applications/62001/income', ['income_document' => 'paystub.pdf'])->assertRedirect('/');
+        $this->get('/')
+            ->assertSee('Hi, Michael')
+            ->assertSee('Upload vehicle photos')
+            ->assertSee('data-menu-toggle', false)
+            ->assertDontSee('lite-dashboard', false);
+    }
+
     public function test_scenario_builder_and_default_dashboard_render(): void
     {
         $this->get('/scenarios')

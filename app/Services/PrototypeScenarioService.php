@@ -116,7 +116,7 @@ class PrototypeScenarioService
                 'products' => ['savings' => false, 'credit_card' => false],
                 'offer' => ['type' => 'none'],
                 'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
-                'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
+                'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'graduated' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
                 'vehicles' => ['count' => 0],
                 'wellness' => ['credit_monitoring_enabled' => false, 'bank_connected' => false, 'high_utilization' => false, 'budget_warning' => false],
                 'protection' => ['enabled' => false],
@@ -170,9 +170,14 @@ class PrototypeScenarioService
     public function updateLiteStage(Request $request, string $stage, array $changes = []): array
     {
         $stage = $this->allowed($stage, self::LITE_STAGES, 'lendingtree_offer');
+        $graduated = (bool) ($this->state($request)['lite']['graduated'] ?? false);
 
         return $this->update($request, [
-            'experience' => ['mode' => 'origination_lite', 'entry_channel' => 'lendingtree', 'authentication' => 'phone_otp'],
+            'experience' => [
+                'mode' => $graduated ? 'full' : 'origination_lite',
+                'entry_channel' => 'lendingtree',
+                'authentication' => $graduated ? 'password' : 'phone_otp',
+            ],
             'lite' => array_replace($changes, ['stage' => $stage]),
             'origination' => ['active' => true, 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
         ]);
@@ -229,7 +234,7 @@ class PrototypeScenarioService
             'products' => ['savings' => false, 'credit_card' => false],
             'offer' => ['type' => 'check_for_offers'],
             'origination' => ['active' => false, 'step' => null, 'journey' => 'standard', 'selected_offer' => null, 'outcome' => null, 'last_updated' => null],
-            'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
+            'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'graduated' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
             'wellness' => [
                 'credit_monitoring_enabled' => true,
                 'credit_score' => 642,
@@ -251,8 +256,10 @@ class PrototypeScenarioService
         $state = array_replace_recursive($this->defaultState(), $state);
         unset($state['customer']['type']);
         $state['experience']['mode'] = $this->allowed($state['experience']['mode'], ['full', 'origination_lite'], 'full');
-        $state['experience']['entry_channel'] = $state['experience']['mode'] === 'origination_lite' ? 'lendingtree' : 'direct';
-        $state['experience']['authentication'] = $state['experience']['mode'] === 'origination_lite' ? 'phone_otp' : 'password';
+        $state['lite']['graduated'] = filter_var($state['lite']['graduated'], FILTER_VALIDATE_BOOL);
+        $graduatedLite = $state['lite']['graduated'];
+        $state['experience']['entry_channel'] = $state['experience']['mode'] === 'origination_lite' || $graduatedLite ? 'lendingtree' : 'direct';
+        $state['experience']['authentication'] = $state['experience']['mode'] === 'origination_lite' && ! $graduatedLite ? 'phone_otp' : 'password';
         $state['loans']['count'] = max(0, min(2, (int) $state['loans']['count']));
         $state['loans']['payment_status'] = $this->allowed($state['loans']['payment_status'], array_keys($this->builderOptions()['payment_statuses']), 'current');
         foreach (['savings', 'credit_card'] as $key) {
@@ -342,7 +349,8 @@ class PrototypeScenarioService
         }
 
         $liteMode = $state['experience']['mode'] === 'origination_lite';
-        $application = $liteMode
+        $graduatedLite = (bool) $state['lite']['graduated'];
+        $application = $liteMode || $graduatedLite
             ? $this->liteApplicationState($state['lite'])
             : ($state['origination']['active'] ? $this->applicationState($state['origination']) : null);
         $severeDelinquency = in_array($state['loans']['payment_status'], ['past_due_30', 'past_due_60', 'charged_off', 'bankruptcy'], true);
@@ -353,7 +361,7 @@ class PrototypeScenarioService
             'name' => $this->stateName($state),
             'description' => 'Customer-facing screens are derived from the shared prototype state.',
             'customer' => [
-                'relationship_status' => $liteMode ? 'applicant' : 'customer',
+                'relationship_status' => $liteMode && ! $graduatedLite ? 'applicant' : 'customer',
                 'first_name' => $state['customer']['first_name'],
                 'last_name' => $state['customer']['last_name'],
             ],
@@ -594,7 +602,7 @@ class PrototypeScenarioService
 
     private function stateName(array $state): string
     {
-        if ($state['experience']['mode'] === 'origination_lite') return 'LendingTree applicant: ' . ($this->builderOptions()['lite_stages'][$state['lite']['stage']] ?? 'Origination lite');
+        if ($state['experience']['mode'] === 'origination_lite' || $state['lite']['graduated']) return 'LendingTree application: ' . ($this->builderOptions()['lite_stages'][$state['lite']['stage']] ?? 'In progress');
         if ($state['origination']['active']) return 'Application: ' . ucwords(str_replace('_', ' ', $state['origination']['step']));
         if (in_array($state['loans']['payment_status'], ['past_due_30', 'past_due_60', 'charged_off', 'bankruptcy'], true)) return $this->builderOptions()['payment_statuses'][$state['loans']['payment_status']];
         if ($state['offer']['type'] === 'prequalified_renewal') return 'Pre-qualified renewal';

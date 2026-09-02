@@ -165,6 +165,18 @@ class PrototypeController extends Controller
             return redirect()->route('prototype.index');
         }
 
+        if ($type === 'application' && ($state['lite']['graduated'] ?? false)) {
+            $nextStep = $scenario['application']['next_step'] ?? null;
+            $route = match ($nextStep['key'] ?? null) {
+                'income' => 'prototype.lite.income',
+                'vehicle' => 'prototype.lite.vehicle',
+                'closing' => 'prototype.lite.closing',
+                default => 'prototype.index',
+            };
+
+            return redirect()->route($route);
+        }
+
         return view('prototype.detail', [
             'type' => $type,
             'id' => $id,
@@ -208,7 +220,7 @@ class PrototypeController extends Controller
     public function liteScreen(Request $request, string $screen): View|RedirectResponse
     {
         $state = $this->scenarios->state($request);
-        if (($state['experience']['mode'] ?? 'full') !== 'origination_lite') {
+        if (($state['experience']['mode'] ?? 'full') !== 'origination_lite' && ! ($state['lite']['graduated'] ?? false)) {
             return redirect()->route('prototype.index');
         }
 
@@ -280,7 +292,10 @@ class PrototypeController extends Controller
 
     public function setupLitePassword(Request $request): RedirectResponse
     {
-        $this->scenarios->update($request, ['lite' => ['password_created' => true]]);
+        $this->scenarios->update($request, [
+            'experience' => ['mode' => 'full', 'entry_channel' => 'lendingtree', 'authentication' => 'password'],
+            'lite' => ['password_created' => true, 'graduated' => true],
+        ]);
 
         return redirect()->route('prototype.index');
     }

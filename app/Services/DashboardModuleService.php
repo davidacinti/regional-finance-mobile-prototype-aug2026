@@ -39,7 +39,7 @@ class DashboardModuleService
         }
 
         if (filled($scenario['application'] ?? null) && ($scenario['application']['status'] ?? null) !== 'pending_funding') {
-            return ['label' => $scenario['application']['cta'], 'url' => route('prototype.application', $scenario['application']['id'])];
+            return ['label' => $scenario['application']['cta'], 'url' => $this->applicationUrl($scenario['application'])];
         }
 
         return ['label' => 'Check for offers', 'url' => route('prototype.offers')];
@@ -53,14 +53,15 @@ class DashboardModuleService
 
         if (filled($scenario['application'] ?? null)) {
             $application = $scenario['application'];
+            $nextStep = $application['next_step'] ?? null;
 
             return [
                 'variant' => 'application',
                 'eyebrow' => 'Application in progress',
-                'headline' => $application['headline'],
-                'body' => $application['summary'],
-                'cta' => $application['cta'],
-                'url' => route('prototype.application', $application['id']),
+                'headline' => $nextStep['headline'] ?? $application['headline'],
+                'body' => $nextStep['body'] ?? $application['summary'],
+                'cta' => $nextStep['cta'] ?? $application['cta'],
+                'url' => $this->applicationUrl($application),
                 'icon' => 'ti-clipboard-list',
             ];
         }
@@ -92,5 +93,15 @@ class DashboardModuleService
         }
 
         return null;
+    }
+
+    private function applicationUrl(array $application): string
+    {
+        return match ($application['next_step']['key'] ?? null) {
+            'income' => route('prototype.lite.income'),
+            'vehicle' => route('prototype.lite.vehicle'),
+            'closing' => route('prototype.lite.closing'),
+            default => route('prototype.application', $application['id']),
+        };
     }
 }

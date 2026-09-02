@@ -21,10 +21,16 @@
       'active' => in_array($current, ['loan', 'payment', 'autopay'], true),
     ];
   } elseif ($application) {
+    $applicationUrl = match ($application['next_step']['key'] ?? null) {
+      'income' => route('prototype.lite.income'),
+      'vehicle' => route('prototype.lite.vehicle'),
+      'closing' => route('prototype.lite.closing'),
+      default => route('prototype.application', $application['id']),
+    };
     $items[] = [
       'key' => 'application', 'label' => ($application['status'] ?? null) === 'pending_funding' ? 'Funding' : 'Apply',
       'icon' => ($application['status'] ?? null) === 'pending_funding' ? 'ti-clock-check' : 'ti-clipboard-list',
-      'url' => route('prototype.application', $application['id']),
+      'url' => $applicationUrl,
       'active' => $current === 'application',
     ];
   }
