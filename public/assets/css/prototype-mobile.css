@@ -2272,6 +2272,12 @@
   gap: 12px;
 }
 
+.application-locked-field > div + div {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid #dbe5ed;
+}
+
 .application-locked-field span {
   color: #52677e;
   font-size: 11px;
