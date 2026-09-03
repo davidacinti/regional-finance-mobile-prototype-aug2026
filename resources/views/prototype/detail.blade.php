@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903prequal-flow">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903confirm-info">
 @endsection
 
 @section('content')
@@ -468,10 +468,14 @@ $pastLoanDocuments = [
                   @break
                 @case('confirm_information')
                   <div class="application-info-fields">
-                    <label><span>Full name</span><input class="form-control" type="text" name="full_name" value="{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? '' }}" form="application-advance-form"></label>
+                    <div class="application-locked-field">
+                      <div><span>Full name</span><strong>{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? '' }}</strong></div>
+                      <p><i class="ti ti-lock"></i>To change your name, call <a href="tel:8645550148">Greenville Branch</a>.</p>
+                    </div>
                     <label><span>Mobile phone</span><input class="form-control" type="tel" name="mobile" value="(864) 555-2194" form="application-advance-form"></label>
                     <label><span>Home address</span><input class="form-control" type="text" name="address" value="1450 Woodruff Rd, Greenville, SC 29607" form="application-advance-form"></label>
-                    <label><span>Employer</span><input class="form-control" type="text" name="employer" value="Regional Distribution Services" form="application-advance-form"></label>
+                    <label><span>Current employer</span><input class="form-control" type="text" name="employer" value="Carolina Logistics" form="application-advance-form"></label>
+                    <label><span>Monthly net income</span><input class="form-control" type="text" inputmode="decimal" name="income" value="$4,850" form="application-advance-form"></label>
                   </div>
                   @if($application['prequalified'] ?? false)
                     <div class="application-trust-row soft-pull"><i class="ti ti-shield-check"></i><div><strong>Checking your rates will not impact your credit score</strong><span>We'll use a soft credit inquiry to show your available loan options.</span></div></div>

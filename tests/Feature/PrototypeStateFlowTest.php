@@ -321,8 +321,14 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->get('/applications/62001')
             ->assertSee('Confirm your information')
+            ->assertDontSee('name="full_name"', false)
+            ->assertSee('To change your name, call')
             ->assertSee('name="address"', false)
+            ->assertSee('1450 Woodruff Rd, Greenville, SC 29607')
             ->assertSee('name="employer"', false)
+            ->assertSee('Carolina Logistics')
+            ->assertSee('name="income"', false)
+            ->assertSee('$4,850')
             ->assertSee('Checking your rates will not impact your credit score')
             ->assertSee('soft credit inquiry')
             ->assertDontSee('Personal loans up to');
