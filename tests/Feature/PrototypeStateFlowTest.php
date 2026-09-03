@@ -472,6 +472,7 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->get('/profile')
             ->assertSee('Contact information')
+            ->assertSee('Call Greenville Branch &middot; (864) 555-0148', false)
             ->assertSee('OTP required')
             ->assertSee('Verify your changes')
             ->assertSee('data-contact-verification', false)

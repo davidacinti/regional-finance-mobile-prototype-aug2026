@@ -769,7 +769,7 @@ $pastLoanDocuments = [
                 <div><span>Legal name</span><strong>{{ $scenario['customer']['first_name'] ?? 'Jordan' }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</strong></div>
                 <div><span>Member since</span><strong>2021</strong></div>
               </div>
-              <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'your branch' }} <span>{{ $branch['phone'] ?? '' }}</span></a>
+              <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '8645550148') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'Greenville Branch' }} &middot; {{ $branch['phone'] ?? '(864) 555-0148' }}</a>
             </section>
 
             <section class="profile-info-section" data-profile-section data-contact-verification>
