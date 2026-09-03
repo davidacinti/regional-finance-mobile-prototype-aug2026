@@ -323,7 +323,7 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('Confirm your information')
             ->assertDontSee('name="full_name"', false)
             ->assertDontSee('name="mobile"', false)
-            ->assertSee('To change your name or mobile number, call')
+            ->assertSee('To update either, call')
             ->assertSee('(864) 555-2194')
             ->assertSee('name="address"', false)
             ->assertSee('1450 Woodruff Rd, Greenville, SC 29607')

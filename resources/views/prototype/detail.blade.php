@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903locked-contact">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903locked-contact-layout">
 @endsection
 
 @section('content')
@@ -471,7 +471,7 @@ $pastLoanDocuments = [
                     <div class="application-locked-field">
                       <div><span>Full name</span><strong>{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? '' }}</strong></div>
                       <div><span>Mobile phone</span><strong>(864) 555-2194</strong></div>
-                      <p><i class="ti ti-lock"></i>To change your name or mobile number, call <a href="tel:8645550148">Greenville Branch</a>.</p>
+                      <p><i class="ti ti-lock"></i><span>To update either, call <a href="tel:8645550148">Greenville Branch</a>.</span></p>
                     </div>
                     <label><span>Home address</span><input class="form-control" type="text" name="address" value="1450 Woodruff Rd, Greenville, SC 29607" form="application-advance-form"></label>
                     <label><span>Current employer</span><input class="form-control" type="text" name="employer" value="Carolina Logistics" form="application-advance-form"></label>

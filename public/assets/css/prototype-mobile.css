@@ -2287,16 +2287,31 @@
 .application-locked-field strong {
   color: #12345b;
   font-size: 13px;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .application-locked-field p {
   display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  margin: 8px 0 0;
-  color: #6b7d90;
+  align-items: center;
+  gap: 8px;
+  margin: 10px -2px -2px;
+  padding: 9px 10px;
+  border-radius: 7px;
+  color: #52677e;
+  background: #eaf3fb;
   font-size: 10px;
   line-height: 1.4;
+}
+
+.application-locked-field p > i {
+  flex: 0 0 auto;
+  color: #2769b4;
+  font-size: 15px;
+}
+
+.application-locked-field p > span {
+  min-width: 0;
 }
 
 .application-locked-field p a {
