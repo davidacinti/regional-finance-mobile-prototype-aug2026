@@ -471,7 +471,7 @@ $pastLoanDocuments = [
                     <div class="application-locked-field">
                       <div><span>Full name</span><strong>{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? '' }}</strong></div>
                       <div><span>Mobile phone</span><strong>(864) 555-2194</strong></div>
-                      <p><i class="ti ti-lock"></i><span>To update either, call <a href="tel:8645550148">Greenville Branch</a>.</span></p>
+                      <p><i class="ti ti-lock"></i><span>To update, call the <a href="tel:8645550148">Greenville Branch at (864) 555-0148</a>.</span></p>
                     </div>
                     <label><span>Home address</span><input class="form-control" type="text" name="address" value="1450 Woodruff Rd, Greenville, SC 29607" form="application-advance-form"></label>
                     <label><span>Current employer</span><input class="form-control" type="text" name="employer" value="Regional Finance" form="application-advance-form"></label>
@@ -769,7 +769,7 @@ $pastLoanDocuments = [
                 <div><span>Legal name</span><strong>{{ $scenario['customer']['first_name'] ?? 'Jordan' }} {{ $scenario['customer']['last_name'] ?? 'Davis' }}</strong></div>
                 <div><span>Member since</span><strong>2021</strong></div>
               </div>
-              <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'your branch' }}</a>
+              <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'your branch' }} <span>{{ $branch['phone'] ?? '' }}</span></a>
             </section>
 
             <section class="profile-info-section" data-profile-section data-contact-verification>
