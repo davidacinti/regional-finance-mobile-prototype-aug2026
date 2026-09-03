@@ -471,10 +471,17 @@ class PrototypeStateFlowTest extends TestCase
 
         $this->get('/profile')
             ->assertSee('Contact information')
+            ->assertSee('OTP required')
+            ->assertSee('Verify your changes')
+            ->assertSee('data-contact-verification', false)
+            ->assertSee('data-profile-otp-panel', false)
+            ->assertSee('Communication preferences')
+            ->assertSee('Preferred contact')
+            ->assertSee('Text message')
+            ->assertSee('Paperless')
             ->assertSee('Career')
             ->assertSee('Trusted contact')
             ->assertSee('data-profile-edit-button', false)
-            ->assertDontSee('Communication preferences')
             ->assertDontSee('Date of birth')
             ->assertDontSee('Last 4 of SSN');
     }

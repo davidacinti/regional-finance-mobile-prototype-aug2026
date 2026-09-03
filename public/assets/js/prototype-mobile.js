@@ -162,6 +162,11 @@
     const editPanel = section.querySelector('[data-profile-edit-panel]');
     const cancelButton = section.querySelector('[data-profile-cancel]');
     const saveStatus = section.querySelector('[data-profile-save-status]');
+    const otpPanel = section.querySelector('[data-profile-otp-panel]');
+    const otpInput = section.querySelector('[data-profile-otp-input]');
+    const otpError = section.querySelector('[data-profile-otp-error]');
+    const otpCancel = section.querySelector('[data-profile-otp-cancel]');
+    let pendingProfileDetails = null;
 
     if (!editButton || !readPanel || !editPanel) {
       return;
@@ -180,6 +185,8 @@
     const setEditing = isEditing => {
       readPanel.hidden = isEditing;
       editPanel.hidden = !isEditing;
+      if (otpPanel) otpPanel.hidden = true;
+      editButton.hidden = false;
       editButton.setAttribute('aria-expanded', String(isEditing));
       editButton.textContent = isEditing ? 'Close' : 'Edit';
       saveStatus.hidden = true;
@@ -198,19 +205,70 @@
       setEditing(false);
     });
 
-    editPanel.addEventListener('submit', event => {
-      event.preventDefault();
-
-      editPanel.querySelectorAll('[data-profile-input]').forEach(input => {
-        const key = input.dataset.profileInput;
-        const value = input.value.trim();
+    const saveProfileDetails = details => {
+      Object.entries(details).forEach(([key, value]) => {
         section.querySelector(`[data-profile-value="${key}"]`)?.replaceChildren(value);
         savedProfileDetails[key] = value;
       });
 
       window.sessionStorage.setItem(profileStorageKey, JSON.stringify(savedProfileDetails));
+      pendingProfileDetails = null;
       setEditing(false);
       saveStatus.hidden = false;
+    };
+
+    editPanel.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const nextProfileDetails = {};
+      editPanel.querySelectorAll('[data-profile-input]').forEach(input => {
+        const key = input.dataset.profileInput;
+        nextProfileDetails[key] = input.value.trim();
+      });
+
+      const requiresOtp = section.hasAttribute('data-contact-verification') && ['email', 'phone'].some(key => {
+        const currentValue = section.querySelector(`[data-profile-value="${key}"]`)?.textContent?.trim();
+        return nextProfileDetails[key] !== currentValue;
+      });
+
+      if (requiresOtp && otpPanel) {
+        pendingProfileDetails = nextProfileDetails;
+        editPanel.hidden = true;
+        otpPanel.hidden = false;
+        editButton.hidden = true;
+        otpError.hidden = true;
+        otpInput.value = '';
+        otpInput.focus();
+        return;
+      }
+
+      saveProfileDetails(nextProfileDetails);
+    });
+
+    otpInput?.addEventListener('input', () => {
+      otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
+      otpError.hidden = true;
+    });
+
+    otpCancel?.addEventListener('click', () => {
+      otpPanel.hidden = true;
+      editPanel.hidden = false;
+      editButton.hidden = false;
+      editButton.textContent = 'Close';
+      otpError.hidden = true;
+      editPanel.querySelector('input, select')?.focus();
+    });
+
+    otpPanel?.addEventListener('submit', event => {
+      event.preventDefault();
+
+      if (otpInput.value !== '123456' || !pendingProfileDetails) {
+        otpError.hidden = false;
+        otpInput.focus();
+        return;
+      }
+
+      saveProfileDetails(pendingProfileDetails);
     });
   });
 

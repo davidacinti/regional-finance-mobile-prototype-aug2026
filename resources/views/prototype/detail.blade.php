@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903locked-contact-layout">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903profile-otp">
 @endsection
 
 @section('content')
@@ -772,7 +772,7 @@ $pastLoanDocuments = [
               <a class="profile-branch-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '') }}"><i class="ti ti-phone"></i>Call {{ $branch['name'] ?? 'your branch' }}</a>
             </section>
 
-            <section class="profile-info-section" data-profile-section>
+            <section class="profile-info-section" data-profile-section data-contact-verification>
               <div class="profile-section-heading">
                 <h3>Contact information</h3>
                 <button type="button" data-profile-edit-button aria-expanded="false">Edit</button>
@@ -784,14 +784,54 @@ $pastLoanDocuments = [
               </div>
               <form class="profile-edit-panel" data-profile-edit-panel hidden>
                 <label class="profile-edit-wide">Home address<input data-profile-input="address" type="text" value="1450 Woodruff Rd, Greenville, SC 29607"></label>
-                <label>Email address<input data-profile-input="email" type="email" value="jordan.davis@example.com"></label>
-                <label>Mobile phone<input data-profile-input="phone" type="tel" value="(864) 555-2194"></label>
+                <label>Email address<span class="profile-secure-label"><i class="ti ti-shield-lock"></i>OTP required</span><input data-profile-input="email" type="email" value="jordan.davis@example.com"></label>
+                <label>Mobile phone<span class="profile-secure-label"><i class="ti ti-shield-lock"></i>OTP required</span><input data-profile-input="phone" type="tel" value="(864) 555-2194"></label>
                 <div class="profile-edit-actions">
                   <button class="btn btn-primary" type="submit">Save</button>
                   <button class="btn btn-outline-primary" type="button" data-profile-cancel>Cancel</button>
                 </div>
               </form>
+              <form class="profile-otp-panel" data-profile-otp-panel hidden>
+                <div class="profile-otp-icon"><i class="ti ti-device-mobile-check"></i></div>
+                <div>
+                  <span class="eyebrow">Security check</span>
+                  <h4>Verify your changes</h4>
+                  <p>Enter the six-digit code sent to your current mobile number ending in 2194.</p>
+                </div>
+                <label>Verification code<input type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" data-profile-otp-input placeholder="6-digit code"></label>
+                <p class="profile-otp-demo">Prototype code: <strong>123456</strong></p>
+                <p class="profile-otp-error" data-profile-otp-error hidden>Enter the six-digit verification code.</p>
+                <div class="profile-edit-actions">
+                  <button class="btn btn-primary" type="submit">Verify and save</button>
+                  <button class="btn btn-outline-primary" type="button" data-profile-otp-cancel>Back</button>
+                </div>
+              </form>
               <p class="profile-save-status" data-profile-save-status hidden><i class="ti ti-circle-check"></i>Changes saved</p>
+            </section>
+
+            <section class="profile-info-section" data-profile-section>
+              <div class="profile-section-heading">
+                <h3>Communication preferences</h3>
+                <button type="button" data-profile-edit-button aria-expanded="false">Edit</button>
+              </div>
+              <div class="profile-read-list" data-profile-read-panel>
+                <div><span>Preferred contact</span><strong data-profile-value="contact-method">Text message</strong></div>
+                <div><span>Best time to reach you</span><strong data-profile-value="contact-time">Weekdays, 5-7 PM</strong></div>
+                <div><span>Preferred language</span><strong data-profile-value="language">English</strong></div>
+                <div><span>Document delivery</span><strong data-profile-value="delivery">Paperless</strong></div>
+              </div>
+              <form class="profile-edit-panel" data-profile-edit-panel hidden>
+                <label>Preferred contact<select data-profile-input="contact-method"><option>Email</option><option selected>Text message</option><option>Phone call</option></select></label>
+                <label>Best time<select data-profile-input="contact-time"><option>Weekdays, 8 AM-12 PM</option><option>Weekdays, 12-5 PM</option><option selected>Weekdays, 5-7 PM</option></select></label>
+                <label>Preferred language<select data-profile-input="language"><option selected>English</option><option>Spanish</option></select></label>
+                <label>Document delivery<select data-profile-input="delivery"><option selected>Paperless</option><option>Paper mail</option></select></label>
+                <div class="profile-edit-actions">
+                  <button class="btn btn-primary" type="submit">Save preferences</button>
+                  <button class="btn btn-outline-primary" type="button" data-profile-cancel>Cancel</button>
+                </div>
+              </form>
+              <p class="profile-disclosure"><i class="ti ti-info-circle"></i>Required servicing and legal notices may still be sent through another channel.</p>
+              <p class="profile-save-status" data-profile-save-status hidden><i class="ti ti-circle-check"></i>Preferences saved</p>
             </section>
 
             <section class="profile-info-section" data-profile-section>
@@ -1107,5 +1147,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260827profile-refine"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260903profile-otp"></script>
 @endsection
