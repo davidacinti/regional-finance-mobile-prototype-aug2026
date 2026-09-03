@@ -309,7 +309,9 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/')
             ->assertSee('pending-funding-product', false)
             ->assertSee('Funding')
-            ->assertSee('$3,500.00');
+            ->assertSee('$3,500.00')
+            ->assertDontSee('next-best-action application', false)
+            ->assertDontSee('APPLICATION IN PROGRESS');
     }
 
     public function test_prequalified_application_uses_hard_pull_and_skips_income(): void

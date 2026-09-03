@@ -53,6 +53,9 @@ class DashboardModuleService
 
         if (filled($scenario['application'] ?? null)) {
             $application = $scenario['application'];
+            if (($application['status'] ?? null) === 'pending_funding') {
+                return null;
+            }
             $nextStep = $application['next_step'] ?? null;
 
             return [
