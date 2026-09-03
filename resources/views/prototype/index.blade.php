@@ -74,7 +74,7 @@ $highlightCards[] = [
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260827compact-actions">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903banner-layout">
 @endsection
 
 @section('content')

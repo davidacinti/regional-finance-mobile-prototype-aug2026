@@ -4544,11 +4544,11 @@ button:focus-visible {
 
 /* Offer, vehicle, and compact servicing polish */
 .next-best-action {
-  grid-template-columns: 40px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px 12px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px 12px;
   margin: 0 0 18px;
-  padding: 13px 14px;
+  padding: 15px 16px;
   border: 1px solid #d8e5ef;
   background: #fff;
   box-shadow: 0 6px 18px rgba(18, 52, 91, .07);
@@ -4566,14 +4566,19 @@ button:focus-visible {
   background: #e6f2fb;
 }
 
+.next-best-action .eyebrow {
+  display: block;
+  line-height: 1.25;
+}
+
 .next-best-copy {
   min-width: 0;
 }
 
 .next-best-copy h2 {
-  margin: 1px 0 2px;
-  font-size: 15px;
-  line-height: 1.2;
+  margin: 3px 0 3px;
+  font-size: 16px;
+  line-height: 1.25;
 }
 
 .next-best-copy p {
@@ -4583,16 +4588,16 @@ button:focus-visible {
 
 .next-best-action > form,
 .next-best-action > .next-best-link {
-  grid-column: 3;
-  grid-row: 1;
-  margin: 0;
-  width: auto;
+  grid-column: 2;
+  grid-row: auto;
+  margin: 2px 0 0;
+  width: 100%;
 }
 
 .next-best-link {
-  justify-content: flex-end;
-  min-height: 32px;
-  padding: 5px 0;
+  justify-content: flex-start;
+  min-height: 24px;
+  padding: 2px 0;
   border-radius: 0;
   color: #2769b4;
   background: transparent;
