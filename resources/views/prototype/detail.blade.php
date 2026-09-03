@@ -83,7 +83,7 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
-<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260902settings-switches">
+<link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903prequal-flow">
 @endsection
 
 @section('content')
@@ -467,9 +467,15 @@ $pastLoanDocuments = [
                   </div>
                   @break
                 @case('confirm_information')
-                  <div class="review-row"><span>Name</span><strong>Jordan Davis</strong></div>
-                  <div class="review-row"><span>Mobile</span><strong>(864) 555-2194</strong></div>
-                  <div class="review-row"><span>Address</span><strong>Greenville, SC</strong></div>
+                  <div class="application-info-fields">
+                    <label><span>Full name</span><input class="form-control" type="text" name="full_name" value="{{ $scenario['customer']['first_name'] }} {{ $scenario['customer']['last_name'] ?? '' }}" form="application-advance-form"></label>
+                    <label><span>Mobile phone</span><input class="form-control" type="tel" name="mobile" value="(864) 555-2194" form="application-advance-form"></label>
+                    <label><span>Home address</span><input class="form-control" type="text" name="address" value="1450 Woodruff Rd, Greenville, SC 29607" form="application-advance-form"></label>
+                    <label><span>Employer</span><input class="form-control" type="text" name="employer" value="Regional Distribution Services" form="application-advance-form"></label>
+                  </div>
+                  @if($application['prequalified'] ?? false)
+                    <div class="application-trust-row soft-pull"><i class="ti ti-shield-check"></i><div><strong>Checking your rates will not impact your credit score</strong><span>We'll use a soft credit inquiry to show your available loan options.</span></div></div>
+                  @endif
                   @break
                 @case('credit_eligibility')
                   @if($application['prequalified'] ?? false)
@@ -481,9 +487,10 @@ $pastLoanDocuments = [
                   @endif
                   @break
                 @case('review_options')
-                  <label class="loan-option-choice selected"><input type="radio" name="loan-option" checked><span><strong>$3,500</strong><small>$168/mo &bull; 24 months &bull; 24.90% APR</small></span><em>Recommended</em></label>
-                  <label class="loan-option-choice"><input type="radio" name="loan-option"><span><strong>$2,500</strong><small>$126/mo &bull; 24 months &bull; 24.90% APR</small></span></label>
-                  <div class="application-option-note"><i class="ti ti-info-circle"></i>Choosing an option does not send funds yet.</div>
+                  <div class="loan-options-intro"><i class="ti ti-shield-check"></i><span><strong>Your rate check is complete</strong>These options were found with no impact to your credit score.</span></div>
+                  <label class="loan-option-choice selected"><input type="radio" name="loan-option" value="3500" checked form="application-advance-form"><span><small>Loan amount</small><strong>$3,500</strong><em>$168 monthly &bull; 24 months</em></span><span class="loan-option-rate"><small>APR</small><strong>24.90%</strong></span><b>Recommended</b></label>
+                  <label class="loan-option-choice"><input type="radio" name="loan-option" value="2500" form="application-advance-form"><span><small>Loan amount</small><strong>$2,500</strong><em>$126 monthly &bull; 24 months</em></span><span class="loan-option-rate"><small>APR</small><strong>24.90%</strong></span></label>
+                  <div class="application-option-note"><i class="ti ti-info-circle"></i>Selecting an option does not send funds. A hard credit inquiry is required before booking.</div>
                   @break
                 @case('verify_income')
                   <div class="application-choice selected"><i class="ti ti-building-bank"></i><div><strong>Connect your bank</strong><span>Securely verify recurring income.</span></div><i class="ti ti-check"></i></div>
@@ -507,7 +514,7 @@ $pastLoanDocuments = [
               @endswitch
             </article>
 
-            <form method="POST" action="{{ route('prototype.application.advance', $application['id'] ?? 62001) }}">
+            <form id="application-advance-form" method="POST" action="{{ route('prototype.application.advance', $application['id'] ?? 62001) }}">
               @csrf
               <button class="btn btn-primary w-100" type="submit">{{ $application['cta'] ?? 'Continue' }}</button>
             </form>

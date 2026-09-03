@@ -134,7 +134,7 @@ class PrototypeScenarioService
 
         return $this->update($request, ['origination' => [
             'active' => true,
-            'step' => 'application_started',
+            'step' => $journey === 'prequalified' ? 'confirm_information' : 'application_started',
             'journey' => $journey,
             'selected_offer' => null,
             'outcome' => null,
@@ -146,10 +146,9 @@ class PrototypeScenarioService
     {
         $state = $this->state($request);
         $current = $state['origination']['step'] ?? self::ORIGINATION_STEPS[0];
-        $steps = self::ORIGINATION_STEPS;
-        if (($state['origination']['journey'] ?? 'standard') === 'prequalified') {
-            $steps = array_values(array_filter($steps, fn (string $step) => $step !== 'verify_income'));
-        }
+        $steps = ($state['origination']['journey'] ?? 'standard') === 'prequalified'
+            ? ['confirm_information', 'review_options', 'credit_eligibility', 'funding_destination', 'sign_documents', 'complete']
+            : self::ORIGINATION_STEPS;
         $index = array_search($current, $steps, true);
         $index = $index === false ? 0 : $index;
         $index = max(0, min(count($steps) - 1, $index + $direction));
@@ -483,9 +482,9 @@ class PrototypeScenarioService
         $prequalified = ($origination['journey'] ?? 'standard') === 'prequalified';
         $steps = [
             'application_started' => [8, 1, 'Explore', $prequalified ? 'Your pre-qualified option is ready' : 'A personal loan for what comes next', $prequalified ? 'Review your pre-qualified path and continue when you are ready.' : 'See loan options with a quick, guided application.', 'Continue'],
-            'confirm_information' => [20, 1, 'About you', 'Confirm your information', 'Review your contact and personal details.', 'Confirm and continue'],
-            'credit_eligibility' => [35, 2, 'Credit review', $prequalified ? 'Complete your application' : 'Check your eligibility', $prequalified ? 'Authorize the credit review required to complete your selected application.' : 'See whether you pre-qualify without impacting your credit score.', $prequalified ? 'Authorize and continue' : 'Check eligibility'],
-            'review_options' => [52, 3, 'Your options', 'Your loan options are ready', 'Choose the amount and payment that work best for you.', 'Choose this option'],
+            'confirm_information' => [$prequalified ? 16 : 20, 1, 'About you', 'Confirm your information', $prequalified ? 'Review and update your details before checking your rates.' : 'Review your contact and personal details.', 'Confirm and continue'],
+            'credit_eligibility' => [$prequalified ? 52 : 35, $prequalified ? 3 : 2, 'Credit review', $prequalified ? 'Complete your application' : 'Check your eligibility', $prequalified ? 'Authorize the credit review required to book your selected loan.' : 'See whether you pre-qualify without impacting your credit score.', $prequalified ? 'Authorize and continue' : 'Check eligibility'],
+            'review_options' => [$prequalified ? 34 : 52, $prequalified ? 2 : 3, 'Your options', $prequalified ? 'Your loan options' : 'Your loan options are ready', 'Choose the amount and payment that work best for you.', 'Choose this option'],
             'verify_income' => [64, 3, 'Income', 'Verify your income', 'One quick verification helps us finalize your selected option.', 'Verify income'],
             'funding_destination' => [76, 4, 'Funding', 'Where should we send your funds?', 'Choose or add the account that will receive your loan proceeds.', 'Use this account'],
             'sign_documents' => [88, 4, 'E-sign', 'Review and sign', 'Review your final loan documents and provide your electronic signature.', 'Sign and finish'],

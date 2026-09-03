@@ -319,15 +319,31 @@ class PrototypeStateFlowTest extends TestCase
         $this->post('/prototype/presets/prequalified-renewal')->assertRedirect('/');
         $this->post('/applications/start')->assertRedirect('/applications/62001');
 
+        $this->get('/applications/62001')
+            ->assertSee('Confirm your information')
+            ->assertSee('name="address"', false)
+            ->assertSee('name="employer"', false)
+            ->assertSee('Checking your rates will not impact your credit score')
+            ->assertSee('soft credit inquiry')
+            ->assertDontSee('Personal loans up to');
+
         $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
+        $this->get('/applications/62001')
+            ->assertSee('Your loan options')
+            ->assertSee('Your rate check is complete')
+            ->assertSee('$3,500')
+            ->assertSee('$2,500');
+
+        $this->get('/')
+            ->assertSee('Your loan options')
+            ->assertSee('Choose this option');
+
         $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
         $this->get('/applications/62001')
             ->assertSee('hard credit inquiry')
             ->assertSee('complete this application');
 
         $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-
         $this->get('/applications/62001')
             ->assertSee('Where should we send your funds?')
             ->assertDontSee('Verify your income');

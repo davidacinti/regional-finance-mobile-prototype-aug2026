@@ -2232,6 +2232,122 @@
   outline-offset: 2px;
 }
 
+/* Prequalified renewal: confirm, soft pull, options, then hard pull */
+.application-info-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.application-info-fields label {
+  display: grid;
+  gap: 6px;
+}
+
+.application-info-fields label > span {
+  color: #52677e;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.application-info-fields .form-control {
+  min-height: 44px;
+  border-color: #cbdbe8;
+  border-radius: 8px;
+  color: #12345b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.application-trust-row.soft-pull,
+.loan-options-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #d9e59a;
+  border-radius: 8px;
+  color: #526716;
+  background: #f7f9dc;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.application-trust-row.soft-pull > i,
+.loan-options-intro > i {
+  flex: 0 0 auto;
+  color: #55720e;
+  font-size: 20px;
+}
+
+.application-trust-row.soft-pull strong,
+.loan-options-intro strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #28470e;
+  font-size: 12px;
+}
+
+.loan-options-intro {
+  margin: 0 0 12px;
+}
+
+.loan-option-choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  min-height: 96px;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.loan-option-choice input {
+  width: 17px;
+  height: 17px;
+  accent-color: #377fc9;
+}
+
+.loan-option-choice > span > small,
+.loan-option-rate small {
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.loan-option-choice > span > strong {
+  font-size: 21px;
+  line-height: 1.1;
+}
+
+.loan-option-choice > span > em {
+  margin: 5px 0 0;
+  color: #687c90;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.loan-option-rate {
+  align-self: center;
+  text-align: right;
+}
+
+.loan-option-rate strong {
+  font-size: 14px;
+}
+
+.loan-option-choice > b {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: #2f7850;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.loan-option-choice.selected .loan-option-rate {
+  margin-top: 14px;
+}
+
 .wellness-score-ring {
   width: 86px;
   height: 86px;
