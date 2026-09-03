@@ -328,7 +328,7 @@ class PrototypeStateFlowTest extends TestCase
             ->assertSee('name="address"', false)
             ->assertSee('1450 Woodruff Rd, Greenville, SC 29607')
             ->assertSee('name="employer"', false)
-            ->assertSee('Carolina Logistics')
+            ->assertSee('Regional Finance')
             ->assertSee('name="income"', false)
             ->assertSee('$4,850')
             ->assertSee('Checking your rates will not impact your credit score')

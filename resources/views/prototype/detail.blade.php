@@ -474,7 +474,7 @@ $pastLoanDocuments = [
                       <p><i class="ti ti-lock"></i><span>To update either, call <a href="tel:8645550148">Greenville Branch</a>.</span></p>
                     </div>
                     <label><span>Home address</span><input class="form-control" type="text" name="address" value="1450 Woodruff Rd, Greenville, SC 29607" form="application-advance-form"></label>
-                    <label><span>Current employer</span><input class="form-control" type="text" name="employer" value="Carolina Logistics" form="application-advance-form"></label>
+                    <label><span>Current employer</span><input class="form-control" type="text" name="employer" value="Regional Finance" form="application-advance-form"></label>
                     <label><span>Monthly net income</span><input class="form-control" type="text" inputmode="decimal" name="income" value="$4,850" form="application-advance-form"></label>
                   </div>
                   @if($application['prequalified'] ?? false)
@@ -801,13 +801,13 @@ $pastLoanDocuments = [
               </div>
               <div class="profile-read-list" data-profile-read-panel>
                 <div><span>Employment status</span><strong data-profile-value="employment">Employed full time</strong></div>
-                <div><span>Current employer</span><strong data-profile-value="employer">Carolina Logistics</strong></div>
+                <div><span>Current employer</span><strong data-profile-value="employer">Regional Finance</strong></div>
                 <div><span>Monthly net income</span><strong data-profile-value="income">$4,850</strong></div>
                 <div><span>Pay frequency</span><strong data-profile-value="frequency">Biweekly</strong></div>
               </div>
               <form class="profile-edit-panel" data-profile-edit-panel hidden>
                 <label>Employment status<select data-profile-input="employment"><option selected>Employed full time</option><option>Employed part time</option><option>Self employed</option><option>Retired</option></select></label>
-                <label>Current employer<input data-profile-input="employer" type="text" value="Carolina Logistics"></label>
+                <label>Current employer<input data-profile-input="employer" type="text" value="Regional Finance"></label>
                 <label>Monthly net income<input data-profile-input="income" type="text" value="$4,850"></label>
                 <label>Pay frequency<select data-profile-input="frequency"><option selected>Biweekly</option><option>Weekly</option><option>Monthly</option></select></label>
                 <div class="profile-edit-actions">
