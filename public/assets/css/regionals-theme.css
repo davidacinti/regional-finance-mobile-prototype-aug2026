@@ -33,6 +33,17 @@ html {
   background-color: #ffffff !important;
 }
 
+html.prototype-app-root,
+body.prototype-app-body,
+body.prototype-app-body #app,
+body.prototype-app-body #root {
+  width: 100%;
+  max-width: none;
+  min-height: 100%;
+  margin: 0;
+  background: #ffffff !important;
+}
+
 html,
 body,
 button,
@@ -52,7 +63,7 @@ body {
 }
 
 /* Keep the iOS status-bar and Dynamic Island safe area opaque. */
-body::before {
+body.prototype-app-body::before {
   position: fixed;
   z-index: 2147483647;
   top: 0;
@@ -552,4 +563,87 @@ button.btn-link:focus,
 a.btn-link:hover,
 a.btn-link:focus {
   color: #356da8;
+}
+
+/* Full-width application shell on phones and small touch-screen layouts. */
+@media (max-width: 991.98px) {
+  body.prototype-app-body {
+    --rf-mobile-gutter-left: max(18px, env(safe-area-inset-left, 0px));
+    --rf-mobile-gutter-right: max(18px, env(safe-area-inset-right, 0px));
+    --rf-safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    overflow-x: hidden;
+    background: #ffffff !important;
+  }
+
+  body.prototype-app-body .layout-wrapper,
+  body.prototype-app-body .layout-container,
+  body.prototype-app-body .layout-page,
+  body.prototype-app-body .content-wrapper,
+  body.prototype-app-body .content-wrapper > .container,
+  body.prototype-app-body .content-wrapper > .container-fluid,
+  body.prototype-app-body .content-wrapper > .container-xxl,
+  body.prototype-app-body .prototype-shell {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  body.prototype-app-body .prototype-shell {
+    display: block;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  body.prototype-app-body .phone-frame {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin: 0 !important;
+    padding-top: calc(18px + var(--rf-safe-area-top));
+    padding-right: var(--rf-mobile-gutter-right);
+    padding-bottom: calc(88px + var(--rf-safe-area-bottom));
+    padding-left: var(--rf-mobile-gutter-left);
+    border: 0;
+    border-radius: 0;
+    background: #ffffff !important;
+    box-shadow: none;
+  }
+
+  body.prototype-app-body .top-navbar,
+  body.prototype-app-body .lite-regional-header {
+    width: auto;
+    margin-right: calc(0px - var(--rf-mobile-gutter-right));
+    margin-left: calc(0px - var(--rf-mobile-gutter-left));
+    padding-right: var(--rf-mobile-gutter-right);
+    padding-left: var(--rf-mobile-gutter-left);
+    background: #ffffff !important;
+  }
+
+  body.prototype-app-body .side-menu {
+    padding-top: calc(18px + var(--rf-safe-area-top));
+    background: #ffffff !important;
+  }
+
+  body.prototype-app-body .phone-frame .app-card,
+  body.prototype-app-body .phone-frame .detail-card,
+  body.prototype-app-body .phone-frame .payment-form-card {
+    width: 100%;
+    max-width: none;
+  }
+
+  body.prototype-app-body .bottom-nav {
+    width: auto !important;
+    min-height: calc(68px + var(--rf-safe-area-bottom));
+    margin-right: calc(0px - var(--rf-mobile-gutter-right)) !important;
+    margin-bottom: calc(-88px - var(--rf-safe-area-bottom)) !important;
+    margin-left: calc(0px - var(--rf-mobile-gutter-left)) !important;
+    padding-right: var(--rf-mobile-gutter-right);
+    padding-bottom: calc(10px + var(--rf-safe-area-bottom));
+    padding-left: var(--rf-mobile-gutter-left);
+    background: #ffffff !important;
+  }
 }

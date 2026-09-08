@@ -4,6 +4,7 @@ $footerView = 'layouts/sections/footer/footer-empty';
 $isMenu = false;
 $isNavbar = false;
 $isFooter = false;
+$prototypeMobileApp = true;
 $loans = $scenario['loans'] ?? [];
 $application = $scenario['application'] ?? null;
 $offer = $scenario['offer'] ?? null;

@@ -5,6 +5,7 @@ $isMenu = false;
 $isNavbar = false;
 $isFooter = false;
 $customizerHidden = 'customizer-hide';
+$prototypeMobileApp = true;
 $application = $scenario['application'];
 $stage = $application['step'];
 $branch = $scenario['branch'];
