@@ -893,6 +893,68 @@ a:focus-visible,
   letter-spacing: .055em;
 }
 
+.loan-activity-card button.activity-row {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.loan-activity-card .activity-row > i {
+  transition: transform 180ms ease;
+}
+
+.loan-activity-card .activity-row[aria-expanded="true"] > i {
+  transform: rotate(180deg);
+}
+
+.activity-payment-details {
+  padding: 4px 18px 18px;
+  border-bottom: 1px solid #dce6ef;
+  background: #f8fbfe;
+}
+
+.activity-payment-details[hidden] {
+  display: none;
+}
+
+.activity-payment-details dl {
+  margin: 0;
+}
+
+.activity-payment-details dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e3ebf2;
+}
+
+.activity-payment-details dt {
+  color: #5b6878;
+  font-weight: 600;
+}
+
+.activity-payment-details dd {
+  margin: 0;
+  color: #202a36;
+  font-weight: 700;
+  text-align: right;
+}
+
+.activity-report-link {
+  display: block;
+  margin-top: 14px;
+  color: var(--brand-blue);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.activity-report-link span {
+  color: #5b6878;
+  font-weight: 500;
+}
+
 /* Keep detail pages open and calm; their content sections provide the grouping. */
 .detail-card:has(> .offers-page),
 .detail-card:has(> .wellness-page),

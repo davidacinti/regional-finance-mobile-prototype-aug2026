@@ -85,7 +85,7 @@ $pastLoanDocuments = [
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903profile-otp">
-<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260908-activity-dates">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260908-payment-details">
 @endsection
 
 @section('content')
@@ -130,10 +130,10 @@ $pastLoanDocuments = [
         $payoffAmount = ($loan['balance'] ?? 0) + 42.18;
         $loanPendingPayment = ($scheduledPayment['loan_id'] ?? null) === ($loan['id'] ?? null) ? $scheduledPayment : null;
         $activityRows = [
-          ['date' => '2026-07-21', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => $loan['balance']],
-          ['date' => '2026-06-17', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 469.10],
-          ['date' => '2026-05-28', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 948.70],
-          ['date' => '2026-04-30', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => 200, 'balance' => ($loan['balance'] ?? 0) + 1389.76],
+          ['date' => '2026-07-21', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => $loan['balance'], 'interest' => 98.42, 'confirmation' => 'RF672184'],
+          ['date' => '2026-06-17', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 469.10, 'interest' => 101.27, 'confirmation' => 'RF659704'],
+          ['date' => '2026-05-28', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => $loan['next_payment_amount'], 'balance' => ($loan['balance'] ?? 0) + 948.70, 'interest' => 104.18, 'confirmation' => 'RF641935'],
+          ['date' => '2026-04-30', 'title' => 'One-time payment', 'source' => 'From Primary Checking - 4203', 'amount' => 200, 'balance' => ($loan['balance'] ?? 0) + 1389.76, 'interest' => 96.54, 'confirmation' => 'RF628410'],
         ];
       @endphp
 
@@ -232,7 +232,10 @@ $pastLoanDocuments = [
           <div class="activity-list" data-activity-panel="recent">
             @foreach($activityRows as $activity)
               <div class="activity-date">{{ strtoupper(\Carbon\Carbon::parse($activity['date'])->format('F j, Y')) }}</div>
-              <div class="activity-row">
+              @php
+                $activityPanelId = 'payment-details-' . $loop->iteration;
+              @endphp
+              <button type="button" class="activity-row" data-payment-toggle aria-expanded="false" aria-controls="{{ $activityPanelId }}">
                 <div>
                   <strong>{{ $activity['title'] }}</strong>
                   <span>{{ $activity['source'] }}</span>
@@ -242,6 +245,17 @@ $pastLoanDocuments = [
                   <span>{{ $money($activity['balance']) }}</span>
                 </div>
                 <i class="ti ti-chevron-down"></i>
+              </button>
+              <div class="activity-payment-details" id="{{ $activityPanelId }}" hidden>
+                <dl>
+                  <div><dt>Date posted</dt><dd>{{ \Carbon\Carbon::parse($activity['date'])->format('M j, Y') }}</dd></div>
+                  <div><dt>Interest paid</dt><dd>{{ $money($activity['interest']) }}</dd></div>
+                  <div><dt>Principal paid</dt><dd>{{ $money($activity['amount'] - $activity['interest']) }}</dd></div>
+                  <div><dt>Confirmation #</dt><dd>{{ $activity['confirmation'] }}</dd></div>
+                </dl>
+                <a class="activity-report-link" href="tel:{{ preg_replace('/[^0-9]/', '', $branch['phone'] ?? '8645550148') }}">
+                  <span>Report an issue?</span> Call branch {{ $branch['phone'] ?? '(864) 555-0148' }}
+                </a>
               </div>
             @endforeach
           </div>
@@ -1152,5 +1166,5 @@ $pastLoanDocuments = [
 @if($type === 'support')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 @endif
-<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260903profile-otp"></script>
+<script src="{{ asset('assets/js/prototype-mobile.js') }}?v=20260908-payment-details"></script>
 @endsection

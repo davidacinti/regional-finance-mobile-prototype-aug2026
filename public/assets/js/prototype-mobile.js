@@ -335,6 +335,16 @@
         });
       });
     });
+
+    activity.querySelectorAll('[data-payment-toggle]').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const details = document.getElementById(toggle.getAttribute('aria-controls'));
+        const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
+
+        toggle.setAttribute('aria-expanded', String(willOpen));
+        if (details) details.hidden = !willOpen;
+      });
+    });
   });
 
   const showPrototypeAlert = ({ title, text, icon = 'ti-circle-check', confirmText = 'OK', showCancel = false, cancelText = 'Not now' }) => {
