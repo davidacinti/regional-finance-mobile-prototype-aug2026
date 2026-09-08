@@ -883,6 +883,16 @@ a:focus-visible,
   display: none;
 }
 
+.loan-activity-card .activity-date {
+  padding: 10px 18px;
+  color: #315f8e;
+  background: #eef5fb;
+  box-shadow: inset 3px 0 0 #78a9dc;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .055em;
+}
+
 /* Keep detail pages open and calm; their content sections provide the grouping. */
 .detail-card:has(> .offers-page),
 .detail-card:has(> .wellness-page),

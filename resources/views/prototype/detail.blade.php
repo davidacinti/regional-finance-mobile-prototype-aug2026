@@ -85,7 +85,7 @@ $pastLoanDocuments = [
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903profile-otp">
-<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260904m">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260908-activity-dates">
 @endsection
 
 @section('content')

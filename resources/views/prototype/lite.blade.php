@@ -27,7 +27,7 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
 
 @section('page-style')
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260902origination-lite">
-<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260904m">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260908-activity-dates">
 @endsection
 
 @section('content')
