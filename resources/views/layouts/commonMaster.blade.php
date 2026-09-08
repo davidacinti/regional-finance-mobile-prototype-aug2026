@@ -13,13 +13,14 @@ $documentTitle = $pageTitle && $pageTitle !== $productName ? $pageTitle . ' | ' 
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
 
   <title>{{ $documentTitle }}</title>
   <meta name="description" content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
   <meta name="keywords" content="{{ config('variables.templateKeyword') ? config('variables.templateKeyword') : '' }}">
   <meta name="application-name" content="{{ $productName }}">
-  <meta name="theme-color" content="#0d2240">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{ $productName }}">
   <meta property="og:title" content="{{ $documentTitle }}">

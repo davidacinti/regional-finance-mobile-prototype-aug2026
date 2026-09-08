@@ -1,4 +1,5 @@
 :root {
+  --rf-safe-area-top: env(safe-area-inset-top, 0px);
   --regionals-navy: #0d2240;
   --regionals-blue: #2a71d4;
   --regionals-lime: #cdd929;
@@ -29,6 +30,7 @@ html {
   --bs-primary-rgb: 42, 113, 212;
   --bs-link-color: var(--regionals-blue);
   --bs-link-hover-color: #205fb6;
+  background-color: #ffffff !important;
 }
 
 html,
@@ -47,6 +49,19 @@ body {
   line-height: 1.55;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Keep the iOS status-bar and Dynamic Island safe area opaque. */
+body::before {
+  position: fixed;
+  z-index: 2147483647;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--rf-safe-area-top);
+  background: #ffffff;
+  content: "";
+  pointer-events: none;
 }
 
 h1,
