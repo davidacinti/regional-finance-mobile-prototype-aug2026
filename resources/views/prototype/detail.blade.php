@@ -450,7 +450,7 @@ $pastLoanDocuments = [
         @case('application')
           @php
             $application = $scenario['application'] ?? [];
-            $step = $application['step'] ?? 'application_started';
+            $step = $application['step'] ?? 'confirm_information';
             $applicationIcon = match($step) {
               'verify_identity' => 'ti-id',
               'credit_eligibility' => 'ti-shield-check',
@@ -478,13 +478,6 @@ $pastLoanDocuments = [
 
             <article class="app-card application-step-card">
               @switch($step)
-                @case('application_started')
-                  <div class="application-marketing-card {{ ($application['prequalified'] ?? false) ? 'is-prequalified' : '' }}">
-                    <div class="application-marketing-amount"><span>Personal loans up to</span><strong>$25,000</strong></div>
-                    <p>{{ ($application['prequalified'] ?? false) ? 'You already have a pre-qualified path. Confirm your information to continue.' : 'A simple application, clear options, and support from your local branch.' }}</p>
-                    <div class="application-benefits"><span><i class="ti ti-clock"></i>Fast guided process</span><span><i class="ti ti-shield-check"></i>{{ ($application['prequalified'] ?? false) ? 'Pre-qualified' : 'Soft check to start' }}</span></div>
-                  </div>
-                  @break
                 @case('confirm_information')
                   <div class="application-info-fields">
                     <div class="application-locked-field">
@@ -542,7 +535,7 @@ $pastLoanDocuments = [
               <button class="btn btn-primary w-100" type="submit">{{ $application['cta'] ?? 'Continue' }}</button>
             </form>
             <div class="application-secondary-actions">
-              @if($step !== 'application_started' && $step !== 'complete')
+              @if($step !== 'confirm_information' && $step !== 'complete')
                 <form method="POST" action="{{ route('prototype.application.previous', $application['id'] ?? 62001) }}">@csrf<button type="submit"><i class="ti ti-arrow-left"></i>Back</button></form>
               @endif
               @if($step !== 'complete')

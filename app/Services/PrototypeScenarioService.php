@@ -12,11 +12,9 @@ class PrototypeScenarioService
     private const SESSION_KEY = 'prototype_app_state';
 
     private const ORIGINATION_STEPS = [
-        'application_started',
         'confirm_information',
-        'credit_eligibility',
         'review_options',
-        'verify_income',
+        'credit_eligibility',
         'funding_destination',
         'sign_documents',
         'complete',
@@ -100,7 +98,7 @@ class PrototypeScenarioService
             'application-progress' => [
                 'loans' => ['count' => 0],
                 'offer' => ['type' => 'none'],
-                'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'standard', 'last_updated' => now()->toIso8601String()],
+                'origination' => ['active' => true, 'step' => 'confirm_information', 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
                 'vehicles' => ['count' => 0],
                 'wellness' => [
                     'credit_monitoring_enabled' => false,
@@ -115,7 +113,7 @@ class PrototypeScenarioService
                 'loans' => ['count' => 0],
                 'products' => ['savings' => false, 'credit_card' => false],
                 'offer' => ['type' => 'none'],
-                'origination' => ['active' => true, 'step' => 'application_started', 'journey' => 'standard', 'last_updated' => now()->toIso8601String()],
+                'origination' => ['active' => true, 'step' => 'confirm_information', 'journey' => 'prequalified', 'last_updated' => now()->toIso8601String()],
                 'lite' => ['stage' => 'lendingtree_offer', 'prequalified_amount' => 8500, 'password_created' => false, 'graduated' => false, 'income_document' => null, 'vehicle_photos' => [], 'appointment' => null],
                 'vehicles' => ['count' => 0],
                 'wellness' => ['credit_monitoring_enabled' => false, 'bank_connected' => false, 'high_utilization' => false, 'budget_warning' => false],
@@ -130,12 +128,10 @@ class PrototypeScenarioService
     public function startApplication(Request $request): array
     {
         $state = $this->state($request);
-        $journey = ($state['offer']['type'] ?? null) === 'prequalified_renewal' ? 'prequalified' : 'standard';
-
         return $this->update($request, ['origination' => [
             'active' => true,
-            'step' => $journey === 'prequalified' ? 'confirm_information' : 'application_started',
-            'journey' => $journey,
+            'step' => 'confirm_information',
+            'journey' => 'prequalified',
             'selected_offer' => null,
             'outcome' => null,
             'last_updated' => now()->toIso8601String(),
@@ -146,9 +142,7 @@ class PrototypeScenarioService
     {
         $state = $this->state($request);
         $current = $state['origination']['step'] ?? self::ORIGINATION_STEPS[0];
-        $steps = ($state['origination']['journey'] ?? 'standard') === 'prequalified'
-            ? ['confirm_information', 'review_options', 'credit_eligibility', 'funding_destination', 'sign_documents', 'complete']
-            : self::ORIGINATION_STEPS;
+        $steps = self::ORIGINATION_STEPS;
         $index = array_search($current, $steps, true);
         $index = $index === false ? 0 : $index;
         $index = max(0, min(count($steps) - 1, $index + $direction));
@@ -267,9 +261,15 @@ class PrototypeScenarioService
         $state['offer']['type'] = $this->allowed($state['offer']['type'], array_keys($this->builderOptions()['offer_types']), 'none');
         $state['origination']['active'] = filter_var($state['origination']['active'], FILTER_VALIDATE_BOOL);
         $state['origination']['journey'] = $this->allowed($state['origination']['journey'], ['standard', 'prequalified'], 'standard');
+        if (($state['origination']['step'] ?? null) === 'application_started') {
+            $state['origination']['step'] = 'confirm_information';
+        }
         $state['origination']['step'] = $state['origination']['active']
-            ? $this->allowed($state['origination']['step'], self::ORIGINATION_STEPS, 'application_started')
+            ? $this->allowed($state['origination']['step'], self::ORIGINATION_STEPS, 'confirm_information')
             : null;
+        if ($state['origination']['active'] && $state['experience']['mode'] === 'full') {
+            $state['origination']['journey'] = 'prequalified';
+        }
         $state['wellness']['credit_score'] = max(300, min(850, (int) $state['wellness']['credit_score']));
         $state['wellness']['credit_score_change'] = $this->allowed($state['wellness']['credit_score_change'], ['decrease', 'none', 'increase'], 'increase');
         $state['wellness']['cash_flow'] = $this->allowed($state['wellness']['cash_flow'], ['low', 'normal', 'strong'], 'normal');
@@ -292,7 +292,7 @@ class PrototypeScenarioService
             $state['products'] = ['savings' => false, 'credit_card' => false];
             $state['offer']['type'] = 'none';
             $state['origination']['active'] = true;
-            $state['origination']['step'] = 'application_started';
+            $state['origination']['step'] = 'confirm_information';
             $state['origination']['journey'] = 'standard';
             $state['wellness']['credit_monitoring_enabled'] = false;
             $state['wellness']['bank_connected'] = false;
@@ -481,7 +481,6 @@ class PrototypeScenarioService
     {
         $prequalified = ($origination['journey'] ?? 'standard') === 'prequalified';
         $steps = [
-            'application_started' => [8, 1, 'Explore', $prequalified ? 'Your pre-qualified option is ready' : 'A personal loan for what comes next', $prequalified ? 'Review your pre-qualified path and continue when you are ready.' : 'See loan options with a quick, guided application.', 'Continue'],
             'confirm_information' => [$prequalified ? 16 : 20, 1, 'About you', 'Confirm your information', $prequalified ? 'Review and update your details before checking your rates.' : 'Review your contact and personal details.', 'Confirm and continue'],
             'credit_eligibility' => [$prequalified ? 52 : 35, $prequalified ? 3 : 2, 'Credit review', $prequalified ? 'Complete your application' : 'Check your eligibility', $prequalified ? 'Authorize the credit review required to book your selected loan.' : 'See whether you pre-qualify without impacting your credit score.', $prequalified ? 'Authorize and continue' : 'Check eligibility'],
             'review_options' => [$prequalified ? 34 : 52, $prequalified ? 2 : 3, 'Your options', $prequalified ? 'Your loan options' : 'Your loan options are ready', 'Choose the amount and payment that work best for you.', 'Choose this option'],
@@ -490,8 +489,8 @@ class PrototypeScenarioService
             'sign_documents' => [88, 4, 'E-sign', 'Review and sign', 'Review your final loan documents and provide your electronic signature.', 'Sign and finish'],
             'complete' => [100, 5, 'Complete', 'You\'re good to go', 'Your loan is approved and pending funding.', 'Return home'],
         ];
-        $step = $origination['step'] ?? 'application_started';
-        [$percent, $phase, $phaseLabel, $headline, $summary, $cta] = $steps[$step] ?? $steps['application_started'];
+        $step = $origination['step'] ?? 'confirm_information';
+        [$percent, $phase, $phaseLabel, $headline, $summary, $cta] = $steps[$step] ?? $steps['confirm_information'];
 
         return [
             'id' => 62001, 'status' => $step === 'complete' ? 'pending_funding' : 'in_progress', 'step' => $step,

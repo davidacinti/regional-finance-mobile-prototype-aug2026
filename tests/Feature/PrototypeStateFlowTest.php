@@ -185,7 +185,7 @@ class PrototypeStateFlowTest extends TestCase
         $this->postJson('/prototype/presets/application-progress')
             ->assertOk()
             ->assertJsonPath('state.meta.preset', 'application-progress')
-            ->assertJsonPath('state.origination.step', 'application_started');
+            ->assertJsonPath('state.origination.step', 'confirm_information');
 
         $this->postJson('/prototype/state', [
             'loans' => ['count' => 0, 'payment_status' => 'current'],
@@ -279,26 +279,21 @@ class PrototypeStateFlowTest extends TestCase
             ->assertDontSee('pending-payment-dashboard', false);
     }
 
-    public function test_standard_application_progresses_to_pending_funding(): void
+    public function test_application_uses_the_unified_prequalified_origination_flow(): void
     {
         $this->post('/prototype/presets/application-progress')->assertRedirect('/');
 
         $this->get('/applications/62001')
             ->assertOk()
-            ->assertSee('Personal loans up to')
-            ->assertSee('$25,000');
+            ->assertSee('Confirm your information')
+            ->assertSee('Checking your rates will not impact your credit score')
+            ->assertDontSee('Personal loans up to');
 
         $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-        $this->get('/applications/62001')->assertSee('Confirm your information');
+        $this->get('/applications/62001')->assertSee('Your loan options');
 
         $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-        $this->get('/applications/62001')->assertSee('Pre-qualify with no score impact');
-
-        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-        $this->get('/')->assertSee('Your loan options are ready');
-
-        $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
-        $this->get('/applications/62001')->assertSee('Verify your income');
+        $this->get('/applications/62001')->assertSee('hard credit inquiry');
 
         foreach (['Where should we send your funds?', 'Review and sign', "You're good to go"] as $headline) {
             $this->post('/applications/62001/advance')->assertRedirect('/applications/62001');
