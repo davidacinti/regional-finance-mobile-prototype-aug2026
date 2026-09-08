@@ -70,7 +70,7 @@ $highlightCards[] = [
 
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Regional Finance Mobile Prototype')
+@section('title', 'Regional Finance Mobile App Prototype')
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">

@@ -1,10 +1,12 @@
 {
-  "name": "laravel/laravel",
+  "name": "regional-finance/mobile-app-prototype",
   "type": "project",
-  "description": "The skeleton application for the Laravel framework.",
+  "description": "Regional Finance mobile app prototype.",
   "keywords": [
-    "laravel",
-    "framework"
+    "regional-finance",
+    "mobile-app",
+    "prototype",
+    "laravel"
   ],
   "license": "MIT",
   "require": {

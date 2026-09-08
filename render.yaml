@@ -6,7 +6,7 @@ services:
     healthCheckPath: /
     envVars:
       - key: APP_NAME
-        value: Regional Finance Mobile Prototype
+        value: Regional Finance Mobile App Prototype
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
