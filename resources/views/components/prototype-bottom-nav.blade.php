@@ -52,7 +52,7 @@
 
 <nav class="bottom-nav" aria-label="Mobile app navigation" style="--bottom-nav-items: {{ count($items) }}">
   @foreach($items as $item)
-    <a class="{{ $item['active'] ? 'active' : '' }}" href="{{ $item['url'] }}" data-nav-item="{{ $item['key'] }}">
+    <a class="{{ $item['active'] ? 'active' : '' }}" href="{{ $item['url'] }}" data-nav-item="{{ $item['key'] }}" @if($item['active']) aria-current="page" @endif>
       <i class="ti {{ $item['icon'] }}"></i><span>{{ $item['label'] }}</span>
     </a>
   @endforeach

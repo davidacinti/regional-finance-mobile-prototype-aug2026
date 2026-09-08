@@ -16,9 +16,9 @@ return [
 
     'myRTLMode' => false,
 
-    'hasCustomizer' => true,
+    'hasCustomizer' => false,
 
-    'displayCustomizer' => true,
+    'displayCustomizer' => false,
 
     'contentLayout' => 'compact', // Options: compact, wide
 
@@ -34,14 +34,6 @@ return [
 
     'showDropdownOnHover' => true,
 
-    'customizerControls' => [
-      'rtl',
-      'style',
-      'headerType',
-      'contentLayout',
-      'layoutCollapsed',
-      'layoutNavbarOptions',
-      'themes',
-    ],
+    'customizerControls' => [],
   ],
 ];

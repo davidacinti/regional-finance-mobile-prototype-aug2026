@@ -3,6 +3,7 @@ services:
     name: regional-finance-mobile-prototype-aug2026
     runtime: docker
     plan: free
+    healthCheckPath: /
     envVars:
       - key: APP_NAME
         value: Regional Finance Mobile Prototype

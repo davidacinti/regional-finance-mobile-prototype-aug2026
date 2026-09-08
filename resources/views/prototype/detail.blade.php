@@ -84,6 +84,7 @@ $pastLoanDocuments = [
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 @endif
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903profile-otp">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260904m">
 @endsection
 
 @section('content')
@@ -93,7 +94,7 @@ $pastLoanDocuments = [
       <nav class="top-navbar" aria-label="App actions">
         <a class="top-nav-btn" href="{{ route('prototype.index') }}" aria-label="Go back" data-back-button><i class="ti ti-arrow-left"></i></a>
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance home">
-          <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
+          <img class="regional-logo rf-header-logo" src="{{ asset('assets/img/branding/rf-logo-header.svg') }}" alt="Regional Finance" width="102" height="26">
         </a>
       </nav>
     </header>
@@ -333,7 +334,7 @@ $pastLoanDocuments = [
           >
             <div class="payment-hero">
               <span class="eyebrow">Personal loan - {{ substr((string) ($loan['id'] ?? '5831'), -4) }}</span>
-              <h2>{{ $money($amountDue) }} due {{ $dateLong($loan['next_payment_date']) }}</h2>
+              <h2><strong>{{ $money($amountDue) }}</strong><span>Due {{ $dateLong($loan['next_payment_date']) }}</span></h2>
             </div>
 
             @if($scheduledPayment)
@@ -365,8 +366,11 @@ $pastLoanDocuments = [
                 @csrf
                 <article class="payment-entry-card">
                   <label class="payment-amount-field" for="payment-amount">
-                    <input id="payment-amount" name="amount" type="number" min="0.01" step="0.01" value="{{ number_format((float) $amountDue, 2, '.', '') }}" inputmode="decimal" required>
-                    <span>Enter an amount</span>
+                    <span class="payment-field-label">Payment amount</span>
+                    <span class="payment-amount-control">
+                      <span class="payment-currency" aria-hidden="true">$</span>
+                      <input id="payment-amount" name="amount" type="number" min="0.01" step="0.01" value="{{ number_format((float) $amountDue, 2, '.', '') }}" inputmode="decimal" aria-label="Payment amount" required>
+                    </span>
                   </label>
 
                   <div class="payment-inline-warning" data-minimum-warning hidden>

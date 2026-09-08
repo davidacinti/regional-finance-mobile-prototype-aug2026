@@ -75,6 +75,7 @@ $highlightCards[] = [
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260903banner-layout">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260904m">
 @endsection
 
 @section('content')
@@ -93,7 +94,7 @@ $highlightCards[] = [
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance home">
-          <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
+          <img class="regional-logo rf-header-logo" src="{{ asset('assets/img/branding/rf-logo-header.svg') }}" alt="Regional Finance" width="102" height="26">
         </a>
       </nav>
       <div class="brand-block">
@@ -104,7 +105,7 @@ $highlightCards[] = [
     <div class="side-menu-backdrop" hidden data-menu-close></div>
     <aside class="side-menu" id="mobile-side-menu" aria-label="Account menu" aria-hidden="true">
       <div class="side-menu-header">
-        <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
+        <img class="regional-logo rf-header-logo" src="{{ asset('assets/img/branding/rf-logo-header.svg') }}" alt="Regional Finance" width="102" height="26">
         <button class="top-nav-btn" type="button" aria-label="Close menu" data-menu-close>
           <i class="ti ti-x"></i>
         </button>

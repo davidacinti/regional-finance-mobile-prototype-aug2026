@@ -30,4 +30,4 @@ RUN composer dump-autoload --optimize \
     && chmod -R 775 storage bootstrap/cache \
     && php artisan package:discover --ansi
 
-CMD php -S 0.0.0.0:${PORT:-8080} -t public public/router.php
+CMD php -S 0.0.0.0:${PORT:-10000} -t public public/router.php

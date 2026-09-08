@@ -26,6 +26,7 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
 
 @section('page-style')
 <link rel="stylesheet" href="{{ asset('assets/css/prototype-mobile.css') }}?v=20260902origination-lite">
+<link rel="stylesheet" href="{{ asset('assets/css/regional-finance-v52.css') }}?v=20260904m">
 @endsection
 
 @section('content')
@@ -43,7 +44,7 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
 
         <article class="lender-offer regional-lender-offer">
           <div class="lender-offer-heading">
-            <img src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
+            <img class="rf-header-logo" src="{{ asset('assets/img/branding/rf-logo-header.svg') }}" alt="Regional Finance" width="102" height="26">
             <span>Recommended</span>
           </div>
           <strong class="lender-amount">{{ $amount }} loan</strong>
@@ -78,7 +79,7 @@ $isTaskScreen = in_array($screen, ['income', 'vehicle', 'closing', 'password'], 
           <span class="lite-secure-mark"><i class="ti ti-lock"></i></span>
         @endif
         <a class="top-logo-link" href="{{ route('prototype.index') }}" aria-label="Regional Finance application home">
-          <img class="regional-logo" src="{{ asset('assets/img/branding/regionals-logo.svg') }}" alt="Regional Finance">
+          <img class="regional-logo rf-header-logo" src="{{ asset('assets/img/branding/rf-logo-header.svg') }}" alt="Regional Finance" width="102" height="26">
         </a>
         <span class="lite-mode-label">Application</span>
       </header>
