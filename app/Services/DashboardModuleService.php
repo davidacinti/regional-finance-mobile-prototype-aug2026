@@ -42,7 +42,7 @@ class DashboardModuleService
             return ['label' => $scenario['application']['cta'], 'url' => $this->applicationUrl($scenario['application'])];
         }
 
-        return ['label' => 'Check for offers', 'url' => route('prototype.offers')];
+        return ['label' => 'Check for offers', 'url' => route('prototype.application.start'), 'method' => 'post'];
     }
 
     private function nextBestAction(array $scenario): ?array

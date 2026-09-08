@@ -394,6 +394,8 @@ class PrototypeStateFlowTest extends TestCase
         $this->get('/offers')
             ->assertOk()
             ->assertSee('Products and options picked for you')
+            ->assertDontSee('See your loan options')
+            ->assertDontSee('Check offers')
             ->assertSee('Protection & benefits', false);
 
         $this->post('/prototype/presets/application-progress')->assertRedirect('/');

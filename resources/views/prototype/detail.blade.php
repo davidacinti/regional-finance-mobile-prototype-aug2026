@@ -554,13 +554,6 @@ $pastLoanDocuments = [
                 <div><span class="eyebrow">Application in progress</span><h3>{{ $application['headline'] }}</h3><p>{{ $application['summary'] }}</p></div>
                 <a class="btn btn-primary w-100" href="{{ route('prototype.application', $application['id']) }}">{{ $application['cta'] }}</a>
               </article>
-            @elseif(($offer['status'] ?? null) === 'available')
-              <article class="offer-product-card featured {{ $offer['type'] }}">
-                <div class="offer-product-icon"><i class="ti {{ $offer['type'] === 'prequalified_renewal' ? 'ti-award' : 'ti-sparkles' }}"></i></div>
-                <div><span class="eyebrow">{{ $offer['eyebrow'] }}</span><h3>{{ $offer['headline'] }}</h3><p>{{ $offer['body'] }}</p></div>
-                <div class="soft-credit-callout compact"><i class="ti ti-shield-check"></i><span>{{ $offer['highlight'] }}</span></div>
-                <form class="offer-check-form" method="POST" action="{{ route('prototype.application.start') }}">@csrf<button class="btn btn-primary w-100" type="submit">{{ $offer['cta'] }}</button></form>
-              </article>
             @endif
 
             <section class="marketplace-group">
